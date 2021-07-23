@@ -1,14 +1,5 @@
-
-import 'dart:async';
-
-import 'package:flutter/services.dart';
-
-class HotkeyManager {
-  static const MethodChannel _channel =
-      const MethodChannel('hotkey_manager');
-
-  static Future<String?> get platformVersion async {
-    final String? version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
-  }
-}
+export './src/enums/key_code.dart';
+export './src/enums/key_modifier.dart';
+export './src/widgets/hotkey_recorder.dart';
+export './src/hotkey_manager.dart';
+export './src/hotkey.dart';

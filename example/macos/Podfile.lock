@@ -1,0 +1,35 @@
+PODS:
+  - FlutterMacOS (1.0.0)
+  - HotKey (0.1.2)
+  - hotkey_manager (0.0.1):
+    - hotkey_manager/Core (= 0.0.1)
+  - hotkey_manager/Core (0.0.1):
+    - FlutterMacOS
+    - HotKey
+    - KeyboardShortcuts
+  - KeyboardShortcuts (0.7.1)
+
+DEPENDENCIES:
+  - FlutterMacOS (from `Flutter/ephemeral`)
+  - hotkey_manager (from `Flutter/ephemeral/.symlinks/plugins/hotkey_manager/macos`)
+
+SPEC REPOS:
+  trunk:
+    - HotKey
+    - KeyboardShortcuts
+
+EXTERNAL SOURCES:
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+  hotkey_manager:
+    :path: Flutter/ephemeral/.symlinks/plugins/hotkey_manager/macos
+
+SPEC CHECKSUMS:
+  FlutterMacOS: 57701585bf7de1b3fc2bb61f6378d73bbdea8424
+  HotKey: ad59450195936c10992438c4210f673de5aee43e
+  hotkey_manager: c2c950db02788b3cfdc4c71eb5713bcea92bcb70
+  KeyboardShortcuts: de68625ae0471476fa92dc363a341f4981b29947
+
+PODFILE CHECKSUM: 6eac6b3292e5142cfc23bdeb71848a40ec51c14c
+
+COCOAPODS: 1.10.1
