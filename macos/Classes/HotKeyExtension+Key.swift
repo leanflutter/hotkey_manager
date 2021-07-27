@@ -70,12 +70,16 @@ extension Key {
             
         // MARK: - Modifiers
         case "meta": self = .command
+        case "metaLeft": self = .command
         case "metaRight": self = .rightCommand
         case "alt": self = .option
+        case "altLeft": self = .option
         case "altRight": self = .rightOption
         case "control": self = .control
+        case "controlLeft": self = .control
         case "controlRight": self = .rightControl
         case "shift": self = .shift
+        case "shiftLeft": self = .shift
         case "shiftRight": self = .rightShift
         case "fn": self = .function
         case "capsLock": self = .capsLock

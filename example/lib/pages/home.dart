@@ -2,57 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
-
-class _ListItem extends StatelessWidget {
-  final Widget? title;
-  final Widget? subtitle;
-  final Widget? trailing;
-  final VoidCallback? onTap;
-
-  const _ListItem({
-    Key? key,
-    this.title,
-    this.subtitle,
-    this.trailing,
-    this.onTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        constraints: BoxConstraints(minHeight: 48),
-        padding: EdgeInsets.only(
-          left: 16,
-          right: 16,
-          top: 8,
-          bottom: 8,
-        ),
-        alignment: Alignment.centerLeft,
-        child: Column(
-          children: [
-            Row(
-              children: [
-                DefaultTextStyle(
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                  ),
-                  child: title!,
-                ),
-                Expanded(child: Container()),
-                if (trailing != null) SizedBox(height: 34, child: trailing),
-              ],
-            ),
-            if (subtitle != null) Container(child: subtitle),
-          ],
-        ),
-      ),
-      onTap: this.onTap,
-    );
-  }
-}
+import 'package:preference_list/preference_list.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -81,23 +31,50 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return Column(
+    return PreferenceList(
       children: <Widget>[
-        _ListItem(
-          title: Text('register'),
-          onTap: () async {
-            await HotKeyManager.instance.register(
-              _hotKey,
-              keyDownHandler: _keyDownHandler,
-              keyUpHandler: _keyUpHandler,
-            );
-          },
+        PreferenceListSection(
+          children: [
+            PreferenceListItem(
+              title: Text('register'),
+              onTap: () async {
+                await HotKeyManager.instance.register(
+                  _hotKey,
+                  keyDownHandler: _keyDownHandler,
+                  keyUpHandler: _keyUpHandler,
+                );
+              },
+            ),
+            PreferenceListItem(
+              title: Text('unregister'),
+              onTap: () async {
+                await HotKeyManager.instance.unregister(_hotKey);
+              },
+            ),
+          ],
         ),
-        _ListItem(
-          title: Text('unregister'),
-          onTap: () async {
-            await HotKeyManager.instance.unregister(_hotKey);
-          },
+        Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 200,
+                height: 60,
+                margin: EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    HotKeyRecorder(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

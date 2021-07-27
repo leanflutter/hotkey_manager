@@ -4,8 +4,8 @@ import './enums/key_code.dart';
 import './enums/key_modifier.dart';
 
 class HotKey {
-  final KeyCode keyCode;
-  final List<KeyModifier>? modifiers;
+  KeyCode keyCode;
+  List<KeyModifier>? modifiers;
   String identifier = Uuid().v4();
 
   HotKey(

@@ -555,7 +555,11 @@ enum KeyCode {
 }
 
 extension KeyCodeParser on KeyCode {
-  static KeyCode fromLogicalKey(LogicalKeyboardKey logicalKey) {
+  static KeyCode? fromLogicalKey(LogicalKeyboardKey logicalKey) {
+    List<int> logicalKeyIdList =
+        _knownLogicalKeys.values.map((e) => e.keyId).toList();
+    if (!logicalKeyIdList.contains(logicalKey.keyId)) return null;
+
     return _knownLogicalKeys.entries
         .firstWhere((entry) => entry.value.keyId == logicalKey.keyId)
         .key;
@@ -571,5 +575,13 @@ extension KeyCodeParser on KeyCode {
 
   String get stringValue {
     return describeEnum(this);
+  }
+
+  int get keyId {
+    return logicalKey.keyId;
+  }
+
+  String get keyLabel {
+    return logicalKey.keyLabel;
   }
 }
