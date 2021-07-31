@@ -4,77 +4,112 @@ import 'package:flutter/material.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:preference_list/preference_list.dart';
 
+import '../widgets/record_hotkey_dialog.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  HotKey _hotKey = HotKey(
-    KeyCode.keyS,
-    modifiers: [KeyModifier.meta, KeyModifier.alt],
-  );
+  List<HotKey> _registeredHotKeyList = [];
 
-  @override
-  void initState() {
-    super.initState();
+  void _keyDownHandler(HotKey hotKey) {
+    BotToast.showText(
+      text: 'keyDown\n\n${hotKey.toString()}(${hotKey.scope})\n',
+    );
   }
 
-  void _keyDownHandler() {
-    print('keyDownHandler');
-    BotToast.showText(text: 'onKeyDown+${_hotKey.toJson()}');
+  void _keyUpHandler(HotKey hotKey) {
+    BotToast.showText(
+      text: 'keyUp\n\n${hotKey.toString()}(${hotKey.scope})\n',
+    );
   }
 
-  void _keyUpHandler() {
-    print('keyUpHandler');
-    BotToast.showText(text: 'onKeyUp+${_hotKey.toJson()}');
+  void _handleHotKeyRegister(HotKey hotKey) async {
+    await HotKeyManager.instance.register(
+      hotKey,
+      keyDownHandler: _keyDownHandler,
+      keyUpHandler: _keyUpHandler,
+    );
+    setState(() {
+      _registeredHotKeyList = HotKeyManager.instance.registeredHotKeyList;
+    });
+  }
+
+  void _handleHotKeyUnregister(HotKey hotKey) async {
+    await HotKeyManager.instance.unregister(hotKey);
+    setState(() {
+      _registeredHotKeyList = HotKeyManager.instance.registeredHotKeyList;
+    });
+  }
+
+  Future<void> _handleClickRegisterNewHotKey() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return RecordHotKeyDialog(
+          onHotKeyRecorded: (newHotKey) => _handleHotKeyRegister(newHotKey),
+        );
+      },
+    );
   }
 
   Widget _buildBody(BuildContext context) {
     return PreferenceList(
       children: <Widget>[
         PreferenceListSection(
+          title: Text('REGISTERED HOTKEY LIST'),
           children: [
-            PreferenceListItem(
-              title: Text('register'),
-              onTap: () async {
-                await HotKeyManager.instance.register(
-                  _hotKey,
-                  keyDownHandler: _keyDownHandler,
-                  keyUpHandler: _keyUpHandler,
-                );
-              },
-            ),
-            PreferenceListItem(
-              title: Text('unregister'),
-              onTap: () async {
-                await HotKeyManager.instance.unregister(_hotKey);
-              },
-            ),
-          ],
-        ),
-        Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 200,
-                height: 60,
-                margin: EdgeInsets.only(top: 20),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-                child: Stack(
-                  alignment: Alignment.center,
+            for (var registeredHotKey in _registeredHotKeyList)
+              PreferenceListItem(
+                padding: EdgeInsets.all(12),
+                title: Row(
                   children: [
-                    HotKeyRecorder(),
+                    HotKeyVirtualView(hotKey: registeredHotKey),
+                    SizedBox(width: 10),
+                    Text(
+                      registeredHotKey.scope.toString(),
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
+                    ),
                   ],
                 ),
+                accessoryView: Container(
+                  width: 40,
+                  height: 40,
+                  child: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Icon(
+                          CupertinoIcons.delete,
+                          size: 18,
+                          color: Colors.red,
+                        ),
+                      ],
+                    ),
+                    onPressed: () => _handleHotKeyUnregister(registeredHotKey),
+                  ),
+                ),
               ),
-            ],
-          ),
+            PreferenceListItem(
+              title: Text(
+                'Register a new HotKey',
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              accessoryView: Container(),
+              onTap: () {
+                _handleClickRegisterNewHotKey();
+              },
+            )
+          ],
         ),
       ],
     );
@@ -84,7 +119,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Plugin example app'),
+        title: const Text('Example'),
       ),
       body: _buildBody(context),
     );
