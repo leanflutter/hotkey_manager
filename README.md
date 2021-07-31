@@ -5,7 +5,7 @@
 [pub-image]: https://img.shields.io/pub/v/hotkey_manager.svg
 [pub-url]: https://pub.dev/packages/hotkey_manager
 
-This plugin allows Flutter **desktop** apps to defines system-wide hot key.
+This plugin allows Flutter **desktop** apps to defines system/inapp wide hot key.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -52,13 +52,17 @@ dependencies:
 
 ### Usage
 
+Register/Unregsiter a system/inapp wide hot key.
+
 ```dart
 import 'package:hotkey_manager/hotkey_manager.dart';
 
-// ⌘ + ⌥ + s
+// ⌥ + Q
 HotKey _hotKey = HotKey(
-  KeyCode.keyS,
-  modifiers: [KeyModifier.meta, KeyModifier.alt],
+  KeyCode.keyQ,
+  modifiers: [KeyModifier.alt],
+  // Set hotkey scope (default is HotKeyScope.system)
+  scope: HotKeyScope.inapp, // Set as inapp-wide hotkey.
 );
 
 await HotKeyManager.instance.register(
@@ -74,16 +78,27 @@ await HotKeyManager.instance.register(
 await HotKeyManager.instance.unregister(_hotKey);
 ```
 
+Use `HotKeyRecorder` widget to help you record a hot key.
+
+```dart
+HotKeyRecorder(
+  onHotKeyRecorded: (hotKey) {
+    _hotKey = hotKey;
+    setState(() {});
+  },
+),
+```
+
 > Please see the example app of this plugin for a full example.
 
 ## API
 
 ### HotKeyManager
 
-| Method     | Description                   |
-| ---------- | ----------------------------- |
-| register   | register system-wide hot key. |
-| unregister | unregister hot key.           |
+| Method     | Description                              |
+| ---------- | ---------------------------------------- |
+| register   | register an system/inapp wide hot key.   |
+| unregister | unregister an system/inapp wide hot key. |
 
 ## Related Links
 

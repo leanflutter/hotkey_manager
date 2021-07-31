@@ -72,6 +72,10 @@ extension KeyModifierParser on KeyModifier {
     return _knownLogicalKeys[this]!.first;
   }
 
+  List<LogicalKeyboardKey> get logicalKeys {
+    return _knownLogicalKeys[this]!;
+  }
+
   String get stringValue => describeEnum(this);
 
   int get keyId {
