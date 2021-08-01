@@ -5,6 +5,7 @@ import '../enums/key_code.dart';
 import '../enums/key_modifier.dart';
 import '../hotkey.dart';
 import './hotkey_virtual_view.dart';
+
 class HotKeyRecorder extends StatefulWidget {
   final HotKey? initalHotKey;
   final ValueChanged<HotKey> onHotKeyRecorded;
@@ -39,25 +40,32 @@ class _HotKeyRecorderState extends State<HotKeyRecorder> {
 
   _handleRawKeyEvent(RawKeyEvent value) {
     if (!(value is RawKeyDownEvent)) return;
-    KeyCode? keyCode;
+
+    KeyCode keyCode = KeyCode.none;
     List<KeyModifier>? keyModifiers;
 
-    try {
-      keyCode = KeyCode.values.firstWhere(
-        (kc) =>
-            value.isKeyPressed(kc.logicalKey) &&
-            KeyModifier.values
-                .every((km) => !km.logicalKeys.contains(kc.logicalKey)),
-      );
-    } catch (error) {
-      //skip
-    }
+    keyCode = KeyCode.values.firstWhere(
+      (kc) {
+        if (!value.isKeyPressed(kc.logicalKey)) return false;
+        KeyModifier? keyModifier =
+            KeyModifierParser.fromLogicalKey(kc.logicalKey);
+
+        if (keyModifier != null &&
+            value.data.isModifierPressed(keyModifier.modifierKey)) {
+          return false;
+        }
+
+        return true;
+      },
+      orElse: () => KeyCode.none,
+    );
     keyModifiers = KeyModifier.values
-        .where((km) =>
-            km.logicalKeys.map((lk) => value.isKeyPressed(lk)).contains(true))
+        .where((km) => value.data.isModifierPressed(km.modifierKey))
         .toList();
-    _hotKey.keyCode = keyCode ?? KeyCode.none;
+    _hotKey.keyCode = keyCode;
     _hotKey.modifiers = keyModifiers;
+
+    if (!_hotKey.isSetted) return;
 
     widget.onHotKeyRecorded(_hotKey);
 

@@ -15,7 +15,7 @@ class HotKey {
   String identifier = Uuid().v4();
   HotKeyScope scope;
 
-  bool get isSetted => keyCode != KeyCode.none || (modifiers ?? []).length > 0;
+  bool get isSetted => keyCode != KeyCode.none;
 
   HotKey(
     this.keyCode, {

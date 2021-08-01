@@ -40,10 +40,11 @@ class HotKeyManager {
     if (value is RawKeyDownEvent) {
       HotKey hotKey = _hotKeyList.firstWhere(
         (e) {
-          return value.isKeyPressed(e.keyCode.logicalKey) &&
-              (e.modifiers ?? []).every((m) => m.logicalKeys
-                  .map((lk) => value.isKeyPressed(lk))
-                  .contains(true));
+          return e.scope == HotKeyScope.inapp &&
+              value.isKeyPressed(e.keyCode.logicalKey) &&
+              (e.modifiers ?? []).every(
+                (m) => value.data.isModifierPressed(m.modifierKey),
+              );
         },
         orElse: () => HotKey(KeyCode.none),
       );

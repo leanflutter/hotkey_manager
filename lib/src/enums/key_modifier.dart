@@ -31,7 +31,17 @@ const Map<KeyModifier, List<LogicalKeyboardKey>> _knownLogicalKeys =
   ],
 };
 
-const Map<KeyModifier, String> _knownLogicalKeyLabels = <KeyModifier, String>{
+const Map<KeyModifier, ModifierKey> _knownModifierKeys =
+    <KeyModifier, ModifierKey>{
+  KeyModifier.capsLock: ModifierKey.capsLockModifier,
+  KeyModifier.shift: ModifierKey.shiftModifier,
+  KeyModifier.control: ModifierKey.controlModifier,
+  KeyModifier.alt: ModifierKey.altModifier,
+  KeyModifier.meta: ModifierKey.metaModifier,
+  KeyModifier.fn: ModifierKey.functionModifier,
+};
+
+const Map<KeyModifier, String> _knownModifierKeyLabels = <KeyModifier, String>{
   KeyModifier.capsLock: '⇪',
   KeyModifier.shift: '⇧',
   KeyModifier.control: '⌃',
@@ -54,6 +64,16 @@ extension KeyModifierParser on KeyModifier {
     return KeyModifier.values.firstWhere((e) => describeEnum(e) == string);
   }
 
+  static ModifierKey? fromModifierKey(ModifierKey modifierKey) {
+    return _knownModifierKeys.entries
+        .firstWhere((entry) => entry.value == modifierKey)
+        .value;
+  }
+
+  ModifierKey get modifierKey {
+    return _knownModifierKeys[this]!;
+  }
+
   static KeyModifier? fromLogicalKey(LogicalKeyboardKey logicalKey) {
     List<int> logicalKeyIdList = [];
 
@@ -68,21 +88,13 @@ extension KeyModifierParser on KeyModifier {
         .key;
   }
 
-  LogicalKeyboardKey get logicalKey {
-    return _knownLogicalKeys[this]!.first;
-  }
-
   List<LogicalKeyboardKey> get logicalKeys {
     return _knownLogicalKeys[this]!;
   }
 
   String get stringValue => describeEnum(this);
 
-  int get keyId {
-    return logicalKey.keyId;
-  }
-
   String get keyLabel {
-    return _knownLogicalKeyLabels[this] ?? logicalKey.keyLabel;
+    return _knownModifierKeyLabels[this] ?? describeEnum(this);
   }
 }

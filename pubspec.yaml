@@ -30,6 +30,8 @@ flutter:
     platforms:
       macos:
         pluginClass: HotkeyManagerPlugin
+      windows:
+        pluginClass: HotkeyManagerPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

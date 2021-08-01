@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  hotkey_manager
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
