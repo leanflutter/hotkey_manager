@@ -1,3 +1,7 @@
+## 0.0.3
+
+- Supported `windows`'.
+
 ## 0.0.2
 
 - Supported inapp-wide hotkey.

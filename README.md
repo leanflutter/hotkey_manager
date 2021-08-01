@@ -27,7 +27,7 @@ This plugin allows Flutter **desktop** apps to defines system/inapp wide hot key
 
 | MacOS | Linux | Windows |
 | :---: | :---: | :-----: |
-|  ✔️   |  ➖   |   ➖    |
+|  ✔️   |  ➖   |   ✔️    |
 
 ## Quick Start
 
@@ -37,7 +37,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  hotkey_manager: ^0.0.2
+  hotkey_manager: ^0.0.3
 ```
 
 Or
@@ -67,11 +67,11 @@ HotKey _hotKey = HotKey(
 
 await HotKeyManager.instance.register(
   _hotKey,
-  keyDownHandler: () {
-    print('onKeyDown+${_hotKey.toJson()}');
+  keyDownHandler: (hotKey) {
+    print('onKeyDown+${hotKey.toJson()}');
   },
-  keyUpHandler: (){
-    print('onKeyUp+${_hotKey.toJson()}');
+  keyUpHandler: (hotKey){
+    print('onKeyUp+${hotKey.toJson()}');
   } ,
 );
 
