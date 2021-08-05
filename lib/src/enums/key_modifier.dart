@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart' show describeEnum;
 import 'package:flutter/services.dart';
 
@@ -41,12 +43,12 @@ const Map<KeyModifier, ModifierKey> _knownModifierKeys =
   KeyModifier.fn: ModifierKey.functionModifier,
 };
 
-const Map<KeyModifier, String> _knownModifierKeyLabels = <KeyModifier, String>{
+final Map<KeyModifier, String> _knownKeyLabels = <KeyModifier, String>{
   KeyModifier.capsLock: '⇪',
   KeyModifier.shift: '⇧',
   KeyModifier.control: '⌃',
   KeyModifier.alt: '⌥',
-  KeyModifier.meta: '⌘',
+  KeyModifier.meta: Platform.isMacOS ? '⌘' : '⊞',
   KeyModifier.fn: 'fn',
 };
 
@@ -95,6 +97,6 @@ extension KeyModifierParser on KeyModifier {
   String get stringValue => describeEnum(this);
 
   String get keyLabel {
-    return _knownModifierKeyLabels[this] ?? describeEnum(this);
+    return _knownKeyLabels[this] ?? describeEnum(this);
   }
 }

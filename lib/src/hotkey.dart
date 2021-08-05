@@ -51,6 +51,6 @@ class HotKey {
 
   @override
   String toString() {
-    return '${modifiers!.map((e) => e.keyLabel).join('+')}${modifiers!.length > 0 ? '+' : ''}${keyCode.keyLabel}';
+    return '${modifiers!.map((e) => e.keyLabel).join('')}${keyCode.keyLabel}';
   }
 }

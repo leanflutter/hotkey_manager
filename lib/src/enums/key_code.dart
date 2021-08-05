@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -554,6 +556,96 @@ enum KeyCode {
   control,
 }
 
+final Map<KeyCode, String> _knownKeyLabels = <KeyCode, String>{
+  KeyCode.keyA: 'A',
+  KeyCode.keyB: 'B',
+  KeyCode.keyC: 'C',
+  KeyCode.keyD: 'D',
+  KeyCode.keyE: 'E',
+  KeyCode.keyF: 'F',
+  KeyCode.keyG: 'G',
+  KeyCode.keyH: 'H',
+  KeyCode.keyI: 'I',
+  KeyCode.keyJ: 'J',
+  KeyCode.keyK: 'K',
+  KeyCode.keyL: 'L',
+  KeyCode.keyM: 'M',
+  KeyCode.keyN: 'N',
+  KeyCode.keyO: 'O',
+  KeyCode.keyP: 'P',
+  KeyCode.keyQ: 'Q',
+  KeyCode.keyR: 'R',
+  KeyCode.keyS: 'S',
+  KeyCode.keyT: 'T',
+  KeyCode.keyU: 'U',
+  KeyCode.keyV: 'V',
+  KeyCode.keyW: 'W',
+  KeyCode.keyX: 'X',
+  KeyCode.keyY: 'Y',
+  KeyCode.keyZ: 'Z',
+  KeyCode.digit1: '1',
+  KeyCode.digit2: '2',
+  KeyCode.digit3: '3',
+  KeyCode.digit4: '4',
+  KeyCode.digit5: '5',
+  KeyCode.digit6: '6',
+  KeyCode.digit7: '7',
+  KeyCode.digit8: '8',
+  KeyCode.digit9: '9',
+  KeyCode.digit0: '0',
+  KeyCode.enter: '↩︎',
+  KeyCode.escape: '⎋',
+  KeyCode.backspace: '←',
+  KeyCode.tab: '⇥',
+  KeyCode.space: '␣',
+  KeyCode.minus: '-',
+  KeyCode.equal: '=',
+  KeyCode.bracketLeft: '[',
+  KeyCode.bracketRight: ']',
+  KeyCode.backslash: '\\',
+  KeyCode.semicolon: ';',
+  KeyCode.quote: '\"',
+  KeyCode.backquote: '`',
+  KeyCode.comma: ',',
+  KeyCode.period: '.',
+  KeyCode.slash: '/',
+  KeyCode.capsLock: '⇪',
+  KeyCode.f1: 'F1',
+  KeyCode.f2: 'F2',
+  KeyCode.f3: 'F3',
+  KeyCode.f4: 'F4',
+  KeyCode.f5: 'F5',
+  KeyCode.f6: 'F6',
+  KeyCode.f7: 'F7',
+  KeyCode.f8: 'F8',
+  KeyCode.f9: 'F9',
+  KeyCode.f10: 'F10',
+  KeyCode.f11: 'F11',
+  KeyCode.f12: 'F12',
+  KeyCode.home: '↖',
+  KeyCode.pageUp: '⇞',
+  KeyCode.delete: '⌫',
+  KeyCode.end: '↘',
+  KeyCode.pageDown: '⇟',
+  KeyCode.arrowRight: '→',
+  KeyCode.arrowLeft: '←',
+  KeyCode.arrowDown: '↓',
+  KeyCode.arrowUp: '↑',
+  KeyCode.controlLeft: '⌃',
+  KeyCode.shiftLeft: '⇧',
+  KeyCode.altLeft: '⌥',
+  KeyCode.metaLeft: Platform.isMacOS ? '⌘' : '⊞',
+  KeyCode.controlRight: '⌃',
+  KeyCode.shiftRight: '⇧',
+  KeyCode.altRight: '⌥',
+  KeyCode.metaRight: Platform.isMacOS ? '⌘' : '⊞',
+  KeyCode.fn: 'fn',
+  KeyCode.shift: '⇧',
+  KeyCode.meta: Platform.isMacOS ? '⌘' : '⊞',
+  KeyCode.alt: '⌥',
+  KeyCode.control: '⌃',
+};
+
 extension KeyCodeParser on KeyCode {
   static KeyCode? fromLogicalKey(LogicalKeyboardKey logicalKey) {
     List<int> logicalKeyIdList =
@@ -582,6 +674,6 @@ extension KeyCodeParser on KeyCode {
   }
 
   String get keyLabel {
-    return logicalKey.keyLabel;
+    return _knownKeyLabels[this] ?? logicalKey.keyLabel;
   }
 }
