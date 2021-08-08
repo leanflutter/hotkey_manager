@@ -121,4 +121,12 @@ class HotKeyManager {
 
     _hotKeyList.removeWhere((e) => e.identifier == hotKey.identifier);
   }
+
+  Future<void> unregisterAll() async {
+    if (!_inited) this._init();
+
+    for (var hotKey in _hotKeyList) {
+      this.unregister(hotKey);
+    }
+  }
 }
