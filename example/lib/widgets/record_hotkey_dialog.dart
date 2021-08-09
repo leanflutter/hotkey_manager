@@ -14,7 +14,7 @@ class RecordHotKeyDialog extends StatefulWidget {
 }
 
 class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
-  HotKey _hotKey = HotKey(KeyCode.none);
+  HotKey _hotKey = HotKey(null);
 
   @override
   Widget build(BuildContext context) {

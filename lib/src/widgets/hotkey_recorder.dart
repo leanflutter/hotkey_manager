@@ -21,7 +21,7 @@ class HotKeyRecorder extends StatefulWidget {
 }
 
 class _HotKeyRecorderState extends State<HotKeyRecorder> {
-  HotKey _hotKey = HotKey(KeyCode.none, modifiers: []);
+  HotKey _hotKey = HotKey(null, modifiers: []);
 
   @override
   void initState() {
@@ -41,7 +41,7 @@ class _HotKeyRecorderState extends State<HotKeyRecorder> {
   _handleRawKeyEvent(RawKeyEvent value) {
     if (!(value is RawKeyDownEvent)) return;
 
-    KeyCode keyCode = KeyCode.none;
+    KeyCode? keyCode;
     List<KeyModifier>? keyModifiers;
 
     keyCode = KeyCode.values.firstWhere(
@@ -57,7 +57,7 @@ class _HotKeyRecorderState extends State<HotKeyRecorder> {
 
         return true;
       },
-      orElse: () => KeyCode.none,
+      orElse: () => null!,
     );
     keyModifiers = KeyModifier.values
         .where((km) => value.data.isModifierPressed(km.modifierKey))

@@ -41,12 +41,12 @@ class HotKeyManager {
       HotKey hotKey = _hotKeyList.firstWhere(
         (e) {
           return e.scope == HotKeyScope.inapp &&
-              value.isKeyPressed(e.keyCode.logicalKey) &&
+              value.isKeyPressed(e.keyCode!.logicalKey) &&
               (e.modifiers ?? []).every(
                 (m) => value.data.isModifierPressed(m.modifierKey),
               );
         },
-        orElse: () => HotKey(KeyCode.none),
+        orElse: () => HotKey(null),
       );
 
       if (hotKey.isSetted) {

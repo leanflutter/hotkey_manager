@@ -281,7 +281,7 @@ const Map<KeyCode, LogicalKeyboardKey> _knownLogicalKeys =
 };
 
 enum KeyCode {
-  none,
+  // none,
   hyper,
   superKey,
   fnLock,
