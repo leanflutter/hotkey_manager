@@ -75,11 +75,6 @@ class HotKeyManager {
     }
   }
 
-  Future<String?> get platformVersion async {
-    final String? version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
-  }
-
   List<HotKey> get registeredHotKeyList => _hotKeyList;
 
   Future<void> register(

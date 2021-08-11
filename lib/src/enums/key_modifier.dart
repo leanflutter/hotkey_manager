@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart' show describeEnum;
+import 'package:flutter/foundation.dart' show describeEnum, kIsWeb;
 import 'package:flutter/services.dart';
 
 const Map<KeyModifier, List<LogicalKeyboardKey>> _knownLogicalKeys =
@@ -48,7 +48,7 @@ final Map<KeyModifier, String> _knownKeyLabels = <KeyModifier, String>{
   KeyModifier.shift: '⇧',
   KeyModifier.control: '⌃',
   KeyModifier.alt: '⌥',
-  KeyModifier.meta: Platform.isMacOS ? '⌘' : '⊞',
+  KeyModifier.meta: (!kIsWeb && Platform.isMacOS) ? '⌘' : '⊞',
   KeyModifier.fn: 'fn',
 };
 
