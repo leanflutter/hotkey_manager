@@ -63,12 +63,12 @@ class HotKeyManager {
 
     switch (call.method) {
       case 'onKeyDown':
-        HotKeyHandler handler = _keyDownHandlerMap[identifier]!;
-        handler(hotKey);
+        HotKeyHandler? handler = _keyDownHandlerMap[identifier];
+        if (handler != null) handler(hotKey);
         break;
       case 'onKeyUp':
-        HotKeyHandler handler = _keyUpHandlerMap[identifier]!;
-        handler(hotKey);
+        HotKeyHandler? handler = _keyUpHandlerMap[identifier];
+        if (handler != null) handler(hotKey);
         break;
       default:
         UnimplementedError();

@@ -24,7 +24,34 @@ class HotkeyManagerPlugin {
   }
 
   MethodChannel? _channel;
+
+  bool _inited = false;
   Stream<html.MessageEvent>? _stream;
+
+  void _init() {
+    if (_stream == null) {
+      _stream = html.window.onMessage;
+      _stream!.listen(
+        (event) {
+          if (event.data == null) {
+            return;
+          }
+
+          Map<String, dynamic> eventData =
+              Map<String, dynamic>.from(event.data);
+          switch (eventData['eventType']) {
+            case 'onKeyDown':
+              _channel!.invokeMethod('onKeyDown', eventData['hotKey']);
+              break;
+            case 'onKeyUp':
+              _channel!.invokeMethod('onKeyUp', eventData['hotKey']);
+              break;
+          }
+        },
+      );
+      _inited = true;
+    }
+  }
 
   /// Handles method calls over the MethodChannel of this plugin.
   /// Note: Check the "federated" architecture for a new way of doing this:
@@ -45,35 +72,20 @@ class HotkeyManagerPlugin {
   }
 
   Future<bool> register(MethodCall call) {
+    if (!_inited) _init();
+
     Map<String, dynamic> args = Map<String, dynamic>.from(call.arguments);
     js.context.callMethod(
       'hotkeyManagerPluginRegister',
       [js.JsObject.jsify(args)],
     );
 
-    if (_stream == null) {
-      _stream = html.window.onMessage;
-      _stream!.listen(
-        (event) {
-          Map<String, dynamic> eventData =
-              Map<String, dynamic>.from(event.data);
-          switch (eventData['eventType']) {
-            case 'onKeyDown':
-              _channel!.invokeMethod('onKeyDown', eventData['hotKey']);
-              break;
-            case 'onKeyUp':
-              _channel!.invokeMethod('onKeyUp', eventData['hotKey']);
-              break;
-          }
-          print(eventData);
-        },
-      );
-    }
-
     return Future.value(true);
   }
 
   Future<bool> unregister(MethodCall call) {
+    if (!_inited) _init();
+
     Map<String, dynamic> args = Map<String, dynamic>.from(call.arguments);
     js.context.callMethod(
       'hotkeyManagerPluginUnregister',

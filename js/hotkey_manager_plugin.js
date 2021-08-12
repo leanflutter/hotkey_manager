@@ -27,8 +27,8 @@ const knownVirtualKeyCodes = {
   keyZ: 0x5a,
 };
 
-var _window = window.parent;
-var _document = window.parent.document;
+var _parentWindow = window.parent;
+var _parentDocument = window.parent.document;
 
 var _hotkeyMap = {};
 
@@ -53,34 +53,32 @@ function _hotkeyManagerPluginInit() {
         .includes(false);
     });
     if (hotKey != null) {
-      _document
-        .getElementsByTagName("iframe")[0]
+      _parentDocument
+        .getElementById(window.flutterApp.windowIframeId)
         .contentWindow.postMessage({ eventType, hotKey }, "*");
-    } else {
-      console.log(event);
     }
   };
 
-  _document.onkeydown = (e) => handleKeyDownOrUp("onKeyDown", e);
-  _document.onkeyup = (e) => handleKeyDownOrUp("onKeyUp", e);
+  _parentDocument.onkeydown = (e) => handleKeyDownOrUp("onKeyDown", e);
+  _parentDocument.onkeyup = (e) => handleKeyDownOrUp("onKeyUp", e);
 }
 
 function _hotkeyManagerPluginUninit() {
-  _document.onkeyup = null;
-  _document.onkeydown = null;
+  _parentDocument.onkeyup = null;
+  _parentDocument.onkeydown = null;
 }
 
 function hotkeyManagerPluginRegister(hotkey) {
+  if (Object.values(_hotkeyMap).length == 0) {
+    _hotkeyManagerPluginInit();
+  }
   _hotkeyMap[hotkey.identifier] = hotkey;
-  console.log(_hotkeyMap);
-  console.log(hotkey);
-  _hotkeyManagerPluginInit();
 }
 
 function hotkeyManagerPluginUnregister(hotkey) {
   _hotkeyMap[hotkey.identifier] = null;
   delete _hotkeyMap[hotkey.identifier];
-  console.log(_hotkeyMap);
+
   if (Object.values(_hotkeyMap).length == 0) {
     _hotkeyManagerPluginUninit();
   }
