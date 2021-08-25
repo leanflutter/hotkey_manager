@@ -10,7 +10,6 @@ This plugin allows Flutter **desktop** apps to defines system/inapp wide hot key
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [hotkey_manager](#hotkey_manager)
   - [Platform Support](#platform-support)
   - [Quick Start](#quick-start)
@@ -95,10 +94,10 @@ HotKeyRecorder(
 
 ### HotKeyManager
 
-| Method     | Description                              |
-| ---------- | ---------------------------------------- |
-| register   | register an system/inapp wide hot key.   |
-| unregister | unregister an system/inapp wide hot key. |
+| Method     | Description                              | Linux | MacOS | Windows |
+| ---------- | ---------------------------------------- | ----- | ----- | ------- |
+| register   | register an system/inapp wide hot key.   | ➖    | ✔️    | ✔️      |
+| unregister | unregister an system/inapp wide hot key. | ➖    | ✔️    | ✔️      |
 
 ## Related Links
 
