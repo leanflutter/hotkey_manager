@@ -24,9 +24,9 @@ This plugin allows Flutter **desktop** apps to defines system/inapp wide hot key
 
 ## Platform Support
 
-| MacOS | Linux | Windows |
+| Linux | macOS | Windows |
 | :---: | :---: | :-----: |
-|  ✔️   |  ➖   |   ✔️    |
+|  ➖   |  ✔️   |   ✔️    |
 
 ## Quick Start
 
@@ -36,7 +36,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  hotkey_manager: ^0.0.3
+  hotkey_manager: ^0.0.4
 ```
 
 Or
@@ -45,7 +45,7 @@ Or
 dependencies:
   hotkey_manager:
     git:
-      url: https://github.com/leanflutter/hotkey_manager
+      url: https://github.com/leanflutter/hotkey_manager.git
       ref: main
 ```
 
@@ -94,7 +94,7 @@ HotKeyRecorder(
 
 ### HotKeyManager
 
-| Method     | Description                              | Linux | MacOS | Windows |
+| Method     | Description                              | Linux | macOS | Windows |
 | ---------- | ---------------------------------------- | ----- | ----- | ------- |
 | register   | register an system/inapp wide hot key.   | ➖    | ✔️    | ✔️      |
 | unregister | unregister an system/inapp wide hot key. | ➖    | ✔️    | ✔️      |
