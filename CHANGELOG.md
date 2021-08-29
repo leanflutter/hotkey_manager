@@ -1,3 +1,8 @@
+## 0.0.4
+
+- Supported `web`', Embed via iframe.
+- Adapt flutter master channel.
+
 ## 0.0.3
 
 - Supported `windows`'.
