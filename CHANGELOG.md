@@ -1,11 +1,15 @@
+## 0.0.5
+
+- Supported `linux` platform.
+
 ## 0.0.4
 
-- Supported `web`', Embed via iframe.
+- Supported `web` platform, Embed via iframe.
 - Adapt flutter master channel.
 
 ## 0.0.3
 
-- Supported `windows`'.
+- Supported `windows` platform.
 
 ## 0.0.2
 

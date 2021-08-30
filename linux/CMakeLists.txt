@@ -6,6 +6,9 @@ project(${PROJECT_NAME} LANGUAGES CXX)
 # not be changed
 set(PLUGIN_NAME "hotkey_manager_plugin")
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules (KEYBINDER REQUIRED IMPORTED_TARGET keybinder-3.0)
+
 add_library(${PLUGIN_NAME} SHARED
   "hotkey_manager_plugin.cc"
 )
@@ -17,6 +20,7 @@ target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
 target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
+target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::KEYBINDER)
 
 # List of absolute paths to libraries that should be bundled with the plugin
 set(hotkey_manager_bundled_libraries

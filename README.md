@@ -27,7 +27,7 @@ This plugin allows Flutter **desktop** apps to defines system/inapp wide hot key
 
 | Linux | macOS | Windows |
 | :---: | :---: | :-----: |
-|  ➖   |  ✔️   |   ✔️    |
+|   ✔️   |   ✔️   |    ✔️    |
 
 ## Quick Start
 
@@ -70,6 +70,7 @@ await HotKeyManager.instance.register(
   keyDownHandler: (hotKey) {
     print('onKeyDown+${hotKey.toJson()}');
   },
+  // Only works on macOS.
   keyUpHandler: (hotKey){
     print('onKeyUp+${hotKey.toJson()}');
   } ,
@@ -105,8 +106,8 @@ HotKeyRecorder(
 
 | Method     | Description                              | Linux | macOS | Windows |
 | ---------- | ---------------------------------------- | ----- | ----- | ------- |
-| register   | register an system/inapp wide hot key.   | ➖    | ✔️    | ✔️      |
-| unregister | unregister an system/inapp wide hot key. | ➖    | ✔️    | ✔️      |
+| register   | register an system/inapp wide hot key.   | ✔️     | ✔️     | ✔️       |
+| unregister | unregister an system/inapp wide hot key. | ✔️     | ✔️     | ✔️       |
 
 ## Related Links
 
