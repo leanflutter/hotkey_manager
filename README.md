@@ -15,6 +15,7 @@ This plugin allows Flutter **desktop** apps to defines system/inapp wide hot key
   - [Quick Start](#quick-start)
     - [Installation](#installation)
     - [Usage](#usage)
+  - [Discussion](#discussion)
   - [API](#api)
     - [HotKeyManager](#hotkeymanager)
   - [Related Links](#related-links)
@@ -89,6 +90,14 @@ HotKeyRecorder(
 ```
 
 > Please see the example app of this plugin for a full example.
+
+## Discussion
+
+> Welcome to join the discussion group to share your suggestions and ideas with me.
+
+- WeChat Group 请添加我的微信 `lijy91`，并备注 `LeanFlutter`
+- [QQ Group](https://jq.qq.com/?_wv=1027&k=e3kwRnnw)
+- [Telegram Group](https://t.me/leanflutter)
 
 ## API
 
