@@ -15,6 +15,7 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <string>
 
 #define HOTKEY_MANAGER_PLUGIN(obj)                                     \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), hotkey_manager_plugin_get_type(), \

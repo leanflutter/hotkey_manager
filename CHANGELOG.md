@@ -1,3 +1,7 @@
+## 0.0.6
+
+- [linux] Add #include <string> to hotkey_manager_plugin.cc
+
 ## 0.0.5
 
 - Supported `linux` platform.
