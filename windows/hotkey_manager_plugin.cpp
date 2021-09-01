@@ -444,6 +444,20 @@ namespace {
         result->Success(flutter::EncodableValue(true));
     }
 
+    void UnregisterAll(
+        const flutter::MethodCall<flutter::EncodableValue>& method_call,
+        std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
+
+        for(std::map<std::string,int>::iterator it = hotKeyIdMap.begin(); it != hotKeyIdMap.end(); ++it) {
+            std::string identifier = it->first;
+            int hotKeyId = it->second;
+            UnregisterHotKey(NULL, hotKeyId);
+            hotKeyIdMap[identifier] = 0;
+        }
+
+        result->Success(flutter::EncodableValue(true));
+    }
+
     void HotkeyManagerPlugin::HandleMethodCall(
         const flutter::MethodCall<flutter::EncodableValue>& method_call,
         std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
@@ -452,6 +466,9 @@ namespace {
         }
         else if (method_call.method_name().compare("unregister") == 0) {
             Unregister(method_call, std::move(result));
+        }
+        else if (method_call.method_name().compare("unregisterAll") == 0) {
+            UnregisterAll(method_call, std::move(result));
         }
         else {
             result->NotImplemented();
