@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -44,7 +45,7 @@ class _HotKeyRecorderState extends State<HotKeyRecorder> {
     KeyCode? keyCode;
     List<KeyModifier>? keyModifiers;
 
-    keyCode = KeyCode.values.firstWhere(
+    keyCode = KeyCode.values.firstWhereOrNull(
       (kc) {
         if (!value.isKeyPressed(kc.logicalKey)) return false;
         KeyModifier? keyModifier =
@@ -57,11 +58,11 @@ class _HotKeyRecorderState extends State<HotKeyRecorder> {
 
         return true;
       },
-      orElse: () => null!,
     );
     keyModifiers = KeyModifier.values
         .where((km) => value.data.isModifierPressed(km.modifierKey))
         .toList();
+
     _hotKey.keyCode = keyCode;
     _hotKey.modifiers = keyModifiers;
 

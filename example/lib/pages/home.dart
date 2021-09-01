@@ -14,16 +14,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<HotKey> _registeredHotKeyList = [];
 
+  @override
+  void initState() {
+    super.initState();
+    HotKeyManager.instance.unregisterAll();
+  }
+
   void _keyDownHandler(HotKey hotKey) {
-    BotToast.showText(
-      text: 'keyDown\n\n${hotKey.toString()}(${hotKey.scope})\n',
-    );
+    String log = 'keyDown ${hotKey.toString()} (${hotKey.scope})';
+    BotToast.showText(text: log);
+    print(log);
   }
 
   void _keyUpHandler(HotKey hotKey) {
-    BotToast.showText(
-      text: 'keyUp\n\n${hotKey.toString()}(${hotKey.scope})\n',
-    );
+    String log = 'keyUp   ${hotKey.toString()} (${hotKey.scope})';
+    BotToast.showText(text: log);
+    print(log);
   }
 
   void _handleHotKeyRegister(HotKey hotKey) async {

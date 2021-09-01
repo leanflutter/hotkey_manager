@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 
 import './enums/key_code.dart';
@@ -59,16 +60,24 @@ class HotKeyManager {
 
   Future<void> _methodCallHandler(MethodCall call) async {
     String identifier = call.arguments['identifier'];
-    HotKey hotKey = _hotKeyList.firstWhere((e) => e.identifier == identifier);
+    HotKey? hotKey = _hotKeyList.firstWhereOrNull(
+      (e) => e.identifier == identifier,
+    );
+    if (hotKey == null) {
+      print('[Warning] Can\'t find registered hotKey.');
+      return;
+    }
 
     switch (call.method) {
       case 'onKeyDown':
-        HotKeyHandler? handler = _keyDownHandlerMap[identifier];
-        if (handler != null) handler(hotKey);
+        if (_keyDownHandlerMap.containsKey(identifier)) {
+          _keyDownHandlerMap[identifier]!(hotKey);
+        }
         break;
       case 'onKeyUp':
-        HotKeyHandler? handler = _keyUpHandlerMap[identifier];
-        if (handler != null) handler(hotKey);
+        if (_keyUpHandlerMap.containsKey(identifier)) {
+          _keyUpHandlerMap[identifier]!(hotKey);
+        }
         break;
       default:
         UnimplementedError();
@@ -120,8 +129,10 @@ class HotKeyManager {
   Future<void> unregisterAll() async {
     if (!_inited) this._init();
 
-    for (var hotKey in _hotKeyList) {
-      this.unregister(hotKey);
-    }
+    await _channel.invokeMethod('unregisterAll');
+
+    _keyDownHandlerMap.clear();
+    _keyUpHandlerMap.clear();
+    _hotKeyList.clear();
   }
 }

@@ -23,6 +23,9 @@ public class HotkeyManagerPlugin: NSObject, FlutterPlugin {
         case "unregister":
             unregister(call, result: result)
             break
+        case "unregisterAll":
+            unregisterAll(call, result: result)
+            break
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -57,6 +60,11 @@ public class HotkeyManagerPlugin: NSObject, FlutterPlugin {
         
         self.hotKeyDict[identifier] = nil;
         
+        result(true)
+    }
+    
+    public func unregisterAll(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        self.hotKeyDict.removeAll();
         result(true)
     }
 }
