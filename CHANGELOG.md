@@ -1,3 +1,8 @@
+## 0.1.0
+
+- Supported Hot Reload.
+- #2 Fixed `No element` error.
+
 ## 0.0.6
 
 - [linux] Add #include <string> to hotkey_manager_plugin.cc

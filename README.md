@@ -14,6 +14,7 @@ This plugin allows Flutter **desktop** apps to defines system/inapp wide hot key
   - [Platform Support](#platform-support)
   - [Quick Start](#quick-start)
     - [Installation](#installation)
+      - [⚠️ Linux requirements](#️-linux-requirements)
     - [Usage](#usage)
   - [Discussion](#discussion)
   - [API](#api)
@@ -27,7 +28,7 @@ This plugin allows Flutter **desktop** apps to defines system/inapp wide hot key
 
 | Linux | macOS | Windows |
 | :---: | :---: | :-----: |
-|   ✔️   |   ✔️   |    ✔️    |
+|  ✔️   |  ✔️   |   ✔️    |
 
 ## Quick Start
 
@@ -37,7 +38,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  hotkey_manager: ^0.0.5
+  hotkey_manager: ^0.1.0
 ```
 
 Or
@@ -50,13 +51,34 @@ dependencies:
       ref: main
 ```
 
-### Usage
+#### ⚠️ Linux requirements
 
-Register/Unregsiter a system/inapp wide hot key.
+- [`keybinder-3.0`](https://github.com/kupferlauncher/keybinder)
+
+Run the following command
+
+```
+sudo apt-get install keybinder-3.0
+```
+
+### Usage
 
 ```dart
 import 'package:hotkey_manager/hotkey_manager.dart';
 
+void main() {
+  // Must add this line.
+  WidgetsFlutterBinding.ensureInitialized();
+  // For hot reload, `unregisterAll()` needs to be called.
+  HotKeyManager.instance.unregisterAll();
+
+  runApp(MyApp());
+}
+```
+
+Register/Unregsiter a system/inapp wide hot key.
+
+```dart
 // ⌥ + Q
 HotKey _hotKey = HotKey(
   KeyCode.keyQ,
@@ -64,7 +86,6 @@ HotKey _hotKey = HotKey(
   // Set hotkey scope (default is HotKeyScope.system)
   scope: HotKeyScope.inapp, // Set as inapp-wide hotkey.
 );
-
 await HotKeyManager.instance.register(
   _hotKey,
   keyDownHandler: (hotKey) {
@@ -106,12 +127,13 @@ HotKeyRecorder(
 
 | Method     | Description                              | Linux | macOS | Windows |
 | ---------- | ---------------------------------------- | ----- | ----- | ------- |
-| register   | register an system/inapp wide hot key.   | ✔️     | ✔️     | ✔️       |
-| unregister | unregister an system/inapp wide hot key. | ✔️     | ✔️     | ✔️       |
+| register   | register an system/inapp wide hot key.   | ✔️    | ✔️    | ✔️      |
+| unregister | unregister an system/inapp wide hot key. | ✔️    | ✔️    | ✔️      |
 
 ## Related Links
 
 - https://github.com/soffes/HotKey
+- https://github.com/kupferlauncher/keybinder
 
 ## License
 
