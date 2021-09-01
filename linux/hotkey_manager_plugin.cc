@@ -58,12 +58,12 @@ std::map<std::string, uint> known_virtual_key_codes = {
     std::make_pair("digit8", GDK_KEY_8),
     std::make_pair("digit9", GDK_KEY_9),
     std::make_pair("digit0", GDK_KEY_0),
-    // std::make_pair("enter", VK_RETURN),
-    // std::make_pair("escape", VK_SPACE),
-    // std::make_pair("backspace", VK_BACK),
-    // std::make_pair("tab", VK_TAB),
-    // std::make_pair("space", VK_SPACE),
-    // std::make_pair("minus", VK_OEM_MINUS),
+    // std::make_pair("enter", 0),
+    // std::make_pair("escape", 0),
+    // std::make_pair("backspace", 0),
+    // std::make_pair("tab", 0),
+    // std::make_pair("space", 0),
+    // std::make_pair("minus", 0),
     // std::make_pair("equal", 0),
     // std::make_pair("bracketLeft", 0),
     // std::make_pair("bracketRight", 0),
@@ -74,7 +74,7 @@ std::map<std::string, uint> known_virtual_key_codes = {
     // std::make_pair("comma", 0),
     // std::make_pair("period", 0),
     // std::make_pair("slash", 0),
-    // std::make_pair("capsLock", VK_CAPITAL),
+    // std::make_pair("capsLock", 0),
     std::make_pair("f1", GDK_KEY_F1),
     std::make_pair("f2", GDK_KEY_F2),
     std::make_pair("f3", GDK_KEY_F3),
@@ -87,64 +87,64 @@ std::map<std::string, uint> known_virtual_key_codes = {
     std::make_pair("f10", GDK_KEY_F10),
     std::make_pair("f11", GDK_KEY_F11),
     std::make_pair("f12", GDK_KEY_F12),
-    // std::make_pair("printScreen", VK_SNAPSHOT),
-    // std::make_pair("scrollLock", VK_SCROLL),
-    // std::make_pair("pause", VK_PAUSE),
-    // std::make_pair("insert", VK_INSERT),
-    // std::make_pair("home", VK_HOME),
-    // std::make_pair("pageUp", VK_PRIOR),
-    // std::make_pair("delete", VK_DELETE),
-    // std::make_pair("end", VK_END),
-    // std::make_pair("pageDown", VK_NEXT),
-    // std::make_pair("arrowRight", VK_RIGHT),
-    // std::make_pair("arrowLeft", VK_LEFT),
-    // std::make_pair("arrowDown", VK_DOWN),
-    // std::make_pair("arrowUp", VK_UP),
-    // std::make_pair("numLock", VK_NUMLOCK),
-    // std::make_pair("numpadDivide", VK_DIVIDE),
-    // std::make_pair("numpadMultiply", VK_MULTIPLY),
-    // std::make_pair("numpadSubtract", VK_SUBTRACT),
-    // std::make_pair("numpadAdd", VK_ADD),
+    // std::make_pair("printScreen", 0),
+    // std::make_pair("scrollLock", 0),
+    // std::make_pair("pause", 0),
+    // std::make_pair("insert", 0),
+    // std::make_pair("home", 0),
+    // std::make_pair("pageUp", 0),
+    // std::make_pair("delete", 0),
+    // std::make_pair("end", 0),
+    // std::make_pair("pageDown", 0),
+    // std::make_pair("arrowRight", 0),
+    // std::make_pair("arrowLeft", 0),
+    // std::make_pair("arrowDown", 0),
+    // std::make_pair("arrowUp", 0),
+    // std::make_pair("numLock", 0),
+    // std::make_pair("numpadDivide", 0),
+    // std::make_pair("numpadMultiply", 0),
+    // std::make_pair("numpadSubtract", 0),
+    // std::make_pair("numpadAdd", 0),
     // std::make_pair("numpadEnter", 0),
-    // std::make_pair("numpad1", VK_NUMPAD1),
-    // std::make_pair("numpad2", VK_NUMPAD2),
-    // std::make_pair("numpad3", VK_NUMPAD3),
-    // std::make_pair("numpad4", VK_NUMPAD4),
-    // std::make_pair("numpad5", VK_NUMPAD5),
-    // std::make_pair("numpad6", VK_NUMPAD6),
-    // std::make_pair("numpad7", VK_NUMPAD7),
-    // std::make_pair("numpad8", VK_NUMPAD8),
-    // std::make_pair("numpad9", VK_NUMPAD9),
-    // std::make_pair("numpad0", VK_NUMPAD0),
-    // std::make_pair("numpadDecimal", VK_DECIMAL),
+    // std::make_pair("numpad1", 0),
+    // std::make_pair("numpad2", 0),
+    // std::make_pair("numpad3", 0),
+    // std::make_pair("numpad4", 0),
+    // std::make_pair("numpad5", 0),
+    // std::make_pair("numpad6", 0),
+    // std::make_pair("numpad7", 0),
+    // std::make_pair("numpad8", 0),
+    // std::make_pair("numpad9", 0),
+    // std::make_pair("numpad0", 0),
+    // std::make_pair("numpadDecimal", 0),
     // std::make_pair("intlBackslash", 0),
     // std::make_pair("contextMenu", 0),
     // std::make_pair("power", 0),
     // std::make_pair("numpadEqual", 0),
-    // std::make_pair("f13", VK_F13),
-    // std::make_pair("f14", VK_F14),
-    // std::make_pair("f15", VK_F15),
-    // std::make_pair("f16", VK_F16),
-    // std::make_pair("f17", VK_F17),
-    // std::make_pair("f18", VK_F18),
-    // std::make_pair("f19", VK_F19),
-    // std::make_pair("f20", VK_F20),
-    // std::make_pair("f21", VK_F21),
-    // std::make_pair("f22", VK_F22),
-    // std::make_pair("f23", VK_F23),
-    // std::make_pair("f24", VK_F24),
+    // std::make_pair("f13", 0),
+    // std::make_pair("f14", 0),
+    // std::make_pair("f15", 0),
+    // std::make_pair("f16", 0),
+    // std::make_pair("f17", 0),
+    // std::make_pair("f18", 0),
+    // std::make_pair("f19", 0),
+    // std::make_pair("f20", 0),
+    // std::make_pair("f21", 0),
+    // std::make_pair("f22", 0),
+    // std::make_pair("f23", 0),
+    // std::make_pair("f24", 0),
     // std::make_pair("open", 0),
-    // std::make_pair("help", VK_HELP),
-    // std::make_pair("select", VK_SELECT),
+    // std::make_pair("help", 0),
+    // std::make_pair("select", 0),
     // std::make_pair("again", 0),
     // std::make_pair("undo", 0),
     // std::make_pair("cut", 0),
     // std::make_pair("copy", 0),
     // std::make_pair("paste", 0),
     // std::make_pair("find", 0),
-    // std::make_pair("audioVolumeMute", VK_VOLUME_MUTE),
-    // std::make_pair("audioVolumeUp", VK_VOLUME_UP),
-    // std::make_pair("audioVolumeDown", VK_VOLUME_DOWN),
+    // std::make_pair("audioVolumeMute", 0),
+    // std::make_pair("audioVolumeUp", 0),
+    // std::make_pair("audioVolumeDown", 0),
     // std::make_pair("numpadComma", 0),
     // std::make_pair("intlRo", 0),
     // std::make_pair("kanaMode", 0),
@@ -169,14 +169,14 @@ std::map<std::string, uint> known_virtual_key_codes = {
     // std::make_pair("numpadSignChange", 0),
     // std::make_pair("numpadClear", 0),
     // std::make_pair("numpadClearEntry", 0),
-    // std::make_pair("controlLeft", VK_LCONTROL),
-    // std::make_pair("shiftLeft", VK_LSHIFT),
+    // std::make_pair("controlLeft", 0),
+    // std::make_pair("shiftLeft", 0),
     // std::make_pair("altLeft", 0),
-    // std::make_pair("metaLeft", VK_LWIN),
-    // std::make_pair("controlRight", VK_RCONTROL),
-    // std::make_pair("shiftRight", VK_RSHIFT),
+    // std::make_pair("metaLeft", 0),
+    // std::make_pair("controlRight", 0),
+    // std::make_pair("shiftRight", 0),
     // std::make_pair("altRight", 0),
-    // std::make_pair("metaRight", VK_RWIN),
+    // std::make_pair("metaRight", 0),
     // std::make_pair("info", 0),
     // std::make_pair("closedCaptionToggle", 0),
     // std::make_pair("brightnessUp", 0),
@@ -193,26 +193,26 @@ std::map<std::string, uint> known_virtual_key_codes = {
     // std::make_pair("exit", 0),
     // std::make_pair("channelUp", 0),
     // std::make_pair("channelDown", 0),
-    // std::make_pair("mediaPlay", VK_MEDIA_PLAY_PAUSE),
-    // std::make_pair("mediaPause", VK_MEDIA_PLAY_PAUSE),
+    // std::make_pair("mediaPlay", 0),
+    // std::make_pair("mediaPause", 0),
     // std::make_pair("mediaRecord", 0),
     // std::make_pair("mediaFastForward", 0),
     // std::make_pair("mediaRewind", 0),
-    // std::make_pair("mediaTrackNext", VK_MEDIA_NEXT_TRACK),
-    // std::make_pair("mediaTrackPrevious", VK_MEDIA_PREV_TRACK),
-    // std::make_pair("mediaStop", VK_MEDIA_STOP),
+    // std::make_pair("mediaTrackNext", 0),
+    // std::make_pair("mediaTrackPrevious", 0),
+    // std::make_pair("mediaStop", 0),
     // std::make_pair("eject", 0),
     // std::make_pair("mediaPlayPause", 0),
     // std::make_pair("speechInputToggle", 0),
     // std::make_pair("bassBoost", 0),
-    // std::make_pair("mediaSelect", VK_LAUNCH_MEDIA_SELECT),
+    // std::make_pair("mediaSelect", 0),
     // std::make_pair("launchWordProcessor", 0),
     // std::make_pair("launchSpreadsheet", 0),
-    // std::make_pair("launchMail", VK_LAUNCH_MAIL),
+    // std::make_pair("launchMail", 0),
     // std::make_pair("launchContacts", 0),
     // std::make_pair("launchCalendar", 0),
-    // std::make_pair("launchApp2", VK_LAUNCH_APP2),
-    // std::make_pair("launchApp1", VK_LAUNCH_APP1),
+    // std::make_pair("launchApp2", 0),
+    // std::make_pair("launchApp1", 0),
     // std::make_pair("launchInternetBrowser", 0),
     // std::make_pair("logOff", 0),
     // std::make_pair("lockScreen", 0),
@@ -227,14 +227,14 @@ std::map<std::string, uint> known_virtual_key_codes = {
     // std::make_pair("newKey", 0),
     // std::make_pair("close", 0),
     // std::make_pair("save", 0),
-    // std::make_pair("print", VK_PRINT),
-    // std::make_pair("browserSearch", VK_BROWSER_SEARCH),
-    // std::make_pair("browserHome", VK_BROWSER_HOME),
-    // std::make_pair("browserBack", VK_BROWSER_BACK),
-    // std::make_pair("browserForward", VK_BROWSER_FORWARD),
-    // std::make_pair("browserStop", VK_BROWSER_STOP),
-    // std::make_pair("browserRefresh", VK_BROWSER_REFRESH),
-    // std::make_pair("browserFavorites", VK_BROWSER_FAVORITES),
+    // std::make_pair("print", 0),
+    // std::make_pair("browserSearch", 0),
+    // std::make_pair("browserHome", 0),
+    // std::make_pair("browserBack", 0),
+    // std::make_pair("browserForward", 0),
+    // std::make_pair("browserStop", 0),
+    // std::make_pair("browserRefresh", 0),
+    // std::make_pair("browserFavorites", 0),
     // std::make_pair("zoomIn", 0),
     // std::make_pair("zoomOut", 0),
     // std::make_pair("zoomToggle", 0),
@@ -245,14 +245,14 @@ std::map<std::string, uint> known_virtual_key_codes = {
     // std::make_pair("keyboardLayoutSelect", 0),
     // std::make_pair("showAllWindows", 0),
     // std::make_pair("fn", 0),
-    // std::make_pair("shift", VK_SHIFT),
-    // std::make_pair("meta", VK_LWIN),
-    // std::make_pair("alt", VK_MENU),
-    // std::make_pair("control", VK_CONTROL),
+    // std::make_pair("shift", 0),
+    // std::make_pair("meta", 0),
+    // std::make_pair("alt", 0),
+    // std::make_pair("control", 0),
 };
 
 HotkeyManagerPlugin *plugin_instance;
-std::map<std::string, std::string> hotkey_map;
+std::map<std::string, std::string> hotkey_id_map;
 
 struct _HotkeyManagerPlugin
 {
@@ -279,12 +279,12 @@ void handle_key_down(const char *keystring, void *user_data)
 
   std::string val = keystring;
   auto result = std::find_if(
-      hotkey_map.begin(),
-      hotkey_map.end(),
+      hotkey_id_map.begin(),
+      hotkey_id_map.end(),
       [val](const auto &e)
       { return e.second == val; });
 
-  if (result != hotkey_map.end())
+  if (result != hotkey_id_map.end())
     identifier = result->first.c_str();
 
   g_autoptr(FlValue) result_data = fl_value_new_map();
@@ -336,7 +336,7 @@ static FlMethodResponse *hkm_register(HotkeyManagerPlugin *self,
       get_keyval(key_code),
       (GdkModifierType)get_mods(modifiers));
 
-  hotkey_map.insert(std::pair<std::string, std::string>(identifier, keystring));
+  hotkey_id_map.insert(std::pair<std::string, std::string>(identifier, keystring));
 
   keybinder_init();
   keybinder_bind(keystring, handle_key_down, NULL);
@@ -352,15 +352,30 @@ static FlMethodResponse *hkm_unregister(HotkeyManagerPlugin *self,
 
   std::string val = identifier;
   auto result = std::find_if(
-      hotkey_map.begin(),
-      hotkey_map.end(),
+      hotkey_id_map.begin(),
+      hotkey_id_map.end(),
       [val](const auto &e)
       { return e.first == val; });
 
-  if (result != hotkey_map.end())
+  if (result != hotkey_id_map.end())
     keystring = result->second.c_str();
 
   keybinder_unbind(keystring, handle_key_down);
+
+  return FL_METHOD_RESPONSE(fl_method_success_response_new(fl_value_new_bool(true)));
+}
+
+static FlMethodResponse *hkm_unregister_all(HotkeyManagerPlugin *self,
+                                            FlValue *args)
+{
+
+  for (std::map<std::string, std::string>::iterator it = hotkey_id_map.begin(); it != hotkey_id_map.end(); ++it)
+  {
+    std::string identifier = it->first;
+    const char *keystring = it->second.c_str();
+    keybinder_unbind(keystring, handle_key_down);
+    hotkey_id_map.erase(identifier);
+  }
 
   return FL_METHOD_RESPONSE(fl_method_success_response_new(fl_value_new_bool(true)));
 }
@@ -382,6 +397,10 @@ static void hotkey_manager_plugin_handle_method_call(
   else if (strcmp(method, "unregister") == 0)
   {
     response = hkm_unregister(self, args);
+  }
+  else if (strcmp(method, "unregisterAll") == 0)
+  {
+    response = hkm_unregister_all(self, args);
   }
   else
   {
