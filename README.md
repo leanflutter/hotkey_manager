@@ -16,6 +16,7 @@ This plugin allows Flutter **desktop** apps to defines system/inapp wide hot key
     - [Installation](#installation)
       - [⚠️ Linux requirements](#️-linux-requirements)
     - [Usage](#usage)
+  - [Who's using it?](#whos-using-it)
   - [Discussion](#discussion)
   - [API](#api)
     - [HotKeyManager](#hotkeymanager)
@@ -113,6 +114,11 @@ HotKeyRecorder(
 
 > Please see the example app of this plugin for a full example.
 
+## Who's using it?
+
+- [AuthPass](https://authpass.app/) - Password Manager based on Flutter for all platforms. Keepass 2.x (kdbx 3.x) compatible.
+- [Biyi (比译)](https://biyidev.com/) - A convenient translation and dictionary app written in dart / Flutter.
+
 ## Discussion
 
 > Welcome to join the discussion group to share your suggestions and ideas with me.
@@ -125,10 +131,11 @@ HotKeyRecorder(
 
 ### HotKeyManager
 
-| Method     | Description                              | Linux | macOS | Windows |
-| ---------- | ---------------------------------------- | ----- | ----- | ------- |
-| register   | register an system/inapp wide hot key.   | ✔️    | ✔️    | ✔️      |
-| unregister | unregister an system/inapp wide hot key. | ✔️    | ✔️    | ✔️      |
+| Method        | Description                               | Linux | macOS | Windows |
+| ------------- | ----------------------------------------- | ----- | ----- | ------- |
+| register      | register an system/inapp wide hotkey.     | ✔️    | ✔️    | ✔️      |
+| unregister    | unregister an system/inapp wide hotkey.   | ✔️    | ✔️    | ✔️      |
+| unregisterAll | unregister all system/inapp wide hotkeys. | ✔️    | ✔️    | ✔️      |
 
 ## Related Links
 
