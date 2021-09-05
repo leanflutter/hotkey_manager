@@ -114,7 +114,23 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 _handleClickRegisterNewHotKey();
               },
-            )
+            ),
+          ],
+        ),
+        PreferenceListSection(
+          children: [
+            PreferenceListItem(
+              title: Text(
+                'Unregister all HotKeys',
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              accessoryView: Container(),
+              onTap: () async {
+                await HotKeyManager.instance.unregisterAll();
+              },
+            ),
           ],
         ),
       ],

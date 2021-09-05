@@ -325,11 +325,29 @@ namespace {
     public:
         static void RegisterWithRegistrar(flutter::PluginRegistrarWindows* registrar);
 
-        HotkeyManagerPlugin();
+        HotkeyManagerPlugin(flutter::PluginRegistrarWindows* registrar);
 
         virtual ~HotkeyManagerPlugin();
 
     private:
+        flutter::PluginRegistrarWindows* registrar;
+
+        // The ID of the WindowProc delegate registration.
+        int window_proc_id = -1;
+        
+        // Called for top-level WindowProc delegation.
+        std::optional<LRESULT> HotkeyManagerPlugin::HandleWindowProc(HWND hwnd, UINT message,
+            WPARAM wparam, LPARAM lparam);
+        void HotkeyManagerPlugin::Register(
+            const flutter::MethodCall<flutter::EncodableValue>& method_call,
+            std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
+        void HotkeyManagerPlugin::Unregister(
+            const flutter::MethodCall<flutter::EncodableValue>& method_call,
+            std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
+        void HotkeyManagerPlugin::UnregisterAll(
+            const flutter::MethodCall<flutter::EncodableValue>& method_call,
+            std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
+
         // Called when a method is called on this plugin's channel from Dart.
         void HandleMethodCall(
             const flutter::MethodCall<flutter::EncodableValue>& method_call,
@@ -344,7 +362,7 @@ namespace {
                 registrar->messenger(), "hotkey_manager",
                 &flutter::StandardMethodCodec::GetInstance());
 
-        auto plugin = std::make_unique<HotkeyManagerPlugin>();
+        auto plugin = std::make_unique<HotkeyManagerPlugin>(registrar);
 
         channel->SetMethodCallHandler(
             [plugin_pointer = plugin.get()](const auto& call, auto result) {
@@ -354,9 +372,17 @@ namespace {
         registrar->AddPlugin(std::move(plugin));
     }
 
-    HotkeyManagerPlugin::HotkeyManagerPlugin() {}
+    HotkeyManagerPlugin::HotkeyManagerPlugin(flutter::PluginRegistrarWindows* registrar)
+        : registrar(registrar) {
+        window_proc_id = registrar->RegisterTopLevelWindowProcDelegate(
+            [this](HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
+                return HandleWindowProc(hwnd, message, wparam, lparam);
+            });
+    }
 
-    HotkeyManagerPlugin::~HotkeyManagerPlugin() {}
+    HotkeyManagerPlugin::~HotkeyManagerPlugin() {
+        registrar->UnregisterTopLevelWindowProcDelegate(window_proc_id);
+    }
 
     void StartHandleKeyEvent() {
         if (isStartHandleKeyEvent) return;
@@ -368,7 +394,7 @@ namespace {
 
         while ((bRet = GetMessage(&msg, NULL, 0, 0)) != 0) {
             if (!isStartHandleKeyEvent) {
-                break;
+                return;
             }
 
             if (bRet == -1)
@@ -401,7 +427,18 @@ namespace {
         isStartHandleKeyEvent = false;
     }
 
-    void Register(
+    std::optional<LRESULT> HotkeyManagerPlugin::HandleWindowProc(HWND hWnd,
+        UINT message,
+        WPARAM wParam,
+        LPARAM lParam) {
+        std::optional<LRESULT> result;
+        if (message == WM_DESTROY) {
+            StopHandleKeyEvent();
+        }
+        return result;
+    }
+
+    void HotkeyManagerPlugin::Register(
         const flutter::MethodCall<flutter::EncodableValue>& method_call,
         std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
         const flutter::EncodableMap& args = std::get<flutter::EncodableMap>(*method_call.arguments());
@@ -420,7 +457,6 @@ namespace {
         UINT fsModifiers = GetFsModifiersFromString(modifiers);
         UINT vk = GetVirtualKeyCodeFromString(keyCode);
 
-
         RegisterHotKey(NULL, hotKeyId, fsModifiers, vk);
         hotKeyIdMap[identifier] = hotKeyId;
 
@@ -429,7 +465,7 @@ namespace {
         StartHandleKeyEvent();
     }
 
-    void Unregister(
+    void HotkeyManagerPlugin::Unregister(
         const flutter::MethodCall<flutter::EncodableValue>& method_call,
         std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
         const flutter::EncodableMap& args = std::get<flutter::EncodableMap>(*method_call.arguments());
@@ -439,12 +475,16 @@ namespace {
         int hotKeyId = hotKeyIdMap[identifier];
 
         UnregisterHotKey(NULL, hotKeyId);
-        hotKeyIdMap[identifier] = 0;
+        hotKeyIdMap.erase(identifier);
+
+        if (hotKeyIdMap.size() == 0) {
+            StopHandleKeyEvent();
+        }
 
         result->Success(flutter::EncodableValue(true));
     }
 
-    void UnregisterAll(
+    void HotkeyManagerPlugin::UnregisterAll(
         const flutter::MethodCall<flutter::EncodableValue>& method_call,
         std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
 
@@ -452,9 +492,11 @@ namespace {
             std::string identifier = it->first;
             int hotKeyId = it->second;
             UnregisterHotKey(NULL, hotKeyId);
-            hotKeyIdMap[identifier] = 0;
+            hotKeyIdMap.erase(identifier);
         }
 
+        StopHandleKeyEvent();
+        
         result->Success(flutter::EncodableValue(true));
     }
 
