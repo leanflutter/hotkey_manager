@@ -13,7 +13,7 @@ class HotKey {
   KeyCode? keyCode;
   List<KeyModifier>? modifiers;
   String identifier = Uuid().v4();
-  HotKeyScope scope;
+  HotKeyScope scope = HotKeyScope.system;
 
   bool get isSetted => keyCode != null;
 
@@ -21,14 +21,15 @@ class HotKey {
     this.keyCode, {
     this.modifiers,
     String? identifier,
-    this.scope = HotKeyScope.system,
+    HotKeyScope? scope,
   }) {
     if (identifier != null) this.identifier = identifier;
+    if (scope != null) this.scope = scope;
   }
 
   factory HotKey.fromJson(Map<String, dynamic> json) {
     return HotKey(
-      json['keyCode'],
+      KeyCodeParser.parse(json['keyCode']),
       modifiers: List<String>.from(json['modifiers'])
           .map((e) => KeyModifierParser.parse(e))
           .toList(),

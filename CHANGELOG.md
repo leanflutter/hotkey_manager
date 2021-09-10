@@ -1,3 +1,7 @@
+## 0.1.1
+
+- Add `unregisterAll` Method.
+
 ## 0.1.0
 
 - Supported Hot Reload.

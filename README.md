@@ -5,7 +5,11 @@
 [pub-image]: https://img.shields.io/pub/v/hotkey_manager.svg
 [pub-url]: https://pub.dev/packages/hotkey_manager
 
-This plugin allows Flutter **desktop** apps to defines system/inapp wide hot key.
+This plugin allows Flutter **desktop** apps to defines system/inapp wide hotkey (i.e. shortcut).
+
+[![Discord](https://img.shields.io/badge/discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/vba8W9SF)
+
+---
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -39,7 +43,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  hotkey_manager: ^0.1.0
+  hotkey_manager: ^0.1.1
 ```
 
 Or
@@ -77,7 +81,7 @@ void main() {
 }
 ```
 
-Register/Unregsiter a system/inapp wide hot key.
+Register/Unregsiter a system/inapp wide hotkey.
 
 ```dart
 // ⌥ + Q
@@ -101,7 +105,7 @@ await HotKeyManager.instance.register(
 await HotKeyManager.instance.unregister(_hotKey);
 ```
 
-Use `HotKeyRecorder` widget to help you record a hot key.
+Use `HotKeyRecorder` widget to help you record a hotkey.
 
 ```dart
 HotKeyRecorder(
