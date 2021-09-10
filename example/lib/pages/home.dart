@@ -129,6 +129,9 @@ class _HomePageState extends State<HomePage> {
               accessoryView: Container(),
               onTap: () async {
                 await HotKeyManager.instance.unregisterAll();
+                _registeredHotKeyList =
+                    HotKeyManager.instance.registeredHotKeyList;
+                setState(() {});
               },
             ),
           ],

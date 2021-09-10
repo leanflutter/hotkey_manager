@@ -492,9 +492,9 @@ namespace {
             std::string identifier = it->first;
             int hotKeyId = it->second;
             UnregisterHotKey(NULL, hotKeyId);
-            hotKeyIdMap.erase(identifier);
         }
 
+        hotKeyIdMap.clear();
         StopHandleKeyEvent();
         
         result->Success(flutter::EncodableValue(true));
