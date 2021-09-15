@@ -361,6 +361,7 @@ static FlMethodResponse *hkm_unregister(HotkeyManagerPlugin *self,
     keystring = result->second.c_str();
 
   keybinder_unbind(keystring, handle_key_down);
+  hotkey_id_map.erase(identifier);
 
   return FL_METHOD_RESPONSE(fl_method_success_response_new(fl_value_new_bool(true)));
 }
@@ -374,8 +375,9 @@ static FlMethodResponse *hkm_unregister_all(HotkeyManagerPlugin *self,
     std::string identifier = it->first;
     const char *keystring = it->second.c_str();
     keybinder_unbind(keystring, handle_key_down);
-    hotkey_id_map.erase(identifier);
   }
+
+  hotkey_id_map.clear();
 
   return FL_METHOD_RESPONSE(fl_method_success_response_new(fl_value_new_bool(true)));
 }
