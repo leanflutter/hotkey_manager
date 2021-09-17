@@ -43,7 +43,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  hotkey_manager: ^0.1.1
+  hotkey_manager: ^0.1.2
 ```
 
 Or

@@ -1,3 +1,7 @@
+## 0.1.2
+
+- Remove web platform implementation
+
 ## 0.1.1
 
 - Add `unregisterAll` Method.

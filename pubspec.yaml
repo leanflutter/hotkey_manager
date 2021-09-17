@@ -1,6 +1,6 @@
 name: hotkey_manager
 description: This plugin allows Flutter desktop apps to defines system/inapp wide hotkey (i.e. shortcut).
-version: 0.1.1
+version: 0.1.2
 homepage: https://github.com/leanflutter/hotkey_manager
 
 environment:
@@ -35,15 +35,13 @@ flutter:
         pluginClass: HotkeyManagerPlugin
       macos:
         pluginClass: HotkeyManagerPlugin
-      web:
-        pluginClass: HotkeyManagerPlugin
-        fileName: hotkey_manager_plugin_web.dart
       windows:
         pluginClass: HotkeyManagerPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
-  assets:
-    - web/
+  # assets:
+  #   - images/a_dot_burr.jpeg
+  #   - images/a_dot_ham.jpeg
   #
   # For details regarding assets in packages, see
   # https://flutter.dev/assets-and-images/#from-packages
