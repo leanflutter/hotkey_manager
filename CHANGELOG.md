@@ -1,3 +1,7 @@
+## 0.1.3
+
+- `HotKeyVirtualView` Support dark Theme Mode.
+
 ## 0.1.2
 
 - Remove web platform implementation
