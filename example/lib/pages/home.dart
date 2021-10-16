@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    HotKeyManager.instance.unregisterAll();
+    hotKeyManager.unregisterAll();
   }
 
   void _keyDownHandler(HotKey hotKey) {
@@ -33,20 +33,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _handleHotKeyRegister(HotKey hotKey) async {
-    await HotKeyManager.instance.register(
+    await hotKeyManager.register(
       hotKey,
       keyDownHandler: _keyDownHandler,
       keyUpHandler: _keyUpHandler,
     );
     setState(() {
-      _registeredHotKeyList = HotKeyManager.instance.registeredHotKeyList;
+      _registeredHotKeyList = hotKeyManager.registeredHotKeyList;
     });
   }
 
   void _handleHotKeyUnregister(HotKey hotKey) async {
-    await HotKeyManager.instance.unregister(hotKey);
+    await hotKeyManager.unregister(hotKey);
     setState(() {
-      _registeredHotKeyList = HotKeyManager.instance.registeredHotKeyList;
+      _registeredHotKeyList = hotKeyManager.registeredHotKeyList;
     });
   }
 
@@ -128,9 +128,8 @@ class _HomePageState extends State<HomePage> {
               ),
               accessoryView: Container(),
               onTap: () async {
-                await HotKeyManager.instance.unregisterAll();
-                _registeredHotKeyList =
-                    HotKeyManager.instance.registeredHotKeyList;
+                await hotKeyManager.unregisterAll();
+                _registeredHotKeyList = hotKeyManager.registeredHotKeyList;
                 setState(() {});
               },
             ),

@@ -75,7 +75,7 @@ void main() {
   // Must add this line.
   WidgetsFlutterBinding.ensureInitialized();
   // For hot reload, `unregisterAll()` needs to be called.
-  HotKeyManager.instance.unregisterAll();
+  hotKeyManager.unregisterAll();
 
   runApp(MyApp());
 }
@@ -91,7 +91,7 @@ HotKey _hotKey = HotKey(
   // Set hotkey scope (default is HotKeyScope.system)
   scope: HotKeyScope.inapp, // Set as inapp-wide hotkey.
 );
-await HotKeyManager.instance.register(
+await hotKeyManager.register(
   _hotKey,
   keyDownHandler: (hotKey) {
     print('onKeyDown+${hotKey.toJson()}');
@@ -102,7 +102,9 @@ await HotKeyManager.instance.register(
   } ,
 );
 
-await HotKeyManager.instance.unregister(_hotKey);
+await hotKeyManager.unregister(_hotKey);
+
+await hotKeyManager.unregisterAll();
 ```
 
 Use `HotKeyRecorder` widget to help you record a hotkey.

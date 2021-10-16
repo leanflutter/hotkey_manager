@@ -136,3 +136,5 @@ class HotKeyManager {
     _hotKeyList.clear();
   }
 }
+
+final hotKeyManager = HotKeyManager.instance;
