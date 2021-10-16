@@ -46,8 +46,8 @@ const Map<KeyModifier, ModifierKey> _knownModifierKeys =
 final Map<KeyModifier, String> _knownKeyLabels = <KeyModifier, String>{
   KeyModifier.capsLock: '⇪',
   KeyModifier.shift: '⇧',
-  KeyModifier.control: '⌃',
-  KeyModifier.alt: '⌥',
+  KeyModifier.control: (!kIsWeb && Platform.isMacOS) ? '⌃' : 'Ctrl',
+  KeyModifier.alt: (!kIsWeb && Platform.isMacOS) ? '⌥' : 'Alt',
   KeyModifier.meta: (!kIsWeb && Platform.isMacOS) ? '⌘' : '⊞',
   KeyModifier.fn: 'fn',
 };
