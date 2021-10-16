@@ -1,3 +1,7 @@
+## 0.1.4
+
+- export `hotKeyManager`.
+
 ## 0.1.3
 
 - `HotKeyVirtualView` Support dark Theme Mode.
