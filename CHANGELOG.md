@@ -1,3 +1,8 @@
+## 0.1.5
+
+- [windows] Fix escape key mapping error
+- [linux] Supplemental key map
+
 ## 0.1.4
 
 - export `hotKeyManager`.
