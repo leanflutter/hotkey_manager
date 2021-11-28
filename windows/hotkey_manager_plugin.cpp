@@ -66,7 +66,7 @@ class HotkeyManagerPlugin : public flutter::Plugin {
       std::make_pair("digit9", 0x39),
       std::make_pair("digit0", 0x30),
       std::make_pair("enter", VK_RETURN),
-      std::make_pair("escape", VK_SPACE),
+      std::make_pair("escape", VK_ESCAPE),
       std::make_pair("backspace", VK_BACK),
       std::make_pair("tab", VK_TAB),
       std::make_pair("space", VK_SPACE),
