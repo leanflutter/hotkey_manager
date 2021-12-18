@@ -66,10 +66,10 @@ extension KeyModifierParser on KeyModifier {
     return KeyModifier.values.firstWhere((e) => describeEnum(e) == string);
   }
 
-  static ModifierKey? fromModifierKey(ModifierKey modifierKey) {
+  static KeyModifier? fromModifierKey(ModifierKey modifierKey) {
     return _knownModifierKeys.entries
         .firstWhere((entry) => entry.value == modifierKey)
-        .value;
+        .key;
   }
 
   ModifierKey get modifierKey {
