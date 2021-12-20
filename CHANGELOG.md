@@ -1,3 +1,7 @@
+## 0.1.6
+
+- Fixed `KeyModifierParser.fromModifierKey` Return type.
+
 ## 0.1.5
 
 - [windows] Fix escape key mapping error
