@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
 
 import './pages/home.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await hotKeyManager.unregisterAll();
 
   runApp(MyApp());
 }

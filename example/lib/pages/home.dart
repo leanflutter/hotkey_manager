@@ -14,12 +14,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<HotKey> _registeredHotKeyList = [];
 
-  @override
-  void initState() {
-    super.initState();
-    hotKeyManager.unregisterAll();
-  }
-
   void _keyDownHandler(HotKey hotKey) {
     String log = 'keyDown ${hotKey.toString()} (${hotKey.scope})';
     BotToast.showText(text: log);

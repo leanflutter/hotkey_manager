@@ -33,7 +33,7 @@ This plugin allows Flutter **desktop** apps to defines system/inapp wide hotkey 
 
 | Linux | macOS | Windows |
 | :---: | :---: | :-----: |
-|  ✔️   |  ✔️   |   ✔️    |
+|   ✔️   |   ✔️   |    ✔️    |
 
 ## Quick Start
 
@@ -71,11 +71,11 @@ sudo apt-get install keybinder-3.0
 ```dart
 import 'package:hotkey_manager/hotkey_manager.dart';
 
-void main() {
+void main() async {
   // Must add this line.
   WidgetsFlutterBinding.ensureInitialized();
   // For hot reload, `unregisterAll()` needs to be called.
-  hotKeyManager.unregisterAll();
+  await hotKeyManager.unregisterAll();
 
   runApp(MyApp());
 }
@@ -139,9 +139,9 @@ HotKeyRecorder(
 
 | Method        | Description                               | Linux | macOS | Windows |
 | ------------- | ----------------------------------------- | ----- | ----- | ------- |
-| register      | register an system/inapp wide hotkey.     | ✔️    | ✔️    | ✔️      |
-| unregister    | unregister an system/inapp wide hotkey.   | ✔️    | ✔️    | ✔️      |
-| unregisterAll | unregister all system/inapp wide hotkeys. | ✔️    | ✔️    | ✔️      |
+| register      | register an system/inapp wide hotkey.     | ✔️     | ✔️     | ✔️       |
+| unregister    | unregister an system/inapp wide hotkey.   | ✔️     | ✔️     | ✔️       |
+| unregisterAll | unregister all system/inapp wide hotkeys. | ✔️     | ✔️     | ✔️       |
 
 ## Related Links
 
