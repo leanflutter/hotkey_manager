@@ -44,7 +44,7 @@ class HotKey {
   Map<String, dynamic> toJson() {
     return {
       'keyCode': keyCode?.stringValue,
-      'modifiers': modifiers?.map((e) => e.stringValue).toList(),
+      'modifiers': modifiers?.map((e) => e.stringValue).toList() ?? [],
       'identifier': identifier,
       'scope': describeEnum(scope),
     };
