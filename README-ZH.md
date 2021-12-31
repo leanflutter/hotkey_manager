@@ -8,11 +8,11 @@
 [discord-image]: https://img.shields.io/discord/884679008049037342.svg
 [discord-url]: https://discord.gg/zPa6EZ2jqb
 
-This plugin allows Flutter **desktop** apps to defines system/inapp wide hotkey (i.e. shortcut).
+这个插件允许 Flutter **桌面** 应用定义系统/应用范围内的热键（即快捷键）。
 
 ---
 
-English | [简体中文](./README-ZH.md)
+[English](./README.md) | 简体中文
 
 ---
 
@@ -20,37 +20,37 @@ English | [简体中文](./README-ZH.md)
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [hotkey_manager](#hotkey_manager)
-  - [Platform Support](#platform-support)
-  - [Quick Start](#quick-start)
-    - [Installation](#installation)
+  - [平台支持](#平台支持)
+  - [快速开始](#快速开始)
+    - [安装](#安装)
       - [⚠️ Linux requirements](#️-linux-requirements)
-    - [Usage](#usage)
-  - [Who's using it?](#whos-using-it)
+    - [用法](#用法)
+  - [谁在用使用它？](#谁在用使用它)
   - [API](#api)
     - [HotKeyManager](#hotkeymanager)
-  - [Related Links](#related-links)
-  - [License](#license)
+  - [相关链接](#相关链接)
+  - [许可证](#许可证)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Platform Support
+## 平台支持
 
 | Linux | macOS | Windows |
 | :---: | :---: | :-----: |
 |   ✔️   |   ✔️   |    ✔️    |
 
-## Quick Start
+## 快速开始
 
-### Installation
+### 安装
 
-Add this to your package's pubspec.yaml file:
+将此添加到你的软件包的 pubspec.yaml 文件：
 
 ```yaml
 dependencies:
   hotkey_manager: ^0.1.6
 ```
 
-Or
+或
 
 ```yaml
 dependencies:
@@ -64,43 +64,43 @@ dependencies:
 
 - [`keybinder-3.0`](https://github.com/kupferlauncher/keybinder)
 
-Run the following command
+运行以下命令
 
 ```
 sudo apt-get install keybinder-3.0
 ```
 
-### Usage
+### 用法
 
 ```dart
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 void main() async {
-  // Must add this line.
+  // 必须加上这一行。
   WidgetsFlutterBinding.ensureInitialized();
-  // For hot reload, `unregisterAll()` needs to be called.
+  // 对于热重载，`unregisterAll()` 需要被调用。
   await hotKeyManager.unregisterAll();
 
   runApp(MyApp());
 }
 ```
 
-Register/Unregsiter a system/inapp wide hotkey.
+注册/卸载一个系统/应用范围的热键。
 
 ```dart
 // ⌥ + Q
 HotKey _hotKey = HotKey(
   KeyCode.keyQ,
   modifiers: [KeyModifier.alt],
-  // Set hotkey scope (default is HotKeyScope.system)
-  scope: HotKeyScope.inapp, // Set as inapp-wide hotkey.
+  // 设置热键范围（默认为 HotKeyScope.system）
+  scope: HotKeyScope.inapp, // 设置为应用范围的热键。
 );
 await hotKeyManager.register(
   _hotKey,
   keyDownHandler: (hotKey) {
     print('onKeyDown+${hotKey.toJson()}');
   },
-  // Only works on macOS.
+  // 只在 macOS 上工作。
   keyUpHandler: (hotKey){
     print('onKeyUp+${hotKey.toJson()}');
   } ,
@@ -111,7 +111,7 @@ await hotKeyManager.unregister(_hotKey);
 await hotKeyManager.unregisterAll();
 ```
 
-Use `HotKeyRecorder` widget to help you record a hotkey.
+使用 `HotKeyRecorder` 小部件帮助您录制一个热键。
 
 ```dart
 HotKeyRecorder(
@@ -122,28 +122,28 @@ HotKeyRecorder(
 ),
 ```
 
-> Please see the example app of this plugin for a full example.
+> 请看这个插件的示例应用，以了解完整的例子。
 
-## Who's using it?
+## 谁在用使用它？
 
-- [AuthPass](https://authpass.app/) - Password Manager based on Flutter for all platforms. Keepass 2.x (kdbx 3.x) compatible.
-- [Biyi (比译)](https://biyidev.com/) - A convenient translation and dictionary app.
+- [AuthPass](https://authpass.app/) - 基于Flutter的密码管理器，适用于所有平台。兼容Keepass 2.x（kdbx 3.x）。
+- [Biyi (比译)](https://biyidev.com/) - 一个便捷的翻译和词典应用程序。
 
 ## API
 
 ### HotKeyManager
 
-| Method        | Description                               | Linux | macOS | Windows |
-| ------------- | ----------------------------------------- | ----- | ----- | ------- |
-| register      | register an system/inapp wide hotkey.     | ✔️     | ✔️     | ✔️       |
-| unregister    | unregister an system/inapp wide hotkey.   | ✔️     | ✔️     | ✔️       |
-| unregisterAll | unregister all system/inapp wide hotkeys. | ✔️     | ✔️     | ✔️       |
+| Method        | Description                       | Linux | macOS | Windows |
+| ------------- | --------------------------------- | ----- | ----- | ------- |
+| register      | 注册一个系统/应用范围的热键。     | ✔️     | ✔️     | ✔️       |
+| unregister    | 取消注册一个系统/应用范围的热键。 | ✔️     | ✔️     | ✔️       |
+| unregisterAll | 取消注册全部系统/应用范围的热键。 | ✔️     | ✔️     | ✔️       |
 
-## Related Links
+## 相关链接
 
 - https://github.com/soffes/HotKey
 - https://github.com/kupferlauncher/keybinder
 
-## License
+## 许可证
 
 [MIT](./LICENSE)
