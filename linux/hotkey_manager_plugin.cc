@@ -1,68 +1,49 @@
 #include "include/hotkey_manager/hotkey_manager_plugin.h"
 
 #include <flutter_linux/flutter_linux.h>
-#include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+#include <gtk/gtk.h>
 #include <sys/utsname.h>
 
-#include <cstring>
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <cstring>
 
 #include <keybinder.h>
 
-#include <map>
-#include <vector>
 #include <algorithm>
+#include <map>
 #include <string>
+#include <vector>
 
 #define HOTKEY_MANAGER_PLUGIN(obj)                                     \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), hotkey_manager_plugin_get_type(), \
                               HotkeyManagerPlugin))
 
 std::map<std::string, uint> known_virtual_key_codes = {
-    std::make_pair("keyA", GDK_KEY_a),
-    std::make_pair("keyB", GDK_KEY_b),
-    std::make_pair("keyC", GDK_KEY_c),
-    std::make_pair("keyD", GDK_KEY_d),
-    std::make_pair("keyE", GDK_KEY_e),
-    std::make_pair("keyF", GDK_KEY_f),
-    std::make_pair("keyG", GDK_KEY_g),
-    std::make_pair("keyH", GDK_KEY_h),
-    std::make_pair("keyI", GDK_KEY_i),
-    std::make_pair("keyJ", GDK_KEY_j),
-    std::make_pair("keyK", GDK_KEY_k),
-    std::make_pair("keyL", GDK_KEY_l),
-    std::make_pair("keyM", GDK_KEY_m),
-    std::make_pair("keyN", GDK_KEY_n),
-    std::make_pair("keyO", GDK_KEY_o),
-    std::make_pair("keyP", GDK_KEY_p),
-    std::make_pair("keyQ", GDK_KEY_q),
-    std::make_pair("keyR", GDK_KEY_r),
-    std::make_pair("keyS", GDK_KEY_s),
-    std::make_pair("keyT", GDK_KEY_t),
-    std::make_pair("keyU", GDK_KEY_u),
-    std::make_pair("keyV", GDK_KEY_v),
-    std::make_pair("keyW", GDK_KEY_w),
-    std::make_pair("keyX", GDK_KEY_x),
-    std::make_pair("keyY", GDK_KEY_y),
-    std::make_pair("keyZ", GDK_KEY_z),
-    std::make_pair("digit1", GDK_KEY_1),
-    std::make_pair("digit2", GDK_KEY_2),
-    std::make_pair("digit3", GDK_KEY_3),
-    std::make_pair("digit4", GDK_KEY_4),
-    std::make_pair("digit5", GDK_KEY_5),
-    std::make_pair("digit6", GDK_KEY_6),
-    std::make_pair("digit7", GDK_KEY_7),
-    std::make_pair("digit8", GDK_KEY_8),
-    std::make_pair("digit9", GDK_KEY_9),
-    std::make_pair("digit0", GDK_KEY_0),
+    std::make_pair("keyA", GDK_KEY_a), std::make_pair("keyB", GDK_KEY_b),
+    std::make_pair("keyC", GDK_KEY_c), std::make_pair("keyD", GDK_KEY_d),
+    std::make_pair("keyE", GDK_KEY_e), std::make_pair("keyF", GDK_KEY_f),
+    std::make_pair("keyG", GDK_KEY_g), std::make_pair("keyH", GDK_KEY_h),
+    std::make_pair("keyI", GDK_KEY_i), std::make_pair("keyJ", GDK_KEY_j),
+    std::make_pair("keyK", GDK_KEY_k), std::make_pair("keyL", GDK_KEY_l),
+    std::make_pair("keyM", GDK_KEY_m), std::make_pair("keyN", GDK_KEY_n),
+    std::make_pair("keyO", GDK_KEY_o), std::make_pair("keyP", GDK_KEY_p),
+    std::make_pair("keyQ", GDK_KEY_q), std::make_pair("keyR", GDK_KEY_r),
+    std::make_pair("keyS", GDK_KEY_s), std::make_pair("keyT", GDK_KEY_t),
+    std::make_pair("keyU", GDK_KEY_u), std::make_pair("keyV", GDK_KEY_v),
+    std::make_pair("keyW", GDK_KEY_w), std::make_pair("keyX", GDK_KEY_x),
+    std::make_pair("keyY", GDK_KEY_y), std::make_pair("keyZ", GDK_KEY_z),
+    std::make_pair("digit1", GDK_KEY_1), std::make_pair("digit2", GDK_KEY_2),
+    std::make_pair("digit3", GDK_KEY_3), std::make_pair("digit4", GDK_KEY_4),
+    std::make_pair("digit5", GDK_KEY_5), std::make_pair("digit6", GDK_KEY_6),
+    std::make_pair("digit7", GDK_KEY_7), std::make_pair("digit8", GDK_KEY_8),
+    std::make_pair("digit9", GDK_KEY_9), std::make_pair("digit0", GDK_KEY_0),
     std::make_pair("enter", GDK_KEY_PRESS),
     std::make_pair("escape", GDK_KEY_Escape),
     std::make_pair("backspace", GDK_KEY_BackSpace),
-    std::make_pair("tab", GDK_KEY_Tab),
-    std::make_pair("space", GDK_KEY_space),
+    std::make_pair("tab", GDK_KEY_Tab), std::make_pair("space", GDK_KEY_space),
     std::make_pair("minus", GDK_KEY_minus),
     std::make_pair("equal", GDK_KEY_equal),
     std::make_pair("bracketLeft", GDK_KEY_bracketleft),
@@ -75,18 +56,12 @@ std::map<std::string, uint> known_virtual_key_codes = {
     std::make_pair("period", GDK_KEY_period),
     std::make_pair("slash", GDK_KEY_slash),
     std::make_pair("capsLock", GDK_KEY_Caps_Lock),
-    std::make_pair("f1", GDK_KEY_F1),
-    std::make_pair("f2", GDK_KEY_F2),
-    std::make_pair("f3", GDK_KEY_F3),
-    std::make_pair("f4", GDK_KEY_F4),
-    std::make_pair("f5", GDK_KEY_F5),
-    std::make_pair("f6", GDK_KEY_F6),
-    std::make_pair("f7", GDK_KEY_F7),
-    std::make_pair("f8", GDK_KEY_F8),
-    std::make_pair("f9", GDK_KEY_F9),
-    std::make_pair("f10", GDK_KEY_F10),
-    std::make_pair("f11", GDK_KEY_F11),
-    std::make_pair("f12", GDK_KEY_F12),
+    std::make_pair("f1", GDK_KEY_F1), std::make_pair("f2", GDK_KEY_F2),
+    std::make_pair("f3", GDK_KEY_F3), std::make_pair("f4", GDK_KEY_F4),
+    std::make_pair("f5", GDK_KEY_F5), std::make_pair("f6", GDK_KEY_F6),
+    std::make_pair("f7", GDK_KEY_F7), std::make_pair("f8", GDK_KEY_F8),
+    std::make_pair("f9", GDK_KEY_F9), std::make_pair("f10", GDK_KEY_F10),
+    std::make_pair("f11", GDK_KEY_F11), std::make_pair("f12", GDK_KEY_F12),
     // std::make_pair("printScreen", 0),
     // std::make_pair("scrollLock", 0),
     // std::make_pair("pause", 0),
@@ -251,20 +226,18 @@ std::map<std::string, uint> known_virtual_key_codes = {
     // std::make_pair("control", 0),
 };
 
-HotkeyManagerPlugin *plugin_instance;
+HotkeyManagerPlugin* plugin_instance;
 std::map<std::string, std::string> hotkey_id_map;
 
-struct _HotkeyManagerPlugin
-{
+struct _HotkeyManagerPlugin {
   GObject parent_instance;
-  FlPluginRegistrar *registrar;
-  FlMethodChannel *channel;
+  FlPluginRegistrar* registrar;
+  FlMethodChannel* channel;
 };
 
 // Gets the window being controlled.
-GtkWindow *get_window(HotkeyManagerPlugin *self)
-{
-  FlView *view = fl_plugin_registrar_get_view(self->registrar);
+GtkWindow* get_window(HotkeyManagerPlugin* self) {
+  FlView* view = fl_plugin_registrar_get_view(self->registrar);
   if (view == nullptr)
     return nullptr;
 
@@ -273,37 +246,30 @@ GtkWindow *get_window(HotkeyManagerPlugin *self)
 
 G_DEFINE_TYPE(HotkeyManagerPlugin, hotkey_manager_plugin, g_object_get_type())
 
-void handle_key_down(const char *keystring, void *user_data)
-{
-  const char *identifier;
+void handle_key_down(const char* keystring, void* user_data) {
+  const char* identifier;
 
   std::string val = keystring;
-  auto result = std::find_if(
-      hotkey_id_map.begin(),
-      hotkey_id_map.end(),
-      [val](const auto &e)
-      { return e.second == val; });
+  auto result = std::find_if(hotkey_id_map.begin(), hotkey_id_map.end(),
+                             [val](const auto& e) { return e.second == val; });
 
   if (result != hotkey_id_map.end())
     identifier = result->first.c_str();
 
   g_autoptr(FlValue) result_data = fl_value_new_map();
-  fl_value_set_string_take(result_data, "identifier", fl_value_new_string(identifier));
-  fl_method_channel_invoke_method(plugin_instance->channel,
-                                  "onKeyDown", result_data,
-                                  nullptr, nullptr, nullptr);
+  fl_value_set_string_take(result_data, "identifier",
+                           fl_value_new_string(identifier));
+  fl_method_channel_invoke_method(plugin_instance->channel, "onKeyDown",
+                                  result_data, nullptr, nullptr, nullptr);
 }
 
-guint get_keyval(const char *key_code)
-{
+guint get_keyval(const char* key_code) {
   return known_virtual_key_codes[key_code];
 }
 
-guint get_mods(const std::vector<std::string> &modifiers)
-{
+guint get_mods(const std::vector<std::string>& modifiers) {
   guint mods = 0;
-  for (int i = 0; i < modifiers.size(); i++)
-  {
+  for (int i = 0; i < modifiers.size(); i++) {
     guint mod = 0;
     if (modifiers[i] == "shift")
       mod = GDK_SHIFT_MASK;
@@ -318,44 +284,43 @@ guint get_mods(const std::vector<std::string> &modifiers)
   return mods;
 }
 
-static FlMethodResponse *hkm_register(HotkeyManagerPlugin *self,
-                                      FlValue *args)
-{
-  FlValue *modifiers_value = fl_value_lookup_string(args, "modifiers");
+static FlMethodResponse* hkm_register(HotkeyManagerPlugin* self,
+                                      FlValue* args) {
+  FlValue* modifiers_value = fl_value_lookup_string(args, "modifiers");
 
-  const char *identifier = fl_value_get_string(fl_value_lookup_string(args, "identifier"));
-  const char *key_code = fl_value_get_string(fl_value_lookup_string(args, "keyCode"));
+  const char* identifier =
+      fl_value_get_string(fl_value_lookup_string(args, "identifier"));
+  const char* key_code =
+      fl_value_get_string(fl_value_lookup_string(args, "keyCode"));
   std::vector<std::string> modifiers;
-  for (gint i = 0; i < fl_value_get_length(modifiers_value); i++)
-  {
-    std::string keyModifier = fl_value_get_string(fl_value_get_list_value(modifiers_value, i));
+  for (gint i = 0; i < fl_value_get_length(modifiers_value); i++) {
+    std::string keyModifier =
+        fl_value_get_string(fl_value_get_list_value(modifiers_value, i));
     modifiers.push_back(keyModifier);
   }
 
-  const char *keystring = gtk_accelerator_name(
-      get_keyval(key_code),
-      (GdkModifierType)get_mods(modifiers));
+  const char* keystring = gtk_accelerator_name(
+      get_keyval(key_code), (GdkModifierType)get_mods(modifiers));
 
-  hotkey_id_map.insert(std::pair<std::string, std::string>(identifier, keystring));
+  hotkey_id_map.insert(
+      std::pair<std::string, std::string>(identifier, keystring));
 
   keybinder_init();
   keybinder_bind(keystring, handle_key_down, NULL);
 
-  return FL_METHOD_RESPONSE(fl_method_success_response_new(fl_value_new_bool(true)));
+  return FL_METHOD_RESPONSE(
+      fl_method_success_response_new(fl_value_new_bool(true)));
 }
 
-static FlMethodResponse *hkm_unregister(HotkeyManagerPlugin *self,
-                                        FlValue *args)
-{
-  const char *identifier = fl_value_get_string(fl_value_lookup_string(args, "identifier"));
-  const char *keystring;
+static FlMethodResponse* hkm_unregister(HotkeyManagerPlugin* self,
+                                        FlValue* args) {
+  const char* identifier =
+      fl_value_get_string(fl_value_lookup_string(args, "identifier"));
+  const char* keystring;
 
   std::string val = identifier;
-  auto result = std::find_if(
-      hotkey_id_map.begin(),
-      hotkey_id_map.end(),
-      [val](const auto &e)
-      { return e.first == val; });
+  auto result = std::find_if(hotkey_id_map.begin(), hotkey_id_map.end(),
+                             [val](const auto& e) { return e.first == val; });
 
   if (result != hotkey_id_map.end())
     keystring = result->second.c_str();
@@ -363,77 +328,67 @@ static FlMethodResponse *hkm_unregister(HotkeyManagerPlugin *self,
   keybinder_unbind(keystring, handle_key_down);
   hotkey_id_map.erase(identifier);
 
-  return FL_METHOD_RESPONSE(fl_method_success_response_new(fl_value_new_bool(true)));
+  return FL_METHOD_RESPONSE(
+      fl_method_success_response_new(fl_value_new_bool(true)));
 }
 
-static FlMethodResponse *hkm_unregister_all(HotkeyManagerPlugin *self,
-                                            FlValue *args)
-{
-
-  for (std::map<std::string, std::string>::iterator it = hotkey_id_map.begin(); it != hotkey_id_map.end(); ++it)
-  {
+static FlMethodResponse* hkm_unregister_all(HotkeyManagerPlugin* self,
+                                            FlValue* args) {
+  for (std::map<std::string, std::string>::iterator it = hotkey_id_map.begin();
+       it != hotkey_id_map.end(); ++it) {
     std::string identifier = it->first;
-    const char *keystring = it->second.c_str();
+    const char* keystring = it->second.c_str();
     keybinder_unbind(keystring, handle_key_down);
   }
 
   hotkey_id_map.clear();
 
-  return FL_METHOD_RESPONSE(fl_method_success_response_new(fl_value_new_bool(true)));
+  return FL_METHOD_RESPONSE(
+      fl_method_success_response_new(fl_value_new_bool(true)));
 }
 
 // Called when a method call is received from Flutter.
 static void hotkey_manager_plugin_handle_method_call(
-    HotkeyManagerPlugin *self,
-    FlMethodCall *method_call)
-{
+    HotkeyManagerPlugin* self,
+    FlMethodCall* method_call) {
   g_autoptr(FlMethodResponse) response = nullptr;
 
-  const gchar *method = fl_method_call_get_name(method_call);
-  FlValue *args = fl_method_call_get_args(method_call);
+  const gchar* method = fl_method_call_get_name(method_call);
+  FlValue* args = fl_method_call_get_args(method_call);
 
-  if (strcmp(method, "register") == 0)
-  {
+  if (strcmp(method, "register") == 0) {
     response = hkm_register(self, args);
-  }
-  else if (strcmp(method, "unregister") == 0)
-  {
+  } else if (strcmp(method, "unregister") == 0) {
     response = hkm_unregister(self, args);
-  }
-  else if (strcmp(method, "unregisterAll") == 0)
-  {
+  } else if (strcmp(method, "unregisterAll") == 0) {
     response = hkm_unregister_all(self, args);
-  }
-  else
-  {
+  } else {
     response = FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
   }
 
   fl_method_call_respond(method_call, response, nullptr);
 }
 
-static void hotkey_manager_plugin_dispose(GObject *object)
-{
+static void hotkey_manager_plugin_dispose(GObject* object) {
   G_OBJECT_CLASS(hotkey_manager_plugin_parent_class)->dispose(object);
 }
 
-static void hotkey_manager_plugin_class_init(HotkeyManagerPluginClass *klass)
-{
+static void hotkey_manager_plugin_class_init(HotkeyManagerPluginClass* klass) {
   G_OBJECT_CLASS(klass)->dispose = hotkey_manager_plugin_dispose;
 }
 
-static void hotkey_manager_plugin_init(HotkeyManagerPlugin *self) {}
+static void hotkey_manager_plugin_init(HotkeyManagerPlugin* self) {}
 
-static void method_call_cb(FlMethodChannel *channel, FlMethodCall *method_call,
-                           gpointer user_data)
-{
-  HotkeyManagerPlugin *plugin = HOTKEY_MANAGER_PLUGIN(user_data);
+static void method_call_cb(FlMethodChannel* channel,
+                           FlMethodCall* method_call,
+                           gpointer user_data) {
+  HotkeyManagerPlugin* plugin = HOTKEY_MANAGER_PLUGIN(user_data);
   hotkey_manager_plugin_handle_method_call(plugin, method_call);
 }
 
-void hotkey_manager_plugin_register_with_registrar(FlPluginRegistrar *registrar)
-{
-  HotkeyManagerPlugin *plugin = HOTKEY_MANAGER_PLUGIN(
+void hotkey_manager_plugin_register_with_registrar(
+    FlPluginRegistrar* registrar) {
+  HotkeyManagerPlugin* plugin = HOTKEY_MANAGER_PLUGIN(
       g_object_new(hotkey_manager_plugin_get_type(), nullptr));
 
   plugin->registrar = FL_PLUGIN_REGISTRAR(g_object_ref(registrar));
@@ -441,11 +396,9 @@ void hotkey_manager_plugin_register_with_registrar(FlPluginRegistrar *registrar)
   g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
   plugin->channel =
       fl_method_channel_new(fl_plugin_registrar_get_messenger(registrar),
-                            "hotkey_manager",
-                            FL_METHOD_CODEC(codec));
-  fl_method_channel_set_method_call_handler(plugin->channel, method_call_cb,
-                                            g_object_ref(plugin),
-                                            g_object_unref);
+                            "hotkey_manager", FL_METHOD_CODEC(codec));
+  fl_method_channel_set_method_call_handler(
+      plugin->channel, method_call_cb, g_object_ref(plugin), g_object_unref);
 
   plugin_instance = plugin;
   g_object_unref(plugin);

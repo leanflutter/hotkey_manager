@@ -308,8 +308,10 @@ class HotkeyManagerPlugin : public flutter::Plugin {
   std::unordered_map<std::string, int32_t> hotkey_id_map_ = {};
   int32_t last_registered_hotkey_id_ = 0;
   int32_t window_proc_id_ = -1;
-  std::optional<LRESULT> HandleWindowProc(HWND hwnd, UINT message,
-                                          WPARAM wparam, LPARAM lparam);
+  std::optional<LRESULT> HandleWindowProc(HWND hwnd,
+                                          UINT message,
+                                          WPARAM wparam,
+                                          LPARAM lparam);
   void Register(
       const flutter::MethodCall<flutter::EncodableValue>& method_call,
       std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
@@ -333,10 +335,10 @@ void HotkeyManagerPlugin::RegisterWithRegistrar(
       std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
           registrar->messenger(), "hotkey_manager",
           &flutter::StandardMethodCodec::GetInstance()));
-  plugin->channel()->SetMethodCallHandler([plugin_pointer = plugin.get()](
-      const auto& call, auto result) {
-    plugin_pointer->HandleMethodCall(call, std::move(result));
-  });
+  plugin->channel()->SetMethodCallHandler(
+      [plugin_pointer = plugin.get()](const auto& call, auto result) {
+        plugin_pointer->HandleMethodCall(call, std::move(result));
+      });
   registrar->AddPlugin(std::move(plugin));
 }
 
@@ -361,7 +363,7 @@ std::optional<LRESULT> HotkeyManagerPlugin::HandleWindowProc(HWND hwnd,
   switch (message) {
     case WM_HOTKEY: {
       int32_t hotkey_id = static_cast<int32_t>(wparam);
-      for (const auto & [ identifier, id ] : hotkey_id_map_) {
+      for (const auto& [identifier, id] : hotkey_id_map_) {
         if (id == hotkey_id) {
           channel_->InvokeMethod(
               "onKeyDown",
