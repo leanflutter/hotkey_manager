@@ -7,7 +7,6 @@ project(${PROJECT_NAME} LANGUAGES CXX)
 set(PLUGIN_NAME "hotkey_manager_plugin")
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules (KEYBINDER REQUIRED IMPORTED_TARGET keybinder-3.0)
 
 add_library(${PLUGIN_NAME} SHARED
   "hotkey_manager_plugin.cc"
@@ -21,6 +20,17 @@ target_include_directories(${PLUGIN_NAME} INTERFACE
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
 target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
 target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::KEYBINDER)
+
+pkg_check_modules(KEYBINDER IMPORTED_TARGET keybinder-3.0)
+if(KEYBINDER_FOUND)
+  target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::KEYBINDER)
+else() 
+  message(
+    FATAL_ERROR
+    "\n"
+    "The `hotkey_manager` package requires keybinder-3.0. See https://github.com/leanflutter/hotkey_manager#linux-requirements"
+  )
+endif()
 
 # List of absolute paths to libraries that should be bundled with the plugin
 set(hotkey_manager_bundled_libraries

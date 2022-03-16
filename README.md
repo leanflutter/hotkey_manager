@@ -23,7 +23,7 @@ English | [简体中文](./README-ZH.md)
   - [Platform Support](#platform-support)
   - [Quick Start](#quick-start)
     - [Installation](#installation)
-      - [⚠️ Linux requirements](#️-linux-requirements)
+      - [Linux requirements](#linux-requirements)
     - [Usage](#usage)
   - [Who's using it?](#whos-using-it)
   - [API](#api)
@@ -60,7 +60,7 @@ dependencies:
       ref: main
 ```
 
-#### ⚠️ Linux requirements
+#### Linux requirements
 
 - [`keybinder-3.0`](https://github.com/kupferlauncher/keybinder)
 
