@@ -8,7 +8,7 @@
 [discord-image]: https://img.shields.io/discord/884679008049037342.svg
 [discord-url]: https://discord.gg/zPa6EZ2jqb
 
-This plugin allows Flutter **desktop** apps to defines system/inapp wide hotkey (i.e. shortcut).
+This plugin allows Flutter desktop apps to defines system/inapp wide hotkey (i.e. shortcut).
 
 ---
 
@@ -47,7 +47,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  hotkey_manager: ^0.1.6
+  hotkey_manager: ^0.1.7
 ```
 
 Or
