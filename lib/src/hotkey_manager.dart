@@ -39,18 +39,19 @@ class HotKeyManager {
     }
 
     if (value is RawKeyDownEvent) {
-      HotKey hotKey = _hotKeyList.firstWhere(
+      HotKey? hotKey = _hotKeyList.firstWhereOrNull(
         (e) {
           return e.scope == HotKeyScope.inapp &&
-              value.isKeyPressed(e.keyCode!.logicalKey) &&
+              value.isKeyPressed(e.keyCode.logicalKey) &&
+              value.data.modifiersPressed.keys.length ==
+                  (e.modifiers ?? []).length &&
               (e.modifiers ?? []).every(
                 (m) => value.data.isModifierPressed(m.modifierKey),
               );
         },
-        orElse: () => HotKey(null),
       );
 
-      if (hotKey.isSetted) {
+      if (hotKey != null) {
         HotKeyHandler? handler = _keyDownHandlerMap[hotKey.identifier];
         if (handler != null) handler(hotKey);
         _lastPressedHotKey = hotKey;

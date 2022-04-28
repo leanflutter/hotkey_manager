@@ -56,10 +56,9 @@ class HotKeyVirtualView extends StatelessWidget {
             _VirtualKeyView(
               keyLabel: keyModifier.keyLabel,
             ),
-          if (hotKey.keyCode != null)
-            _VirtualKeyView(
-              keyLabel: hotKey.keyCode!.keyLabel,
-            ),
+          _VirtualKeyView(
+            keyLabel: hotKey.keyCode.keyLabel,
+          ),
         ],
       ),
     );

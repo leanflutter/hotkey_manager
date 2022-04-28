@@ -22,7 +22,7 @@ class HotKeyRecorder extends StatefulWidget {
 }
 
 class _HotKeyRecorderState extends State<HotKeyRecorder> {
-  HotKey _hotKey = HotKey(null, modifiers: []);
+  HotKey? _hotKey;
 
   @override
   void initState() {
@@ -63,18 +63,27 @@ class _HotKeyRecorderState extends State<HotKeyRecorder> {
         .where((km) => value.data.isModifierPressed(km.modifierKey))
         .toList();
 
-    _hotKey.keyCode = keyCode;
-    _hotKey.modifiers = keyModifiers;
+    if (keyCode != null) {
+      _hotKey = HotKey(
+        keyCode,
+        modifiers: keyModifiers,
+      );
+      if (widget.initalHotKey != null) {
+        _hotKey?.identifier = widget.initalHotKey!.identifier;
+        _hotKey?.scope = widget.initalHotKey!.scope;
+      }
 
-    if (!_hotKey.isSetted) return;
+      widget.onHotKeyRecorded(_hotKey!);
 
-    widget.onHotKeyRecorded(_hotKey);
-
-    setState(() {});
+      setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return HotKeyVirtualView(hotKey: _hotKey);
+    if (_hotKey == null) {
+      return Container();
+    }
+    return HotKeyVirtualView(hotKey: _hotKey!);
   }
 }

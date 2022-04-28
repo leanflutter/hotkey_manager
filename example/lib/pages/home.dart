@@ -22,7 +22,6 @@ class _HomePageState extends State<HomePage> {
 
   void _keyUpHandler(HotKey hotKey) {
     String log = 'keyUp   ${hotKey.toString()} (${hotKey.scope})';
-    BotToast.showText(text: log);
     print(log);
   }
 

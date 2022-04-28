@@ -14,7 +14,7 @@ class RecordHotKeyDialog extends StatefulWidget {
 }
 
 class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
-  HotKey _hotKey = HotKey(null);
+  HotKey? _hotKey;
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +48,9 @@ class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
             Row(
               children: [
                 Checkbox(
-                  value: _hotKey.scope == HotKeyScope.inapp,
+                  value: _hotKey?.scope == HotKeyScope.inapp,
                   onChanged: (newValue) {
-                    _hotKey.scope =
+                    _hotKey?.scope =
                         newValue! ? HotKeyScope.inapp : HotKeyScope.system;
                     setState(() {});
                   },
@@ -70,10 +70,10 @@ class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
         ),
         TextButton(
           child: Text('OK'),
-          onPressed: !_hotKey.isSetted
+          onPressed: _hotKey == null
               ? null
               : () {
-                  widget.onHotKeyRecorded(_hotKey);
+                  widget.onHotKeyRecorded(_hotKey!);
                   Navigator.of(context).pop();
                 },
         ),

@@ -10,12 +10,10 @@ enum HotKeyScope {
 }
 
 class HotKey {
-  KeyCode? keyCode;
+  KeyCode keyCode;
   List<KeyModifier>? modifiers;
   String identifier = Uuid().v4();
   HotKeyScope scope = HotKeyScope.system;
-
-  bool get isSetted => keyCode != null;
 
   HotKey(
     this.keyCode, {
@@ -43,7 +41,7 @@ class HotKey {
 
   Map<String, dynamic> toJson() {
     return {
-      'keyCode': keyCode?.stringValue,
+      'keyCode': keyCode.stringValue,
       'modifiers': modifiers?.map((e) => e.stringValue).toList() ?? [],
       'identifier': identifier,
       'scope': describeEnum(scope),
@@ -52,6 +50,6 @@ class HotKey {
 
   @override
   String toString() {
-    return '${modifiers!.map((e) => e.keyLabel).join('')}${keyCode?.keyLabel}';
+    return '${modifiers!.map((e) => e.keyLabel).join('')}${keyCode.keyLabel}';
   }
 }
