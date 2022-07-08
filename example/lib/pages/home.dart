@@ -1,5 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:preference_list/preference_list.dart';
@@ -15,13 +16,13 @@ class _HomePageState extends State<HomePage> {
   List<HotKey> _registeredHotKeyList = [];
 
   void _keyDownHandler(HotKey hotKey) {
-    String log = 'keyDown ${hotKey.toString()} (${hotKey.scope})';
+    String log = 'keyDown ${describeEnum(hotKey.keyCode)} (${hotKey.scope})';
     BotToast.showText(text: log);
     print(log);
   }
 
   void _keyUpHandler(HotKey hotKey) {
-    String log = 'keyUp   ${hotKey.toString()} (${hotKey.scope})';
+    String log = 'keyUp   ${describeEnum(hotKey.keyCode)} (${hotKey.scope})';
     print(log);
   }
 
