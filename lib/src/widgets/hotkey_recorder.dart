@@ -41,6 +41,7 @@ class _HotKeyRecorderState extends State<HotKeyRecorder> {
 
   _handleRawKeyEvent(RawKeyEvent value) {
     if (!(value is RawKeyDownEvent)) return;
+    if (value.character == null) return;
 
     KeyCode? keyCode;
     List<KeyModifier>? keyModifiers;
