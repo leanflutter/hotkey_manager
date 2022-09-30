@@ -48,7 +48,7 @@ class _HotKeyRecorderState extends State<HotKeyRecorder> {
 
     keyCode = KeyCode.values.firstWhereOrNull(
       (kc) {
-        if (!value.isKeyPressed(kc.logicalKey)) return false;
+        if (value.logicalKey != kc.logicalKey) return false;
         KeyModifier? keyModifier =
             KeyModifierParser.fromLogicalKey(kc.logicalKey);
 

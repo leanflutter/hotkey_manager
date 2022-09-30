@@ -39,12 +39,12 @@ class HotKeyManager {
     }
 
     if (value is RawKeyDownEvent) {
-      if (value.repeat) return;
       if (value.character == null) return;
+
       HotKey? hotKey = _hotKeyList.firstWhereOrNull(
         (e) {
           return e.scope == HotKeyScope.inapp &&
-              value.isKeyPressed(e.keyCode.logicalKey) &&
+              value.logicalKey == e.keyCode.logicalKey &&
               value.data.modifiersPressed.keys.length ==
                   (e.modifiers ?? []).length &&
               (e.modifiers ?? []).every(
