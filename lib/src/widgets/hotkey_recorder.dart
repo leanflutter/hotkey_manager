@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,14 +43,18 @@ class _HotKeyRecorderState extends State<HotKeyRecorder> {
 
   _handleRawKeyEvent(RawKeyEvent value) {
     if (!(value is RawKeyDownEvent)) return;
-    if (value.character == null) return;
+    if (Platform.isMacOS && value.character == null) return;
 
     KeyCode? keyCode;
     List<KeyModifier>? keyModifiers;
 
     keyCode = KeyCode.values.firstWhereOrNull(
       (kc) {
-        if (value.logicalKey != kc.logicalKey) return false;
+        if (Platform.isMacOS) {
+          if (value.logicalKey != kc.logicalKey) return false;
+        } else {
+          if (!value.isKeyPressed(kc.logicalKey)) return false;
+        }
         KeyModifier? keyModifier =
             KeyModifierParser.fromLogicalKey(kc.logicalKey);
 

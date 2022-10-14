@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 
@@ -39,12 +40,22 @@ class HotKeyManager {
     }
 
     if (value is RawKeyDownEvent) {
-      if (value.character == null) return;
+      if (Platform.isMacOS) {
+        if (value.character == null) return;
+      } else {
+        if (value.repeat) return;
+      }
 
       HotKey? hotKey = _hotKeyList.firstWhereOrNull(
         (e) {
+          bool isSameKey;
+          if (Platform.isMacOS) {
+            isSameKey = value.logicalKey == e.keyCode.logicalKey;
+          } else {
+            isSameKey = value.isKeyPressed(e.keyCode.logicalKey);
+          }
           return e.scope == HotKeyScope.inapp &&
-              value.logicalKey == e.keyCode.logicalKey &&
+              isSameKey &&
               value.data.modifiersPressed.keys.length ==
                   (e.modifiers ?? []).length &&
               (e.modifiers ?? []).every(
