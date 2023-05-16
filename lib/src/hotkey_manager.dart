@@ -52,7 +52,8 @@ class HotKeyManager {
           if (Platform.isMacOS) {
             isSameKey = value.logicalKey == e.keyCode.logicalKey;
           } else {
-            isSameKey = value.isKeyPressed(e.keyCode.logicalKey);
+            isSameKey = value.isKeyPressed(e.keyCode.logicalKey) &&
+                value.logicalKey == e.keyCode.logicalKey;
           }
           return e.scope == HotKeyScope.inapp &&
               isSameKey &&
