@@ -8,6 +8,12 @@ platforms:
   macos:
   windows:
 
+topics:
+  - hotkey
+  - shortcuts
+  - global-hotkey
+  - global-shortcuts
+
 environment:
   sdk: ">=2.18.0 <4.0.0"
   flutter: ">=3.3.0"
