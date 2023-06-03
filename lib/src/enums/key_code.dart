@@ -613,7 +613,7 @@ final Map<KeyCode, String> _knownKeyLabels = <KeyCode, String>{
   KeyCode.bracketRight: ']',
   KeyCode.backslash: '\\',
   KeyCode.semicolon: ';',
-  KeyCode.quote: '\"',
+  KeyCode.quote: '"',
   KeyCode.backquote: '`',
   KeyCode.comma: ',',
   KeyCode.period: '.',

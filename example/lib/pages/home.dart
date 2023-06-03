@@ -3,9 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:hotkey_manager_example/widgets/record_hotkey_dialog.dart';
 import 'package:preference_list/preference_list.dart';
-
-import '../widgets/record_hotkey_dialog.dart';
 
 class HomePage extends StatefulWidget {
   @override

@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 class RecordHotKeyDialog extends StatefulWidget {
-  final ValueChanged<HotKey> onHotKeyRecorded;
-
   const RecordHotKeyDialog({
     Key? key,
     required this.onHotKeyRecorded,
   }) : super(key: key);
 
+  final ValueChanged<HotKey> onHotKeyRecorded;
+
   @override
-  _RecordHotKeyDialogState createState() => _RecordHotKeyDialogState();
+  State<RecordHotKeyDialog> createState() => _RecordHotKeyDialogState();
 }
 
 class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {

@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 class _VirtualKeyView extends StatelessWidget {
-  final String keyLabel;
-
   const _VirtualKeyView({
     Key? key,
     required this.keyLabel,
   }) : super(key: key);
 
+  final String keyLabel;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 5, right: 5, top: 3, bottom: 3),
+      padding: const EdgeInsets.only(left: 5, right: 5, top: 3, bottom: 3),
       decoration: BoxDecoration(
         color: Theme.of(context).canvasColor,
         border: Border.all(
@@ -23,14 +23,14 @@ class _VirtualKeyView extends StatelessWidget {
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: Colors.black.withOpacity(0.3),
-            offset: Offset(0.0, 1.0),
+            offset: const Offset(0.0, 1.0),
           ),
         ],
       ),
       child: Text(
         keyLabel,
         style: TextStyle(
-          color: Theme.of(context).textTheme.bodyText2?.color,
+          color: Theme.of(context).textTheme.bodyMedium?.color,
           fontSize: 12,
         ),
       ),
@@ -39,28 +39,26 @@ class _VirtualKeyView extends StatelessWidget {
 }
 
 class HotKeyVirtualView extends StatelessWidget {
-  final HotKey hotKey;
-
   const HotKeyVirtualView({
     Key? key,
     required this.hotKey,
   }) : super(key: key);
 
+  final HotKey hotKey;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Wrap(
-        spacing: 8,
-        children: [
-          for (KeyModifier keyModifier in hotKey.modifiers ?? [])
-            _VirtualKeyView(
-              keyLabel: keyModifier.keyLabel,
-            ),
+    return Wrap(
+      spacing: 8,
+      children: [
+        for (KeyModifier keyModifier in hotKey.modifiers ?? [])
           _VirtualKeyView(
-            keyLabel: hotKey.keyCode.keyLabel,
+            keyLabel: keyModifier.keyLabel,
           ),
-        ],
-      ),
+        _VirtualKeyView(
+          keyLabel: hotKey.keyCode.keyLabel,
+        ),
+      ],
     );
   }
 }

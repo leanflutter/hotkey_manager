@@ -1,3 +1,9 @@
+## 0.1.8
+
+* fix: crash if toString called with null modifiers (#25)
+* Update dependencies & add three keys (#28)
+* bump flutter to 3.10.2
+
 ## 0.1.7
 
 * Fixed inapp hotkeys key down event repeat triggering #9

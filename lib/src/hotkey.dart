@@ -1,8 +1,7 @@
-import 'package:uuid/uuid.dart';
 import 'package:flutter/foundation.dart' show describeEnum;
-
-import './enums/key_code.dart';
-import './enums/key_modifier.dart';
+import 'package:hotkey_manager/src/enums/key_code.dart';
+import 'package:hotkey_manager/src/enums/key_modifier.dart';
+import 'package:uuid/uuid.dart';
 
 enum HotKeyScope {
   system,
@@ -10,11 +9,6 @@ enum HotKeyScope {
 }
 
 class HotKey {
-  KeyCode keyCode;
-  List<KeyModifier>? modifiers;
-  String identifier = Uuid().v4();
-  HotKeyScope scope = HotKeyScope.system;
-
   HotKey(
     this.keyCode, {
     this.modifiers,
@@ -38,6 +32,11 @@ class HotKey {
       ),
     );
   }
+
+  KeyCode keyCode;
+  List<KeyModifier>? modifiers;
+  String identifier = const Uuid().v4();
+  HotKeyScope scope = HotKeyScope.system;
 
   Map<String, dynamic> toJson() {
     return {

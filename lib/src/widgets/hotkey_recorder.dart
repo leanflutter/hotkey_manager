@@ -2,23 +2,22 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../enums/key_code.dart';
-import '../enums/key_modifier.dart';
-import '../hotkey.dart';
-import './hotkey_virtual_view.dart';
+import 'package:hotkey_manager/src/enums/key_code.dart';
+import 'package:hotkey_manager/src/enums/key_modifier.dart';
+import 'package:hotkey_manager/src/hotkey.dart';
+import 'package:hotkey_manager/src/widgets/hotkey_virtual_view.dart';
 
 class HotKeyRecorder extends StatefulWidget {
-  final HotKey? initalHotKey;
-  final ValueChanged<HotKey> onHotKeyRecorded;
-
   const HotKeyRecorder({
     Key? key,
     this.initalHotKey,
     required this.onHotKeyRecorded,
   }) : super(key: key);
+  final HotKey? initalHotKey;
+  final ValueChanged<HotKey> onHotKeyRecorded;
 
   @override
-  _HotKeyRecorderState createState() => _HotKeyRecorderState();
+  State<HotKeyRecorder> createState() => _HotKeyRecorderState();
 }
 
 class _HotKeyRecorderState extends State<HotKeyRecorder> {
@@ -29,18 +28,18 @@ class _HotKeyRecorderState extends State<HotKeyRecorder> {
     if (widget.initalHotKey != null) {
       _hotKey = widget.initalHotKey!;
     }
-    RawKeyboard.instance.addListener(this._handleRawKeyEvent);
+    RawKeyboard.instance.addListener(_handleRawKeyEvent);
     super.initState();
   }
 
   @override
   void dispose() {
-    RawKeyboard.instance.removeListener(this._handleRawKeyEvent);
+    RawKeyboard.instance.removeListener(_handleRawKeyEvent);
     super.dispose();
   }
 
   _handleRawKeyEvent(RawKeyEvent value) {
-    if (!(value is RawKeyDownEvent)) return;
+    if (value is! RawKeyDownEvent) return;
 
     KeyCode? keyCode;
     List<KeyModifier>? keyModifiers;
