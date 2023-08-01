@@ -21,6 +21,11 @@
   (G_TYPE_CHECK_INSTANCE_CAST((obj), hotkey_manager_plugin_get_type(), \
                               HotkeyManagerPlugin))
 
+/* 
+  Map of the Flutter key codes to GDK key codes.
+
+  Reference: https://gitlab.gnome.org/GNOME/gtk/-/blob/863b399899e0a835cde7de111e20900a036738f4/gdk/gdkkeysyms.h
+ */
 std::map<std::string, uint> known_virtual_key_codes = {
     std::make_pair("keyA", GDK_KEY_a),
     std::make_pair("keyB", GDK_KEY_b),
