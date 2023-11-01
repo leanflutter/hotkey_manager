@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:hotkey_manager/src/enums/key_code.dart';
@@ -26,11 +27,45 @@ class HotKeyManager {
   HotKey? _lastPressedHotKey;
 
   void _init() {
-    RawKeyboard.instance.addListener(_handleRawKeyEvent);
+    HardwareKeyboard.instance.addHandler(_handleKeyEvent);
+    // TODO(CNLHC): remove after review
+    // RawKeyboard.instance.addListener(_handleRawKeyEvent);
     _channel.setMethodCallHandler(_methodCallHandler);
     _inited = true;
   }
 
+  bool _handleKeyEvent(KeyEvent evt) {
+    if (evt is KeyUpEvent && _lastPressedHotKey != null) {
+      HotKeyHandler? handler = _keyUpHandlerMap[_lastPressedHotKey!.identifier];
+      if (handler != null) handler(_lastPressedHotKey!);
+      _lastPressedHotKey = null;
+      return false;
+    }
+
+    if (evt is KeyDownEvent) {
+      HotKey? hotKey = _hotKeyList.firstWhereOrNull(
+        (e) {
+          bool inApp = (e.scope == HotKeyScope.inapp);
+          bool keyPressed = (e.keyCode.logicalKey == evt.logicalKey);
+          bool modifierPressed = (e.modifiers ?? []).every((element) =>
+              HardwareKeyboard.instance.logicalKeysPressed
+                  .containsAll(element.logicalKeys));
+
+          return inApp && keyPressed && modifierPressed;
+        },
+      );
+
+      if (hotKey != null) {
+        HotKeyHandler? handler = _keyDownHandlerMap[hotKey.identifier];
+        if (handler != null) handler(hotKey);
+        _lastPressedHotKey = hotKey;
+      }
+    }
+
+    return false;
+  }
+
+  // TODO(CNLHC): remove after review
   _handleRawKeyEvent(RawKeyEvent value) {
     if (value is RawKeyUpEvent && _lastPressedHotKey != null) {
       HotKeyHandler? handler = _keyUpHandlerMap[_lastPressedHotKey!.identifier];
