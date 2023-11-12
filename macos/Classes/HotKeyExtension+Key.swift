@@ -139,6 +139,7 @@ extension Key {
         // MARK: - Misc
         case "escape": self = .escape
         case "delete": self = .delete
+        case "backspace": self = .delete
         case "forwardDelete": self = .forwardDelete
         case "help": self = .help
         case "audioVolumeUp": self = .volumeUp
