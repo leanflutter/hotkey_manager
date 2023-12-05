@@ -4,3 +4,4 @@ export './src/hotkey.dart';
 export './src/hotkey_manager.dart';
 export './src/widgets/hotkey_recorder.dart';
 export './src/widgets/hotkey_virtual_view.dart';
+export './src/widgets/key_press_recorder.dart';

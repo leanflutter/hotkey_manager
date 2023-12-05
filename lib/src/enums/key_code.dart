@@ -284,6 +284,7 @@ const Map<KeyCode, LogicalKeyboardKey> _knownLogicalKeys =
 };
 
 enum KeyCode {
+  empty,
   // none,
   hyper,
   superKey,
@@ -653,6 +654,7 @@ final Map<KeyCode, String> _knownKeyLabels = <KeyCode, String>{
   KeyCode.meta: (!kIsWeb && Platform.isMacOS) ? '⌘' : '⊞',
   KeyCode.alt: '⌥',
   KeyCode.control: '⌃',
+  KeyCode.empty: ' ',
 };
 
 extension KeyCodeParser on KeyCode {
