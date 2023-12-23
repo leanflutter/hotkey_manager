@@ -5,10 +5,10 @@ import 'package:hotkey_manager/hotkey_manager.dart';
 class KeyPressRecorder extends StatefulWidget {
   const KeyPressRecorder({
     Key? key,
-    this.initalHotKey,
+    this.initialHotKey,
     required this.onHotKeyRecorded,
   }) : super(key: key);
-  final HotKey? initalHotKey;
+  final HotKey? initialHotKey;
   final ValueChanged<HotKey> onHotKeyRecorded;
 
   @override
@@ -23,8 +23,8 @@ class _KeyPressRecorderState extends State<KeyPressRecorder> {
 
   @override
   void initState() {
-    if (widget.initalHotKey != null) {
-      _hotKey = widget.initalHotKey!;
+    if (widget.initialHotKey != null) {
+      _hotKey = widget.initialHotKey!;
     }
     super.initState();
   }
