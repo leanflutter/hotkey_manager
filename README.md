@@ -128,6 +128,7 @@ HotKeyRecorder(
 
 ## Who's using it?
 
+- [Airclap](https://airclap.app/) - Send any file to any device. cross platform, ultra fast and easy to use.
 - [AuthPass](https://authpass.app/) - Password Manager based on Flutter for all platforms. Keepass 2.x (kdbx 3.x) compatible.
 - [Biyi (比译)](https://biyidev.com/) - A convenient translation and dictionary app.
 
