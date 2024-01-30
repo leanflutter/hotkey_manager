@@ -22,7 +22,7 @@ dependencies:
   collection: ^1.17.1
   flutter:
     sdk: flutter
-  uuid: ^3.0.7
+  uuid: ">=3.0.7 <5.0.0"
 
 dev_dependencies:
   dependency_validator: ^3.0.0
