@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show describeEnum;
 import 'package:hotkey_manager/src/enums/key_code.dart';
 import 'package:hotkey_manager/src/enums/key_modifier.dart';
 import 'package:uuid/uuid.dart';
@@ -27,7 +26,7 @@ class HotKey {
           .toList(),
       identifier: json['identifier'],
       scope: HotKeyScope.values.firstWhere(
-        (e) => describeEnum(e) == json['scope'],
+        (e) => e.name == json['scope'],
         orElse: () => HotKeyScope.system,
       ),
     );
@@ -43,7 +42,7 @@ class HotKey {
       'keyCode': keyCode.stringValue,
       'modifiers': modifiers?.map((e) => e.stringValue).toList() ?? [],
       'identifier': identifier,
-      'scope': describeEnum(scope),
+      'scope': scope.name,
     };
   }
 

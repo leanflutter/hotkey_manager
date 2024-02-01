@@ -7,25 +7,31 @@ import 'package:hotkey_manager_example/widgets/record_hotkey_dialog.dart';
 import 'package:preference_list/preference_list.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   List<HotKey> _registeredHotKeyList = [];
 
   void _keyDownHandler(HotKey hotKey) {
-    String log = 'keyDown ${describeEnum(hotKey.keyCode)} (${hotKey.scope})';
+    String log = 'keyDown ${hotKey.keyCode.name} (${hotKey.scope})';
     BotToast.showText(text: log);
-    print(log);
+    if (kDebugMode) {
+      print(log);
+    }
   }
 
   void _keyUpHandler(HotKey hotKey) {
-    String log = 'keyUp   ${describeEnum(hotKey.keyCode)} (${hotKey.scope})';
-    print(log);
+    String log = 'keyUp   ${hotKey.keyCode.name} (${hotKey.scope})';
+    if (kDebugMode) {
+      print(log);
+    }
   }
 
-  void _handleHotKeyRegister(HotKey hotKey) async {
+  Future<void> _handleHotKeyRegister(HotKey hotKey) async {
     await hotKeyManager.register(
       hotKey,
       keyDownHandler: _keyDownHandler,
@@ -36,7 +42,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _handleHotKeyUnregister(HotKey hotKey) async {
+  Future<void> _handleHotKeyUnregister(HotKey hotKey) async {
     await hotKeyManager.unregister(hotKey);
     setState(() {
       _registeredHotKeyList = hotKeyManager.registeredHotKeyList;
@@ -59,30 +65,30 @@ class _HomePageState extends State<HomePage> {
     return PreferenceList(
       children: <Widget>[
         PreferenceListSection(
-          title: Text('REGISTERED HOTKEY LIST'),
+          title: const Text('REGISTERED HOTKEY LIST'),
           children: [
             for (var registeredHotKey in _registeredHotKeyList)
               PreferenceListItem(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 title: Row(
                   children: [
                     HotKeyVirtualView(hotKey: registeredHotKey),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Text(
                       registeredHotKey.scope.toString(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 12,
                       ),
                     ),
                   ],
                 ),
-                accessoryView: Container(
+                accessoryView: SizedBox(
                   width: 40,
                   height: 40,
                   child: CupertinoButton(
                     padding: EdgeInsets.zero,
-                    child: Stack(
+                    child: const Stack(
                       alignment: Alignment.center,
                       children: [
                         Icon(

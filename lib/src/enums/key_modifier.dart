@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart' show describeEnum, kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 
 const Map<KeyModifier, List<LogicalKeyboardKey>> _knownLogicalKeys =
@@ -63,7 +63,7 @@ enum KeyModifier {
 
 extension KeyModifierParser on KeyModifier {
   static KeyModifier parse(String string) {
-    return KeyModifier.values.firstWhere((e) => describeEnum(e) == string);
+    return KeyModifier.values.firstWhere((e) => e.name == string);
   }
 
   static KeyModifier? fromModifierKey(ModifierKey modifierKey) {
@@ -85,8 +85,9 @@ extension KeyModifierParser on KeyModifier {
     if (!logicalKeyIdList.contains(logicalKey.keyId)) return null;
 
     return _knownLogicalKeys.entries
-        .firstWhere((entry) =>
-            entry.value.map((e) => e.keyId).contains(logicalKey.keyId))
+        .firstWhere(
+          (entry) => entry.value.map((e) => e.keyId).contains(logicalKey.keyId),
+        )
         .key;
   }
 
@@ -94,9 +95,9 @@ extension KeyModifierParser on KeyModifier {
     return _knownLogicalKeys[this]!;
   }
 
-  String get stringValue => describeEnum(this);
+  String get stringValue => name;
 
   String get keyLabel {
-    return _knownKeyLabels[this] ?? describeEnum(this);
+    return _knownKeyLabels[this] ?? name;
   }
 }

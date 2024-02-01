@@ -26,9 +26,9 @@ dependencies:
 
 dev_dependencies:
   dependency_validator: ^3.0.0
-  flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
+  mostly_reasonable_lints: ^0.1.1
 
 flutter:
   plugin:

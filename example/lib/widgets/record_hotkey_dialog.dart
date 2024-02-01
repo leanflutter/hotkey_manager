@@ -3,9 +3,9 @@ import 'package:hotkey_manager/hotkey_manager.dart';
 
 class RecordHotKeyDialog extends StatefulWidget {
   const RecordHotKeyDialog({
-    Key? key,
+    super.key,
     required this.onHotKeyRecorded,
-  }) : super(key: key);
+  });
 
   final ValueChanged<HotKey> onHotKeyRecorded;
 
@@ -23,11 +23,11 @@ class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
-            Text('The `HotKeyRecorder` widget will record your hotkey.'),
+            const Text('The `HotKeyRecorder` widget will record your hotkey.'),
             Container(
               width: 100,
               height: 60,
-              margin: EdgeInsets.only(top: 20),
+              margin: const EdgeInsets.only(top: 20),
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Theme.of(context).primaryColor,
@@ -55,7 +55,9 @@ class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
                     setState(() {});
                   },
                 ),
-                Text('Set as inapp-wide hotkey. (default is system-wide)'),
+                const Text(
+                  'Set as inapp-wide hotkey. (default is system-wide)',
+                ),
               ],
             ),
           ],
@@ -63,19 +65,19 @@ class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
       ),
       actions: <Widget>[
         TextButton(
-          child: Text('Cancel'),
+          child: const Text('Cancel'),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         TextButton(
-          child: Text('OK'),
           onPressed: _hotKey == null
               ? null
               : () {
                   widget.onHotKeyRecorded(_hotKey!);
                   Navigator.of(context).pop();
                 },
+          child: const Text('OK'),
         ),
       ],
     );

@@ -9,10 +9,11 @@ import 'package:hotkey_manager/src/widgets/hotkey_virtual_view.dart';
 
 class HotKeyRecorder extends StatefulWidget {
   const HotKeyRecorder({
-    Key? key,
+    super.key,
     this.initalHotKey,
     required this.onHotKeyRecorded,
-  }) : super(key: key);
+  });
+
   final HotKey? initalHotKey;
   final ValueChanged<HotKey> onHotKeyRecorded;
 

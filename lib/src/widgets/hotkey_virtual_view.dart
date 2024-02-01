@@ -3,9 +3,8 @@ import 'package:hotkey_manager/hotkey_manager.dart';
 
 class _VirtualKeyView extends StatelessWidget {
   const _VirtualKeyView({
-    Key? key,
     required this.keyLabel,
-  }) : super(key: key);
+  });
 
   final String keyLabel;
 
@@ -40,9 +39,9 @@ class _VirtualKeyView extends StatelessWidget {
 
 class HotKeyVirtualView extends StatelessWidget {
   const HotKeyVirtualView({
-    Key? key,
+    super.key,
     required this.hotKey,
-  }) : super(key: key);
+  });
 
   final HotKey hotKey;
 

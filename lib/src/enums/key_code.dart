@@ -671,11 +671,11 @@ extension KeyCodeParser on KeyCode {
   }
 
   static KeyCode parse(String string) {
-    return KeyCode.values.firstWhere((e) => describeEnum(e) == string);
+    return KeyCode.values.firstWhere((e) => e.name == string);
   }
 
   String get stringValue {
-    return describeEnum(this);
+    return name;
   }
 
   int get keyId {
