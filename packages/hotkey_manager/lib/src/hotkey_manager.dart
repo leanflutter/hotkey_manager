@@ -5,54 +5,57 @@ import 'package:flutter/services.dart';
 import 'package:hotkey_manager_platform_interface/hotkey_manager_platform_interface.dart';
 
 class HotKeyManager {
-  HotKeyManager._();
+  HotKeyManager._() {
+    _platform.onKeyEventReceiver.listen(_handleSystemHotKeyEvent);
+    HardwareKeyboard.instance.addHandler(_handleInAppHotKeyEvent);
+  }
 
   /// The shared instance of [HotKeyManager].
   static final HotKeyManager instance = HotKeyManager._();
 
   HotKeyManagerPlatform get _platform => HotKeyManagerPlatform.instance;
 
-  bool _inited = false;
   final List<HotKey> _hotKeyList = [];
   final Map<String, HotKeyHandler> _keyDownHandlerMap = {};
   final Map<String, HotKeyHandler> _keyUpHandlerMap = {};
 
-  // 最后按下的快捷键
   HotKey? _lastPressedHotKey;
 
-  void _init() {
-    HardwareKeyboard.instance.addHandler(_handleKeyEvent);
-    _platform.onKeyEventReceiver.listen((event) {
-      if (kDebugMode) {
-        print(event);
+  /// Handle system hot key event.
+  void _handleSystemHotKeyEvent(event) {
+    if (kDebugMode) {
+      print(event);
+    }
+    String type = event['type'] as String;
+    Map<Object?, Object?> data = event['data'] as Map;
+    String identifier = data['identifier'] as String;
+    HotKey? hotKey = _hotKeyList.firstWhereOrNull(
+      (e) => e.identifier == identifier,
+    );
+    if (hotKey != null) {
+      switch (type) {
+        case 'onKeyDown':
+          if (_keyDownHandlerMap.containsKey(identifier)) {
+            _keyDownHandlerMap[identifier]!(hotKey);
+          }
+          break;
+        case 'onKeyUp':
+          if (_keyUpHandlerMap.containsKey(identifier)) {
+            _keyUpHandlerMap[identifier]!(hotKey);
+          }
+          break;
+        default:
+          UnimplementedError();
       }
-      String type = event['type'] as String;
-      Map<Object?, Object?> data = event['data'] as Map;
-      String identifier = data['identifier'] as String;
-      HotKey? hotKey = _hotKeyList.firstWhereOrNull(
-        (e) => e.identifier == identifier,
-      );
-      if (hotKey != null) {
-        switch (type) {
-          case 'onKeyDown':
-            if (_keyDownHandlerMap.containsKey(identifier)) {
-              _keyDownHandlerMap[identifier]!(hotKey);
-            }
-            break;
-          case 'onKeyUp':
-            if (_keyUpHandlerMap.containsKey(identifier)) {
-              _keyUpHandlerMap[identifier]!(hotKey);
-            }
-            break;
-          default:
-            UnimplementedError();
-        }
-      }
-    });
-    _inited = true;
+    }
   }
 
-  bool _handleKeyEvent(KeyEvent keyEvent) {
+  /// Handle in-app hot key event.
+  bool _handleInAppHotKeyEvent(KeyEvent keyEvent) {
+    if (_hotKeyList.where((e) => e.scope == HotKeyScope.inapp).isEmpty) {
+      return false;
+    }
+
     if (keyEvent is KeyUpEvent && _lastPressedHotKey != null) {
       HotKeyHandler? handler = _keyUpHandlerMap[_lastPressedHotKey!.identifier];
       if (handler != null) handler(_lastPressedHotKey!);
@@ -74,25 +77,24 @@ class HotKeyManager {
               );
         },
       );
-
       if (hotKey != null) {
         HotKeyHandler? handler = _keyDownHandlerMap[hotKey.identifier];
         if (handler != null) handler(hotKey);
         _lastPressedHotKey = hotKey;
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
   List<HotKey> get registeredHotKeyList => _hotKeyList;
 
+  /// Register a hot key.
   Future<void> register(
     HotKey hotKey, {
     HotKeyHandler? keyDownHandler,
     HotKeyHandler? keyUpHandler,
   }) async {
-    if (!_inited) _init();
-
     if (hotKey.scope == HotKeyScope.system) {
       await _platform.register(hotKey);
     }
@@ -110,13 +112,11 @@ class HotKeyManager {
         ifAbsent: () => keyUpHandler,
       );
     }
-
     _hotKeyList.add(hotKey);
   }
 
+  /// Unregister a hot key.
   Future<void> unregister(HotKey hotKey) async {
-    if (!_inited) _init();
-
     if (hotKey.scope == HotKeyScope.system) {
       await _platform.unregister(hotKey);
     }
@@ -126,15 +126,12 @@ class HotKeyManager {
     if (_keyUpHandlerMap.containsKey(hotKey.identifier)) {
       _keyUpHandlerMap.remove(hotKey.identifier);
     }
-
     _hotKeyList.removeWhere((e) => e.identifier == hotKey.identifier);
   }
 
+  /// Unregister all hot keys.
   Future<void> unregisterAll() async {
-    if (!_inited) _init();
-
     await _platform.unregisterAll();
-
     _keyDownHandlerMap.clear();
     _keyUpHandlerMap.clear();
     _hotKeyList.clear();
