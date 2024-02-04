@@ -22,7 +22,11 @@ dependencies:
   collection: ^1.17.1
   flutter:
     sdk: flutter
-  uuid: ">=3.0.7 <5.0.0"
+  # hotkey_manager_linux: ^0.2.0
+  hotkey_manager_macos: ^0.2.0
+  hotkey_manager_platform_interface: ^0.2.0
+  # hotkey_manager_windows: ^0.2.0
+  uuid: '>=3.0.7 <5.0.0'
 
 dev_dependencies:
   dependency_validator: ^3.0.0
@@ -33,9 +37,9 @@ dev_dependencies:
 flutter:
   plugin:
     platforms:
-      linux:
-        pluginClass: HotkeyManagerPlugin
+  #     linux:
+  #       default_package: hotkey_manager_linux
       macos:
-        pluginClass: HotkeyManagerPlugin
-      windows:
-        pluginClass: HotkeyManagerPlugin
+        default_package: hotkey_manager_macos
+  #     windows:
+  #       default_package: hotkey_manager_windows

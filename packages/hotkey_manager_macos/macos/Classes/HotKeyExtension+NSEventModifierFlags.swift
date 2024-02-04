@@ -8,22 +8,22 @@
 extension NSEvent.ModifierFlags {
     public init(pluginModifiers: Array<String>) {
         self.init()
-        if (pluginModifiers.contains("capsLock")) {
+        if (pluginModifiers.contains("capsLockModifier")) {
             insert(.capsLock)
         }
-        if (pluginModifiers.contains("shift")) {
+        if (pluginModifiers.contains("shiftModifier")) {
             insert(.shift)
         }
-        if (pluginModifiers.contains("control")) {
+        if (pluginModifiers.contains("controlModifier")) {
             insert(.control)
         }
-        if (pluginModifiers.contains("alt")) {
+        if (pluginModifiers.contains("altModifier")) {
             insert(.option)
         }
-        if (pluginModifiers.contains("meta")) {
+        if (pluginModifiers.contains("metaModifier")) {
             insert(.command)
         }
-        if (pluginModifiers.contains("fn")) {
+        if (pluginModifiers.contains("functionModifier")) {
             insert(.function)
         }
     }

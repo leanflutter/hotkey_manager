@@ -2,23 +2,23 @@ import 'package:hotkey_manager_platform_interface/src/hotkey.dart';
 import 'package:hotkey_manager_platform_interface/src/hotkey_manager_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-abstract class HotkeyManagerPlatform extends PlatformInterface {
-  /// Constructs a HotkeyManagerPlatform.
-  HotkeyManagerPlatform() : super(token: _token);
+abstract class HotKeyManagerPlatform extends PlatformInterface {
+  /// Constructs a HotKeyManagerPlatform.
+  HotKeyManagerPlatform() : super(token: _token);
 
   static final Object _token = Object();
 
-  static HotkeyManagerPlatform _instance = MethodChannelHotkeyManager();
+  static HotKeyManagerPlatform _instance = MethodChannelHotKeyManager();
 
-  /// The default instance of [HotkeyManagerPlatform] to use.
+  /// The default instance of [HotKeyManagerPlatform] to use.
   ///
-  /// Defaults to [MethodChannelHotkeyManager].
-  static HotkeyManagerPlatform get instance => _instance;
+  /// Defaults to [MethodChannelHotKeyManager].
+  static HotKeyManagerPlatform get instance => _instance;
 
   /// Platform-specific implementations should set this with their own
-  /// platform-specific class that extends [HotkeyManagerPlatform] when
+  /// platform-specific class that extends [HotKeyManagerPlatform] when
   /// they register themselves.
-  static set instance(HotkeyManagerPlatform instance) {
+  static set instance(HotKeyManagerPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
@@ -27,19 +27,19 @@ abstract class HotkeyManagerPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<void> register(
-    HotKey hotKey, {
-    HotKeyHandler? keyDownHandler,
-    HotKeyHandler? keyUpHandler,
-  }) async {
-    
+  Stream<Map<Object?, Object?>> get onKeyEventReceiver {
+    throw UnimplementedError('onKeyEventReceiver() has not been implemented.');
   }
 
-  Future<void> unregister(HotKey hotKey) async {
+  Future<void> register(HotKey hotKey) async {
+    throw UnimplementedError('register() has not been implemented.');
+  }
 
+  Future<void> unregister(HotKey hotKey) {
+    throw UnimplementedError('unregister() has not been implemented.');
   }
 
   Future<void> unregisterAll() async {
-    
+    throw UnimplementedError('unregisterAll() has not been implemented.');
   }
 }

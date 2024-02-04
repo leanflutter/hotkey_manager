@@ -1,11 +1,7 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'package:hotkey_manager/src/enums/key_code.dart';
-import 'package:hotkey_manager/src/enums/key_modifier.dart';
-import 'package:hotkey_manager/src/hotkey.dart';
 import 'package:hotkey_manager/src/widgets/hotkey_virtual_view.dart';
+import 'package:hotkey_manager_platform_interface/hotkey_manager_platform_interface.dart';
 
 class HotKeyRecorder extends StatefulWidget {
   const HotKeyRecorder({
@@ -29,54 +25,37 @@ class _HotKeyRecorderState extends State<HotKeyRecorder> {
     if (widget.initalHotKey != null) {
       _hotKey = widget.initalHotKey!;
     }
-    RawKeyboard.instance.addListener(_handleRawKeyEvent);
+    HardwareKeyboard.instance.addHandler(_handleKeyEvent);
     super.initState();
   }
 
   @override
   void dispose() {
-    RawKeyboard.instance.removeListener(_handleRawKeyEvent);
+    HardwareKeyboard.instance.removeHandler(_handleKeyEvent);
     super.dispose();
   }
 
-  _handleRawKeyEvent(RawKeyEvent value) {
-    if (value is! RawKeyDownEvent) return;
-
-    KeyCode? keyCode;
-    List<KeyModifier>? keyModifiers;
-
-    keyCode = KeyCode.values.firstWhereOrNull(
-      (kc) {
-        if (!value.isKeyPressed(kc.logicalKey)) return false;
-        KeyModifier? keyModifier =
-            KeyModifierParser.fromLogicalKey(kc.logicalKey);
-
-        if (keyModifier != null &&
-            value.data.isModifierPressed(keyModifier.modifierKey)) {
-          return false;
-        }
-
-        return true;
-      },
-    );
-    keyModifiers = KeyModifier.values
-        .where((km) => value.data.isModifierPressed(km.modifierKey))
+  bool _handleKeyEvent(KeyEvent keyEvent) {
+    if (keyEvent is KeyUpEvent) return false;
+    PhysicalKeyboardKey? key = keyEvent.physicalKey;
+    List<ModifierKey>? pressedModifierKeys = ModifierKey.values
+        .where((e) => e.isModifierPressed) // pressed modifier keys
         .toList();
-
-    if (keyCode != null) {
-      _hotKey = HotKey(
-        keyCode,
-        modifiers: keyModifiers,
-      );
-      if (widget.initalHotKey != null) {
-        _hotKey?.identifier = widget.initalHotKey!.identifier;
-        _hotKey?.scope = widget.initalHotKey!.scope;
-      }
-
-      widget.onHotKeyRecorded(_hotKey!);
-
-      setState(() {});
+    if (pressedModifierKeys.isNotEmpty) {
+      // Remove the modifier keys from the list of pressed keys
+      pressedModifierKeys = pressedModifierKeys
+          .where((e) => !e.physicalKeys.contains(key)) // linewrap
+          .toList();
     }
+    _hotKey = HotKey(
+      identifier: widget.initalHotKey?.identifier,
+      key: key,
+      modifiers: pressedModifierKeys,
+      scope: widget.initalHotKey?.scope ?? HotKeyScope.system,
+    );
+    widget.onHotKeyRecorded(_hotKey!);
+    setState(() {});
+    return true;
   }
 
   @override

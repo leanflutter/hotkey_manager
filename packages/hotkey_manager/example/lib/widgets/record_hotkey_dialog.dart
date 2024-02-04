@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
@@ -16,10 +17,22 @@ class RecordHotKeyDialog extends StatefulWidget {
 class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
   HotKey? _hotKey;
 
+  void _handleSetAsInappWideChanged(bool newValue) {
+    if (_hotKey == null) {
+      BotToast.showText(text: 'Please record a hotkey first.');
+      return;
+    }
+    _hotKey = HotKey(
+      key: _hotKey!.key,
+      modifiers: _hotKey?.modifiers,
+      scope: newValue ? HotKeyScope.inapp : HotKeyScope.system,
+    );
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      // title: Text('Rewind and remember'),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
@@ -45,20 +58,25 @@ class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
                 ],
               ),
             ),
-            Row(
-              children: [
-                Checkbox(
-                  value: _hotKey?.scope == HotKeyScope.inapp,
-                  onChanged: (newValue) {
-                    _hotKey?.scope =
-                        newValue! ? HotKeyScope.inapp : HotKeyScope.system;
-                    setState(() {});
-                  },
-                ),
-                const Text(
-                  'Set as inapp-wide hotkey. (default is system-wide)',
-                ),
-              ],
+            GestureDetector(
+              onTap: () {
+                _handleSetAsInappWideChanged(
+                  _hotKey?.scope != HotKeyScope.inapp,
+                );
+              },
+              child: Row(
+                children: [
+                  Checkbox(
+                    value: _hotKey?.scope == HotKeyScope.inapp,
+                    onChanged: (newValue) {
+                      _handleSetAsInappWideChanged(newValue!);
+                    },
+                  ),
+                  const Text(
+                    'Set as inapp-wide hotkey. (default is system-wide)',
+                  ),
+                ],
+              ),
             ),
           ],
         ),

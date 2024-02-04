@@ -5,7 +5,7 @@ import 'package:hotkey_manager_platform_interface/src/hotkey_manager_method_chan
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  MethodChannelHotkeyManager platform = MethodChannelHotkeyManager();
+  MethodChannelHotKeyManager platform = MethodChannelHotKeyManager();
   const MethodChannel channel = MethodChannel(
     'dev.leanflutter.plugins/hotkey_manager',
   );

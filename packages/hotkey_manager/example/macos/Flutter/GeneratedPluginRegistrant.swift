@@ -5,8 +5,8 @@
 import FlutterMacOS
 import Foundation
 
-import hotkey_manager
+import hotkey_manager_macos
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-  HotkeyManagerPlugin.register(with: registry.registrar(forPlugin: "HotkeyManagerPlugin"))
+  HotkeyManagerMacosPlugin.register(with: registry.registrar(forPlugin: "HotkeyManagerMacosPlugin"))
 }

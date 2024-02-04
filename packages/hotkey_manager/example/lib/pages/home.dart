@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
   List<HotKey> _registeredHotKeyList = [];
 
   void _keyDownHandler(HotKey hotKey) {
-    String log = 'keyDown ${hotKey.keyCode.name} (${hotKey.scope})';
+    String log = 'keyDown ${hotKey.physicalKey.debugName} (${hotKey.scope})';
     BotToast.showText(text: log);
     if (kDebugMode) {
       print(log);
@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _keyUpHandler(HotKey hotKey) {
-    String log = 'keyUp   ${hotKey.keyCode.name} (${hotKey.scope})';
+    String log = 'keyUp   ${hotKey.physicalKey.debugName} (${hotKey.scope})';
     if (kDebugMode) {
       print(log);
     }

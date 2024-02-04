@@ -1,13 +1,8 @@
-// ignore_for_file: avoid_print
-
 import 'dart:async';
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:hotkey_manager/src/enums/key_code.dart';
-import 'package:hotkey_manager/src/enums/key_modifier.dart';
-import 'package:hotkey_manager/src/hotkey.dart';
-
-typedef HotKeyHandler = void Function(HotKey hotKey);
+import 'package:hotkey_manager_platform_interface/hotkey_manager_platform_interface.dart';
 
 class HotKeyManager {
   HotKeyManager._();
@@ -15,7 +10,7 @@ class HotKeyManager {
   /// The shared instance of [HotKeyManager].
   static final HotKeyManager instance = HotKeyManager._();
 
-  final MethodChannel _channel = const MethodChannel('hotkey_manager');
+  HotKeyManagerPlatform get _platform => HotKeyManagerPlatform.instance;
 
   bool _inited = false;
   final List<HotKey> _hotKeyList = [];
@@ -26,29 +21,56 @@ class HotKeyManager {
   HotKey? _lastPressedHotKey;
 
   void _init() {
-    RawKeyboard.instance.addListener(_handleRawKeyEvent);
-    _channel.setMethodCallHandler(_methodCallHandler);
+    HardwareKeyboard.instance.addHandler(_handleKeyEvent);
+    _platform.onKeyEventReceiver.listen((event) {
+      if (kDebugMode) {
+        print(event);
+      }
+      String type = event['type'] as String;
+      Map<Object?, Object?> data = event['data'] as Map;
+      String identifier = data['identifier'] as String;
+      HotKey? hotKey = _hotKeyList.firstWhereOrNull(
+        (e) => e.identifier == identifier,
+      );
+      if (hotKey != null) {
+        switch (type) {
+          case 'onKeyDown':
+            if (_keyDownHandlerMap.containsKey(identifier)) {
+              _keyDownHandlerMap[identifier]!(hotKey);
+            }
+            break;
+          case 'onKeyUp':
+            if (_keyUpHandlerMap.containsKey(identifier)) {
+              _keyUpHandlerMap[identifier]!(hotKey);
+            }
+            break;
+          default:
+            UnimplementedError();
+        }
+      }
+    });
     _inited = true;
   }
 
-  _handleRawKeyEvent(RawKeyEvent value) {
-    if (value is RawKeyUpEvent && _lastPressedHotKey != null) {
+  bool _handleKeyEvent(KeyEvent keyEvent) {
+    if (keyEvent is KeyUpEvent && _lastPressedHotKey != null) {
       HotKeyHandler? handler = _keyUpHandlerMap[_lastPressedHotKey!.identifier];
       if (handler != null) handler(_lastPressedHotKey!);
       _lastPressedHotKey = null;
-      return;
+      return true;
     }
 
-    if (value is RawKeyDownEvent) {
-      if (value.repeat) return;
+    if (keyEvent is KeyDownEvent) {
       HotKey? hotKey = _hotKeyList.firstWhereOrNull(
         (e) {
+          List<ModifierKey>? pressedModifierKeys =
+              ModifierKey.values // pressed modifier keys
+                  .where((e) => e.isModifierPressed)
+                  .toList();
           return e.scope == HotKeyScope.inapp &&
-              value.isKeyPressed(e.keyCode.logicalKey) &&
-              value.data.modifiersPressed.keys.length ==
-                  (e.modifiers ?? []).length &&
-              (e.modifiers ?? []).every(
-                (m) => value.data.isModifierPressed(m.modifierKey),
+              keyEvent.logicalKey == e.logicalKey &&
+              pressedModifierKeys.every(
+                (modifierKey) => (e.modifiers ?? []).contains(modifierKey),
               );
         },
       );
@@ -59,32 +81,7 @@ class HotKeyManager {
         _lastPressedHotKey = hotKey;
       }
     }
-  }
-
-  Future<void> _methodCallHandler(MethodCall call) async {
-    String identifier = call.arguments['identifier'];
-    HotKey? hotKey = _hotKeyList.firstWhereOrNull(
-      (e) => e.identifier == identifier,
-    );
-    if (hotKey == null) {
-      print('[Warning] Can\'t find registered hotKey.');
-      return;
-    }
-
-    switch (call.method) {
-      case 'onKeyDown':
-        if (_keyDownHandlerMap.containsKey(identifier)) {
-          _keyDownHandlerMap[identifier]!(hotKey);
-        }
-        break;
-      case 'onKeyUp':
-        if (_keyUpHandlerMap.containsKey(identifier)) {
-          _keyUpHandlerMap[identifier]!(hotKey);
-        }
-        break;
-      default:
-        UnimplementedError();
-    }
+    return true;
   }
 
   List<HotKey> get registeredHotKeyList => _hotKeyList;
@@ -97,7 +94,7 @@ class HotKeyManager {
     if (!_inited) _init();
 
     if (hotKey.scope == HotKeyScope.system) {
-      await _channel.invokeMethod('register', hotKey.toJson());
+      await _platform.register(hotKey);
     }
     if (keyDownHandler != null) {
       _keyDownHandlerMap.update(
@@ -121,7 +118,7 @@ class HotKeyManager {
     if (!_inited) _init();
 
     if (hotKey.scope == HotKeyScope.system) {
-      await _channel.invokeMethod('unregister', hotKey.toJson());
+      await _platform.unregister(hotKey);
     }
     if (_keyDownHandlerMap.containsKey(hotKey.identifier)) {
       _keyDownHandlerMap.remove(hotKey.identifier);
@@ -136,7 +133,7 @@ class HotKeyManager {
   Future<void> unregisterAll() async {
     if (!_inited) _init();
 
-    await _channel.invokeMethod('unregisterAll');
+    await _platform.unregisterAll();
 
     _keyDownHandlerMap.clear();
     _keyUpHandlerMap.clear();
