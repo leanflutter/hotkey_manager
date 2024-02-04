@@ -8,7 +8,7 @@
 PRODUCT_NAME = hotkey_manager_example
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = org.leanflutter.plugins.hotkeyManagerExample
+PRODUCT_BUNDLE_IDENTIFIER = org.leanflutter.plugins.hotkeymanagerexample
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2021 org.leanflutter.plugins. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2021-2024 LiJianying <lijy91@foxmail.com>. All rights reserved.

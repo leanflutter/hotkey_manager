@@ -23,9 +23,6 @@ class HotKeyManager {
 
   /// Handle system hot key event.
   void _handleSystemHotKeyEvent(event) {
-    if (kDebugMode) {
-      print(event);
-    }
     String type = event['type'] as String;
     Map<Object?, Object?> data = event['data'] as Map;
     String identifier = data['identifier'] as String;
@@ -60,6 +57,10 @@ class HotKeyManager {
       HotKeyHandler? handler = _keyUpHandlerMap[_lastPressedHotKey!.identifier];
       if (handler != null) handler(_lastPressedHotKey!);
       _lastPressedHotKey = null;
+      return true;
+    }
+
+    if (keyEvent is KeyRepeatEvent && _lastPressedHotKey != null) {
       return true;
     }
 

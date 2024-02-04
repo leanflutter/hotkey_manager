@@ -26,6 +26,7 @@ class _HomePageState extends State<HomePage> {
 
   void _keyUpHandler(HotKey hotKey) {
     String log = 'keyUp   ${hotKey.physicalKey.debugName} (${hotKey.scope})';
+    BotToast.showText(text: log);
     if (kDebugMode) {
       print(log);
     }
