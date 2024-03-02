@@ -49,17 +49,7 @@
 
 ```yaml
 dependencies:
-  hotkey_manager: ^0.1.7
-```
-
-或
-
-```yaml
-dependencies:
-  hotkey_manager:
-    git:
-      url: https://github.com/leanflutter/hotkey_manager.git
-      ref: main
+  hotkey_manager: ^0.2.0
 ```
 
 #### Linux requirements
@@ -92,8 +82,8 @@ void main() async {
 ```dart
 // ⌥ + Q
 HotKey _hotKey = HotKey(
-  KeyCode.keyQ,
-  modifiers: [KeyModifier.alt],
+  key: PhysicalKeyboardKey.keyQ,
+  modifiers: [HotKeyModifier.alt],
   // 设置热键范围（默认为 HotKeyScope.system）
   scope: HotKeyScope.inapp, // 设置为应用范围的热键。
 );

@@ -22,7 +22,6 @@ jobs:
       - uses: bluefireteam/melos-action@v3
       - working-directory: ./packages/hotkey_manager/example
         run: |
-          melos bs
           flutter build linux --release
 
   build-macos:
@@ -36,7 +35,6 @@ jobs:
       - uses: bluefireteam/melos-action@v3
       - working-directory: ./packages/hotkey_manager/example
         run: |
-          melos bs
           flutter build macos --release
 
   build-web:
@@ -50,7 +48,6 @@ jobs:
       - uses: bluefireteam/melos-action@v3
       - working-directory: ./packages/hotkey_manager/example
         run: |
-          melos bs
           flutter build web --release
 
   build-windows:
@@ -64,5 +61,4 @@ jobs:
       - uses: bluefireteam/melos-action@v3
       - working-directory: ./packages/hotkey_manager/example
         run: |
-          melos bs
           flutter build windows --release

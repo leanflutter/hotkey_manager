@@ -49,17 +49,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  hotkey_manager: ^0.1.7
-```
-
-Or
-
-```yaml
-dependencies:
-  hotkey_manager:
-    git:
-      url: https://github.com/leanflutter/hotkey_manager.git
-      ref: main
+  hotkey_manager: ^0.2.0
 ```
 
 #### Linux requirements
@@ -92,8 +82,8 @@ Register/Unregsiter a system/inapp wide hotkey.
 ```dart
 // ⌥ + Q
 HotKey _hotKey = HotKey(
-  KeyCode.keyQ,
-  modifiers: [KeyModifier.alt],
+  key: PhysicalKeyboardKey.keyQ,
+  modifiers: [HotKeyModifier.alt],
   // Set hotkey scope (default is HotKeyScope.system)
   scope: HotKeyScope.inapp, // Set as inapp-wide hotkey.
 );

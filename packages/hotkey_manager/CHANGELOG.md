@@ -1,8 +1,11 @@
-## 0.1.8
+## 0.2.0
 
+* feat: Convert to federated plugin
+* feat: Use flutter built-in keymap (provided through the `uni_platform` package)
+* chore: Use `HardwareKeyboard` to replace the `RawKeyboard` api
+* bump flutter to 3.19.2
 * fix: crash if toString called with null modifiers (#25)
 * Update dependencies & add three keys (#28)
-* bump flutter to 3.10.2
 
 ## 0.1.7
 
