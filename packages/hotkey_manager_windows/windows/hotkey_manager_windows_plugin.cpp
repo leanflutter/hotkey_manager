@@ -142,14 +142,14 @@ UINT HotkeyManagerWindowsPlugin::GetFsModifiersFromString(
   UINT fs_modifiers = 0x0000;
   for (int32_t i = 0; i < modifiers.size(); i++) {
     UINT fs_modifier = 0x0000;
-    if (modifiers[i] == "shiftModifier") {
-      fs_modifier = MOD_SHIFT;
-    } else if (modifiers[i] == "controlModifier") {
-      fs_modifier = MOD_CONTROL;
-    } else if (modifiers[i] == "altModifier") {
+    if (modifiers[i] == "alt") {
       fs_modifier = MOD_ALT;
-    } else if (modifiers[i] == "metaModifier") {
+    } else if (modifiers[i] == "control") {
+      fs_modifier = MOD_CONTROL;
+    } else if (modifiers[i] == "meta") {
       fs_modifier = MOD_WIN;
+    } else if (modifiers[i] == "shift") {
+      fs_modifier = MOD_SHIFT;
     }
     fs_modifiers = fs_modifiers | fs_modifier;
   }

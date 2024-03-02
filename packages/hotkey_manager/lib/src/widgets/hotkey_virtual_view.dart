@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hotkey_manager_platform_interface/hotkey_manager_platform_interface.dart';
 
 class _VirtualKeyView extends StatelessWidget {
@@ -51,9 +50,9 @@ class HotKeyVirtualView extends StatelessWidget {
     return Wrap(
       spacing: 8,
       children: [
-        for (ModifierKey modifierKey in hotKey.modifiers ?? [])
+        for (HotKeyModifier modifier in hotKey.modifiers ?? [])
           _VirtualKeyView(
-            keyLabel: modifierKey.keyLabel,
+            keyLabel: modifier.physicalKeys.first.keyLabel,
           ),
         _VirtualKeyView(
           keyLabel: hotKey.physicalKey.keyLabel,

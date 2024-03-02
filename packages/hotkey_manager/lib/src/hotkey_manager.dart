@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:hotkey_manager_platform_interface/hotkey_manager_platform_interface.dart';
 
@@ -65,17 +64,15 @@ class HotKeyManager {
     }
 
     if (keyEvent is KeyDownEvent) {
+      final physicalKeysPressed = HardwareKeyboard.instance.physicalKeysPressed;
       HotKey? hotKey = _hotKeyList.firstWhereOrNull(
         (e) {
-          List<ModifierKey>? pressedModifierKeys =
-              ModifierKey.values // pressed modifier keys
-                  .where((e) => e.isModifierPressed)
-                  .toList();
+          List<HotKeyModifier>? modifiers = HotKeyModifier.values
+              .where((e) => e.physicalKeys.any(physicalKeysPressed.contains))
+              .toList();
           return e.scope == HotKeyScope.inapp &&
               keyEvent.logicalKey == e.logicalKey &&
-              pressedModifierKeys.every(
-                (modifierKey) => (e.modifiers ?? []).contains(modifierKey),
-              );
+              modifiers.every((e.modifiers ?? []).contains);
         },
       );
       if (hotKey != null) {

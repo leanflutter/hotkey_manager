@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
+import 'package:hotkey_manager_platform_interface/hotkey_manager_platform_interface.dart';
 import 'package:json_annotation/json_annotation.dart';
-// ignore: implementation_imports
-import 'package:uni_platform/src/extensions/keyboard_key.dart';
+import 'package:uni_platform/uni_platform.dart';
 import 'package:uuid/uuid.dart';
 
 part 'hotkey.g.dart';
@@ -9,6 +9,40 @@ part 'hotkey.g.dart';
 const _uuid = Uuid();
 
 typedef HotKeyHandler = void Function(HotKey hotKey);
+
+enum HotKeyModifier {
+  alt([
+    PhysicalKeyboardKey.altLeft,
+    PhysicalKeyboardKey.altRight,
+  ]),
+  capsLock([
+    PhysicalKeyboardKey.capsLock,
+  ]),
+  control([
+    PhysicalKeyboardKey.controlLeft,
+    PhysicalKeyboardKey.controlRight,
+  ]),
+  fn([
+    PhysicalKeyboardKey.fn,
+  ]),
+  meta([
+    PhysicalKeyboardKey.metaLeft,
+    PhysicalKeyboardKey.metaRight,
+  ]),
+  shift([
+    PhysicalKeyboardKey.shiftLeft,
+    PhysicalKeyboardKey.shiftRight,
+  ]);
+
+  const HotKeyModifier(this.physicalKeys);
+
+  final List<PhysicalKeyboardKey> physicalKeys;
+
+  bool get isModifierPressed {
+    final physicalKeysPressed = HardwareKeyboard.instance.physicalKeysPressed;
+    return physicalKeys.any(physicalKeysPressed.contains);
+  }
+}
 
 enum HotKeyScope {
   system,
@@ -26,11 +60,14 @@ class HotKey {
     this.scope = HotKeyScope.system,
   }) : identifier = identifier ?? _uuid.v4();
 
-  factory HotKey.fromJson(Map<String, dynamic> json) => _$HotKeyFromJson(json);
+  factory HotKey.fromJson(Map<String, dynamic> json) {
+    if (json['keyCode'] is String) return _$HotKeyFromOldJson(json);
+    return _$HotKeyFromJson(json);
+  }
 
   final String identifier;
   final KeyboardKey key;
-  final List<ModifierKey>? modifiers;
+  final List<HotKeyModifier>? modifiers;
   final HotKeyScope scope;
 
   LogicalKeyboardKey get logicalKey {
@@ -57,9 +94,14 @@ class HotKey {
     );
   }
 
-  @override
-  String toString() {
-    return '${modifiers?.map((e) => e.name).join('')}${key.hashCode}';
+  String get debugName {
+    return [
+      ...(modifiers ?? []).map((e) {
+        final firstPhysicalKey = e.physicalKeys.first;
+        return firstPhysicalKey.debugName;
+      }),
+      physicalKey.debugName,
+    ].join(' + ');
   }
 
   Map<String, dynamic> toJson() => _$HotKeyToJson(this);
@@ -102,4 +144,21 @@ class _KeyboardKeyConverter
       'usageCode': usageCode,
     }..removeWhere((key, value) => value == null);
   }
+}
+
+// Convert HotKey from old JSON format
+HotKey _$HotKeyFromOldJson(Map<String, dynamic> json) {
+  LogicalKeyboardKey logicalKey =
+      KeyCodeParser.parse(json['keyCode']).logicalKey;
+  return HotKey(
+    identifier: json['identifier'] as String,
+    key: logicalKey.physicalKey!,
+    modifiers: ((json['modifiers'] as List<dynamic>?) ?? []).map((modifier) {
+      return HotKeyModifier.values.firstWhere((e) => e.name == modifier);
+    }).toList(),
+    scope: HotKeyScope.values.firstWhere(
+      (e) => e.name == json['scope'] as String,
+      orElse: () => HotKeyScope.system,
+    ),
+  );
 }

@@ -37,20 +37,21 @@ class _HotKeyRecorderState extends State<HotKeyRecorder> {
 
   bool _handleKeyEvent(KeyEvent keyEvent) {
     if (keyEvent is KeyUpEvent) return false;
+    final physicalKeysPressed = HardwareKeyboard.instance.physicalKeysPressed;
     PhysicalKeyboardKey? key = keyEvent.physicalKey;
-    List<ModifierKey>? pressedModifierKeys = ModifierKey.values
-        .where((e) => e.isModifierPressed) // pressed modifier keys
+    List<HotKeyModifier>? modifiers = HotKeyModifier.values
+        .where((e) => e.physicalKeys.any(physicalKeysPressed.contains))
         .toList();
-    if (pressedModifierKeys.isNotEmpty) {
-      // Remove the modifier keys from the list of pressed keys
-      pressedModifierKeys = pressedModifierKeys
+    if (modifiers.isNotEmpty) {
+      // Remove the key from the modifiers list if it is a modifier
+      modifiers = modifiers
           .where((e) => !e.physicalKeys.contains(key)) // linewrap
           .toList();
     }
     _hotKey = HotKey(
       identifier: widget.initalHotKey?.identifier,
       key: key,
-      modifiers: pressedModifierKeys,
+      modifiers: modifiers,
       scope: widget.initalHotKey?.scope ?? HotKeyScope.system,
     );
     widget.onHotKeyRecorded(_hotKey!);

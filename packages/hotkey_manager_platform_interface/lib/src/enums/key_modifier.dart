@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -52,6 +54,9 @@ final Map<KeyModifier, String> _knownKeyLabels = <KeyModifier, String>{
   KeyModifier.fn: 'fn',
 };
 
+@Deprecated(
+  'No longer supported, Use `HotKeyModifier` instead. ',
+)
 enum KeyModifier {
   capsLock,
   shift,

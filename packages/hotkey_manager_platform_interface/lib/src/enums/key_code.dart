@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -283,6 +285,9 @@ const Map<KeyCode, LogicalKeyboardKey> _knownLogicalKeys =
   KeyCode.control: LogicalKeyboardKey.control,
 };
 
+@Deprecated(
+  'No longer supported, Use `PhysicalKeyboardKey` instead. ',
+)
 enum KeyCode {
   // none,
   hyper,

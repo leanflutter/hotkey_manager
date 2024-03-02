@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:uni_platform/uni_platform.dart';
 
 final Map<PhysicalKeyboardKey, String> _knownKeyLabels =
     <PhysicalKeyboardKey, String>{
@@ -90,8 +91,14 @@ final Map<PhysicalKeyboardKey, String> _knownKeyLabels =
   PhysicalKeyboardKey.fn: 'fn',
 };
 
-extension PhysicalKeyboardKeyExt on PhysicalKeyboardKey {
+extension KeyboardKeyExt on KeyboardKey {
   String get keyLabel {
-    return _knownKeyLabels[this] ?? debugName ?? 'Unknown';
+    PhysicalKeyboardKey? physicalKey;
+    if (this is LogicalKeyboardKey) {
+      physicalKey = (this as LogicalKeyboardKey).physicalKey;
+    } else if (this is PhysicalKeyboardKey) {
+      physicalKey = this as PhysicalKeyboardKey;
+    }
+    return _knownKeyLabels[physicalKey] ?? physicalKey?.debugName ?? 'Unknown';
   }
 }

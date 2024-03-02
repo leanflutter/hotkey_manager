@@ -56,14 +56,16 @@ guint get_mods(const std::vector<std::string>& modifiers) {
   guint mods = 0;
   for (int i = 0; i < modifiers.size(); i++) {
     guint mod = 0;
-    if (modifiers[i] == "shiftModifier")
-      mod = GDK_SHIFT_MASK;
-    else if (modifiers[i] == "controlModifier")
-      mod = GDK_CONTROL_MASK;
-    else if (modifiers[i] == "altModifier")
+    if (modifiers[i] == "alt")
       mod = GDK_MOD1_MASK;
-    else if (modifiers[i] == "metaModifier")
+    else if (modifiers[i] == "capsLock")
+      mod = GDK_LOCK_MASK;
+    else if (modifiers[i] == "control")
+      mod = GDK_CONTROL_MASK;
+    else if (modifiers[i] == "meta")
       mod = GDK_META_MASK;
+    else if (modifiers[i] == "shift")
+      mod = GDK_SHIFT_MASK;
     mods = mods | mod;
   }
   return mods;
