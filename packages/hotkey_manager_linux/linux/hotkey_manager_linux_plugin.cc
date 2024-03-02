@@ -10,7 +10,6 @@
 #include <keybinder.h>
 
 #include <algorithm>
-#include <iostream>
 #include <map>
 #include <string>
 #include <vector>
@@ -46,13 +45,11 @@ void handle_key_down(const char* keystring, void* user_data) {
   fl_value_set_string_take(event_data, "identifier",
                            fl_value_new_string(identifier));
 
-  g_autoptr(FlValue) event = fl_value_new_map();
+  FlValue* event = fl_value_new_map();
   fl_value_set_string_take(event, "type", fl_value_new_string("onKeyDown"));
   fl_value_set_string_take(event, "data", event_data);
 
   fl_event_channel_send(event_channel, event, nullptr, nullptr);
-
-  std::cout << keystring << std::endl;
 }
 
 guint get_mods(const std::vector<std::string>& modifiers) {
@@ -89,8 +86,6 @@ static FlMethodResponse* hkm_register(_HotkeyManagerLinuxPlugin* self,
 
   const char* keystring =
       gtk_accelerator_name(key_code, (GdkModifierType)get_mods(modifiers));
-
-  std::cout << keystring << std::endl;
 
   hotkey_id_map.insert(
       std::pair<std::string, std::string>(identifier, keystring));

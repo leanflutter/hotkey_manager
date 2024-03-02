@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   json_annotation: ^4.8.1
   plugin_platform_interface: ^2.1.8
-  uni_platform: ^0.1.2
+  uni_platform: ^0.1.3
   uuid: '>=3.0.7 <5.0.0'
 
 dev_dependencies:
