@@ -52,6 +52,17 @@ dependencies:
   hotkey_manager: ^0.2.0
 ```
 
+或
+
+```yaml
+dependencies:
+  hotkey_manager:
+    git:
+      path: packages/hotkey_manager
+      url: https://github.com/leanflutter/hotkey_manager.git
+      ref: main
+```
+
 #### Linux requirements
 
 - [`keybinder-3.0`](https://github.com/kupferlauncher/keybinder)
