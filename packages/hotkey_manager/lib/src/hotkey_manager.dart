@@ -67,11 +67,12 @@ class HotKeyManager {
       final physicalKeysPressed = HardwareKeyboard.instance.physicalKeysPressed;
       HotKey? hotKey = _hotKeyList.firstWhereOrNull(
         (e) {
-          List<HotKeyModifier>? modifiers = HotKeyModifier.values
+          List<HotKeyModifier> modifiers = HotKeyModifier.values
               .where((e) => e.physicalKeys.any(physicalKeysPressed.contains))
               .toList();
           return e.scope == HotKeyScope.inapp &&
               keyEvent.logicalKey == e.logicalKey &&
+              modifiers.length == (e.modifiers?.length ?? 0) &&
               modifiers.every((e.modifiers ?? []).contains);
         },
       );
