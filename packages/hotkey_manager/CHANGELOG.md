@@ -1,3 +1,7 @@
+## 0.2.1
+
+* Fixed issue where modifiers do not work #50
+
 ## 0.2.0
 
 * feat: Convert to federated plugin
