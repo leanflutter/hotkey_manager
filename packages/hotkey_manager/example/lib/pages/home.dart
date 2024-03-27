@@ -2,9 +2,19 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:hotkey_manager_example/widgets/record_hotkey_dialog.dart';
 import 'package:preference_list/preference_list.dart';
+
+class ExampleIntent extends Intent {}
+
+class ExampleAction extends Action<ExampleIntent> {
+  @override
+  void invoke(covariant ExampleIntent intent) {
+    BotToast.showText(text: 'ExampleAction invoked');
+  }
+}
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -139,13 +149,34 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Example'),
       ),
-      body: _buildBody(context),
+      body: Column(
+        children: [
+          Expanded(
+            child: _buildBody(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Actions(
+      actions: <Type, Action<Intent>>{
+        ExampleIntent: ExampleAction(),
+      },
+      child: GlobalShortcuts(
+        shortcuts: {
+          const SingleActivator(LogicalKeyboardKey.keyA, alt: true):
+              ExampleIntent(),
+        },
+        child: _build(context),
+      ),
     );
   }
 }

@@ -1,3 +1,7 @@
+## 0.2.2
+
+* feat: Add `CallbackGlobalShortcuts` and `GlobalShortcuts` Widgets.
+
 ## 0.2.1
 
 * Fixed issue where modifiers do not work #50

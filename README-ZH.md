@@ -49,7 +49,7 @@
 
 ```yaml
 dependencies:
-  hotkey_manager: ^0.2.1
+  hotkey_manager: ^0.2.2
 ```
 
 或
