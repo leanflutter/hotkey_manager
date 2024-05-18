@@ -65,21 +65,21 @@ class HotKeyManager {
 
     if (keyEvent is KeyDownEvent) {
       final physicalKeysPressed = HardwareKeyboard.instance.physicalKeysPressed;
-      HotKey? hotKey = _hotKeyList.firstWhereOrNull(
-        (e) {
-          List<HotKeyModifier> modifiers = HotKeyModifier.values
-              .where((e) => e.physicalKeys.any(physicalKeysPressed.contains))
-              .toList();
-          return e.scope == HotKeyScope.inapp &&
-              keyEvent.logicalKey == e.logicalKey &&
-              modifiers.length == (e.modifiers?.length ?? 0) &&
-              modifiers.every((e.modifiers ?? []).contains);
-        },
-      );
-      if (hotKey != null) {
-        HotKeyHandler? handler = _keyDownHandlerMap[hotKey.identifier];
-        if (handler != null) handler(hotKey);
-        _lastPressedHotKey = hotKey;
+      final hotKeys = _hotKeyList.where((e) {
+        List<HotKeyModifier> modifiers = HotKeyModifier.values
+            .where((e) => e.physicalKeys.any(physicalKeysPressed.contains))
+            .toList();
+        return e.scope == HotKeyScope.inapp &&
+            keyEvent.logicalKey == e.logicalKey &&
+            modifiers.length == (e.modifiers?.length ?? 0) &&
+            modifiers.every((e.modifiers ?? []).contains);
+      });
+      if (hotKeys.isNotEmpty) {
+        for (final hotKey in hotKeys) {
+          HotKeyHandler? handler = _keyDownHandlerMap[hotKey.identifier];
+          if (handler != null) handler(hotKey);
+        }
+        _lastPressedHotKey = hotKeys.last;
         return true;
       }
     }
