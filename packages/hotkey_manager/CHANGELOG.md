@@ -1,3 +1,7 @@
+## 0.2.3
+
+* bug fix that multi eventHandler does not fire (#53)
+
 ## 0.2.2
 
 * feat: Add `CallbackGlobalShortcuts` and `GlobalShortcuts` Widgets.
