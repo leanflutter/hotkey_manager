@@ -29,10 +29,10 @@ class _VirtualKeyView extends StatelessWidget {
       ),
       child: Text(
         keyLabel,
-        style: TextStyle(
-          color: Theme.of(context).textTheme.bodyText2?.color,
-          fontSize: 12,
-        ),
+        // style: TextStyle(
+        //   // color: Theme.of(context).textTheme.bodyText2?.color,
+        //   fontSize: 12,
+        // ),
       ),
     );
   }
