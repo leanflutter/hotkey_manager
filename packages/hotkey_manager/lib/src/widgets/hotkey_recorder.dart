@@ -6,7 +6,7 @@ import 'package:hotkey_manager_platform_interface/hotkey_manager_platform_interf
 class HotKeyRecorder extends StatefulWidget {
   const HotKeyRecorder({
     super.key,
-    this.initalHotKey,
+    this.initialHotKey,
     required this.onHotKeyRecorded,
   });
 
