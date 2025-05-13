@@ -6,13 +6,12 @@ environment:
   sdk: ">=2.18.0 <4.0.0"
 
 dependencies:
-  bot_toast: ^4.0.1
+  bot_toast: ^4.1.3
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
   hotkey_manager:
     path: ../
-  preference_list: ^0.0.1
 
 dev_dependencies:
   flutter_test:

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:hotkey_manager_example/widgets/record_hotkey_dialog.dart';
-import 'package:preference_list/preference_list.dart';
 
 class ExampleIntent extends Intent {}
 
@@ -73,77 +72,61 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return PreferenceList(
+    return ListView(
       children: <Widget>[
-        PreferenceListSection(
-          title: const Text('REGISTERED HOTKEY LIST'),
-          children: [
-            for (var registeredHotKey in _registeredHotKeyList)
-              PreferenceListItem(
-                padding: const EdgeInsets.all(12),
-                title: Row(
+        const Text('REGISTERED HOTKEY LIST'),
+        for (var registeredHotKey in _registeredHotKeyList)
+          ListTile(
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                HotKeyVirtualView(hotKey: registeredHotKey),
+                const SizedBox(width: 10),
+                Text(
+                  registeredHotKey.scope.toString(),
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+            trailing: SizedBox(
+              width: 40,
+              height: 40,
+              child: CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: const Stack(
+                  alignment: Alignment.center,
                   children: [
-                    HotKeyVirtualView(hotKey: registeredHotKey),
-                    const SizedBox(width: 10),
-                    Text(
-                      registeredHotKey.scope.toString(),
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
+                    Icon(
+                      CupertinoIcons.delete,
+                      size: 18,
+                      color: Colors.red,
                     ),
                   ],
                 ),
-                accessoryView: SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    child: const Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Icon(
-                          CupertinoIcons.delete,
-                          size: 18,
-                          color: Colors.red,
-                        ),
-                      ],
-                    ),
-                    onPressed: () => _handleHotKeyUnregister(registeredHotKey),
-                  ),
-                ),
+                onPressed: () => _handleHotKeyUnregister(registeredHotKey),
               ),
-            PreferenceListItem(
-              title: Text(
-                'Register a new HotKey',
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              accessoryView: Container(),
-              onTap: () {
-                _handleClickRegisterNewHotKey();
-              },
             ),
-          ],
+          ),
+        ListTile(
+          title: const Text(
+            'Register a new HotKey',
+          ),
+          onTap: () {
+            _handleClickRegisterNewHotKey();
+          },
         ),
-        PreferenceListSection(
-          children: [
-            PreferenceListItem(
-              title: Text(
-                'Unregister all HotKeys',
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              accessoryView: Container(),
-              onTap: () async {
-                await hotKeyManager.unregisterAll();
-                _registeredHotKeyList = hotKeyManager.registeredHotKeyList;
-                setState(() {});
-              },
-            ),
-          ],
+        ListTile(
+          title: const Text(
+            'Unregister all HotKeys',
+          ),
+          onTap: () async {
+            await hotKeyManager.unregisterAll();
+            _registeredHotKeyList = hotKeyManager.registeredHotKeyList;
+            setState(() {});
+          },
         ),
       ],
     );
