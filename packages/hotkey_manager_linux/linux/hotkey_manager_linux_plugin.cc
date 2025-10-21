@@ -32,7 +32,7 @@ G_DEFINE_TYPE(HotkeyManagerLinuxPlugin,
               g_object_get_type())
 
 void handle_key_down(const char* keystring, void* user_data) {
-  const char* identifier;
+  const char* identifier = "";
 
   std::string val = keystring;
   auto result = std::find_if(hotkey_id_map.begin(), hotkey_id_map.end(),
@@ -103,7 +103,7 @@ static FlMethodResponse* hkm_unregister(_HotkeyManagerLinuxPlugin* self,
                                         FlValue* args) {
   const char* identifier =
       fl_value_get_string(fl_value_lookup_string(args, "identifier"));
-  const char* keystring;
+  const char* keystring = "";
 
   std::string val = identifier;
   auto result = std::find_if(hotkey_id_map.begin(), hotkey_id_map.end(),
