@@ -5,6 +5,8 @@
 //  Created by Lijy91 on 2021/7/23.
 //
 
+import AppKit
+
 extension NSEvent.ModifierFlags {
     public init(pluginModifiers: Array<String>) {
         self.init()
