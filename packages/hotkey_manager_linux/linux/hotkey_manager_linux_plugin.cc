@@ -1,138 +1,33 @@
 #include "include/hotkey_manager_linux/hotkey_manager_linux_plugin.h"
 
 #include <flutter_linux/flutter_linux.h>
-#include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 #include <sys/utsname.h>
 
 #include <cstring>
 
-#include <keybinder.h>
+#ifdef GDK_WINDOWING_X11
+#include <gdk/gdkx.h>
+#endif
 
-#include <algorithm>
-#include <map>
-#include <string>
-#include <vector>
-
+#include "hotkey_manager_keybinder_backend.h"
+#include "hotkey_manager_linux_backend.h"
 #include "hotkey_manager_linux_plugin_private.h"
+#include "hotkey_manager_portal_backend.h"
 
 #define HOTKEY_MANAGER_LINUX_PLUGIN(obj)                                     \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), hotkey_manager_linux_plugin_get_type(), \
                               HotkeyManagerLinuxPlugin))
 
-std::map<std::string, std::string> hotkey_id_map;
-FlEventChannel* event_channel;
-
 struct _HotkeyManagerLinuxPlugin {
   GObject parent_instance;
+  FlEventChannel* event_channel;
+  HotkeyManagerLinuxBackend* backend;
 };
 
 G_DEFINE_TYPE(HotkeyManagerLinuxPlugin,
               hotkey_manager_linux_plugin,
               g_object_get_type())
-
-void handle_key_down(const char* keystring, void* user_data) {
-  const char* identifier;
-
-  std::string val = keystring;
-  auto result = std::find_if(hotkey_id_map.begin(), hotkey_id_map.end(),
-                             [val](const auto& e) { return e.second == val; });
-
-  if (result != hotkey_id_map.end())
-    identifier = result->first.c_str();
-
-  g_autoptr(FlValue) event_data = fl_value_new_map();
-  fl_value_set_string_take(event_data, "identifier",
-                           fl_value_new_string(identifier));
-
-  FlValue* event = fl_value_new_map();
-  fl_value_set_string_take(event, "type", fl_value_new_string("onKeyDown"));
-  fl_value_set_string_take(event, "data", event_data);
-
-  fl_event_channel_send(event_channel, event, nullptr, nullptr);
-}
-
-guint get_mods(const std::vector<std::string>& modifiers) {
-  guint mods = 0;
-  for (int i = 0; i < modifiers.size(); i++) {
-    guint mod = 0;
-    if (modifiers[i] == "alt")
-      mod = GDK_MOD1_MASK;
-    else if (modifiers[i] == "capsLock")
-      mod = GDK_LOCK_MASK;
-    else if (modifiers[i] == "control")
-      mod = GDK_CONTROL_MASK;
-    else if (modifiers[i] == "meta")
-      mod = GDK_META_MASK;
-    else if (modifiers[i] == "shift")
-      mod = GDK_SHIFT_MASK;
-    mods = mods | mod;
-  }
-  return mods;
-}
-
-static FlMethodResponse* hkm_register(_HotkeyManagerLinuxPlugin* self,
-                                      FlValue* args) {
-  FlValue* modifiers_value = fl_value_lookup_string(args, "modifiers");
-
-  const char* identifier =
-      fl_value_get_string(fl_value_lookup_string(args, "identifier"));
-  const int key_code =
-      fl_value_get_int(fl_value_lookup_string(args, "keyCode"));
-  std::vector<std::string> modifiers;
-  for (gint i = 0; i < fl_value_get_length(modifiers_value); i++) {
-    std::string keyModifier =
-        fl_value_get_string(fl_value_get_list_value(modifiers_value, i));
-    modifiers.push_back(keyModifier);
-  }
-
-  const char* keystring =
-      gtk_accelerator_name(key_code, (GdkModifierType)get_mods(modifiers));
-
-  hotkey_id_map.insert(
-      std::pair<std::string, std::string>(identifier, keystring));
-
-  keybinder_init();
-  keybinder_bind(keystring, handle_key_down, NULL);
-
-  return FL_METHOD_RESPONSE(
-      fl_method_success_response_new(fl_value_new_bool(true)));
-}
-
-static FlMethodResponse* hkm_unregister(_HotkeyManagerLinuxPlugin* self,
-                                        FlValue* args) {
-  const char* identifier =
-      fl_value_get_string(fl_value_lookup_string(args, "identifier"));
-  const char* keystring;
-
-  std::string val = identifier;
-  auto result = std::find_if(hotkey_id_map.begin(), hotkey_id_map.end(),
-                             [val](const auto& e) { return e.first == val; });
-
-  if (result != hotkey_id_map.end())
-    keystring = result->second.c_str();
-
-  keybinder_unbind(keystring, handle_key_down);
-  hotkey_id_map.erase(identifier);
-
-  return FL_METHOD_RESPONSE(
-      fl_method_success_response_new(fl_value_new_bool(true)));
-}
-
-static FlMethodResponse* hkm_unregister_all(_HotkeyManagerLinuxPlugin* self,
-                                            FlValue* args) {
-  for (std::map<std::string, std::string>::iterator it = hotkey_id_map.begin();
-       it != hotkey_id_map.end(); ++it) {
-    std::string identifier = it->first;
-    const char* keystring = it->second.c_str();
-    keybinder_unbind(keystring, handle_key_down);
-  }
-
-  hotkey_id_map.clear();
-
-  return FL_METHOD_RESPONSE(
-      fl_method_success_response_new(fl_value_new_bool(true)));
-}
 
 // Called when a method call is received from Flutter.
 static void hotkey_manager_linux_plugin_handle_method_call(
@@ -144,11 +39,11 @@ static void hotkey_manager_linux_plugin_handle_method_call(
   FlValue* args = fl_method_call_get_args(method_call);
 
   if (strcmp(method, "register") == 0) {
-    response = hkm_register(self, args);
+    response = self->backend->Register(args);
   } else if (strcmp(method, "unregister") == 0) {
-    response = hkm_unregister(self, args);
+    response = self->backend->Unregister(args);
   } else if (strcmp(method, "unregisterAll") == 0) {
-    response = hkm_unregister_all(self, args);
+    response = self->backend->UnregisterAll();
   } else {
     response = FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
   }
@@ -165,7 +60,10 @@ FlMethodResponse* get_platform_version() {
 }
 
 static void hotkey_manager_linux_plugin_dispose(GObject* object) {
-  g_clear_object(&event_channel);
+  HotkeyManagerLinuxPlugin* self = HOTKEY_MANAGER_LINUX_PLUGIN(object);
+  delete self->backend;
+  self->backend = nullptr;
+  g_clear_object(&self->event_channel);
   G_OBJECT_CLASS(hotkey_manager_linux_plugin_parent_class)->dispose(object);
 }
 
@@ -175,6 +73,22 @@ static void hotkey_manager_linux_plugin_class_init(
 }
 
 static void hotkey_manager_linux_plugin_init(HotkeyManagerLinuxPlugin* self) {}
+
+static bool is_x11_display() {
+#ifdef GDK_WINDOWING_X11
+  GdkDisplay* display = gdk_display_get_default();
+  return display != nullptr && GDK_IS_X11_DISPLAY(display);
+#else
+  return false;
+#endif
+}
+
+static HotkeyManagerLinuxBackend* create_backend(FlEventChannel* event_channel) {
+  if (is_x11_display()) {
+    return new HotkeyManagerKeybinderBackend(event_channel);
+  }
+  return new HotkeyManagerPortalBackend(event_channel);
+}
 
 static void method_call_cb(FlMethodChannel* channel,
                            FlMethodCall* method_call,
@@ -196,10 +110,11 @@ void hotkey_manager_linux_plugin_register_with_registrar(
       channel, method_call_cb, g_object_ref(plugin), g_object_unref);
 
   g_autoptr(FlStandardMethodCodec) event_codec = fl_standard_method_codec_new();
-  event_channel =
+  plugin->event_channel =
       fl_event_channel_new(fl_plugin_registrar_get_messenger(registrar),
                            "dev.leanflutter.plugins/hotkey_manager_event",
                            FL_METHOD_CODEC(event_codec));
+  plugin->backend = create_backend(plugin->event_channel);
 
   g_object_unref(plugin);
 }

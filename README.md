@@ -68,12 +68,33 @@ dependencies:
 #### Linux requirements
 
 - [`keybinder-3.0`](https://github.com/kupferlauncher/keybinder)
+- [`xdg-desktop-portal`](https://flatpak.github.io/xdg-desktop-portal/) with
+  GlobalShortcuts support for Wayland sessions
 
 Run the following command
 
 ```
 sudo apt-get install keybinder-3.0
 ```
+
+On X11, Linux global shortcuts are registered through `keybinder-3.0`. On
+Wayland, they are registered through the desktop portal, so the compositor may
+show a permission dialog the first time shortcuts are bound. Portal support for
+`capsLock` and `fn` modifiers depends on the compositor and may be unavailable.
+Give each system-scoped `HotKey` a stable, semantic `identifier` (for example,
+`toggle-mute`) and reuse it across application launches. The portal owns the
+saved binding and the plugin queries it on startup; applications only need to
+persist their own `HotKey` definitions when those definitions are user-created.
+The key combination is only a preference when an identifier is first bound;
+later changes must be made through the desktop's shortcut configuration UI.
+Adding a new identifier may show the portal dialog again. Wayland portals do
+not provide a portable API for removing one saved shortcut, so `unregister`
+only stops handling it in the current application session.
+Recent versions of `xdg-desktop-portal` also require host applications to have
+an installed `.desktop` file whose basename matches the Linux `application-id`
+(for example, `com.example.MyApp.desktop` for `com.example.MyApp`). Compositors
+without a GlobalShortcuts portal backend, such as some Niri/wlroots setups, will
+still reject Wayland global shortcut registration.
 
 ### Usage
 
@@ -105,7 +126,8 @@ await hotKeyManager.register(
   keyDownHandler: (hotKey) {
     print('onKeyDown+${hotKey.toJson()}');
   },
-  // Only works on macOS.
+  // Only works on macOS and on Linux Wayland sessions that support the
+  // GlobalShortcuts portal.
   keyUpHandler: (hotKey){
     print('onKeyUp+${hotKey.toJson()}');
   } ,

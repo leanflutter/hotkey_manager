@@ -65,6 +65,10 @@ class HotKey {
     return _$HotKeyFromJson(json);
   }
 
+  /// The stable identity of this shortcut's action.
+  ///
+  /// Supply the same value across launches for system shortcuts on Wayland so
+  /// the desktop portal can reuse the user's existing binding.
   final String identifier;
   final KeyboardKey key;
   final List<HotKeyModifier>? modifiers;

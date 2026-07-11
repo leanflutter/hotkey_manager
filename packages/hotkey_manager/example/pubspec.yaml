@@ -18,5 +18,15 @@ dev_dependencies:
     sdk: flutter
   mostly_reasonable_lints: ^0.1.1
 
+dependency_overrides:
+  hotkey_manager_linux:
+    path: ../../hotkey_manager_linux
+  hotkey_manager_macos:
+    path: ../../hotkey_manager_macos
+  hotkey_manager_platform_interface:
+    path: ../../hotkey_manager_platform_interface
+  hotkey_manager_windows:
+    path: ../../hotkey_manager_windows
+
 flutter:
   uses-material-design: true

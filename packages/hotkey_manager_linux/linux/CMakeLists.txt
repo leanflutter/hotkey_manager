@@ -13,7 +13,10 @@ set(PLUGIN_NAME "hotkey_manager_linux_plugin")
 
 # Any new source files that you add to the plugin should be added here.
 list(APPEND PLUGIN_SOURCES
+  "hotkey_manager_keybinder_backend.cc"
+  "hotkey_manager_linux_backend.cc"
   "hotkey_manager_linux_plugin.cc"
+  "hotkey_manager_portal_backend.cc"
 )
 
 # Define the plugin library target. Its name must not be changed (see comment
@@ -40,7 +43,6 @@ target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
 target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
-target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::KEYBINDER)
 
 pkg_check_modules(KEYBINDER IMPORTED_TARGET keybinder-3.0)
 if(KEYBINDER_FOUND)
@@ -96,6 +98,7 @@ apply_standard_settings(${TEST_RUNNER})
 target_include_directories(${TEST_RUNNER} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 target_link_libraries(${TEST_RUNNER} PRIVATE flutter)
 target_link_libraries(${TEST_RUNNER} PRIVATE PkgConfig::GTK)
+target_link_libraries(${TEST_RUNNER} PRIVATE PkgConfig::KEYBINDER)
 target_link_libraries(${TEST_RUNNER} PRIVATE gtest_main gmock)
 
 # Enable automatic test discovery.
