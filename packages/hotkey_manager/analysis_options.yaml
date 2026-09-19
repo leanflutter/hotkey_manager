@@ -1,1 +1,1 @@
-include: package:mostly_reasonable_lints/flutter.yaml
+include: package:flutter_lints/flutter.yaml
