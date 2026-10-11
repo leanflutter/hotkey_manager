@@ -84,10 +84,7 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(width: 10),
                 Text(
                   registeredHotKey.scope.toString(),
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
                 ),
               ],
             ),
@@ -99,11 +96,7 @@ class _HomePageState extends State<HomePage> {
                 child: const Stack(
                   alignment: Alignment.center,
                   children: [
-                    Icon(
-                      CupertinoIcons.delete,
-                      size: 18,
-                      color: Colors.red,
-                    ),
+                    Icon(CupertinoIcons.delete, size: 18, color: Colors.red),
                   ],
                 ),
                 onPressed: () => _handleHotKeyUnregister(registeredHotKey),
@@ -111,17 +104,13 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ListTile(
-          title: const Text(
-            'Register a new HotKey',
-          ),
+          title: const Text('Register a new HotKey'),
           onTap: () {
             _handleClickRegisterNewHotKey();
           },
         ),
         ListTile(
-          title: const Text(
-            'Unregister all HotKeys',
-          ),
+          title: const Text('Unregister all HotKeys'),
           onTap: () async {
             await hotKeyManager.unregisterAll();
             _registeredHotKeyList = hotKeyManager.registeredHotKeyList;
@@ -134,25 +123,15 @@ class _HomePageState extends State<HomePage> {
 
   Widget _build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Example'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: _buildBody(context),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Example')),
+      body: Column(children: [Expanded(child: _buildBody(context))]),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Actions(
-      actions: <Type, Action<Intent>>{
-        ExampleIntent: ExampleAction(),
-      },
+      actions: <Type, Action<Intent>>{ExampleIntent: ExampleAction()},
       child: GlobalShortcuts(
         shortcuts: {
           const SingleActivator(LogicalKeyboardKey.keyA, alt: true):

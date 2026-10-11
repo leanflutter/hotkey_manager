@@ -10,10 +10,6 @@ extension _SingleActivatorExtension on SingleActivator {
       if (meta) HotKeyModifier.meta,
     ];
     return HotKey(
-      identifier: [
-        ...modifiers.map((m) => m.name),
-        '${trigger.keyId}',
-      ].join('+'),
       key: trigger,
       modifiers: modifiers,
       scope: HotKeyScope.system,
@@ -38,30 +34,49 @@ class GlobalShortcuts extends StatefulWidget {
 
 class _GlobalShortcutsState extends State<GlobalShortcuts> {
   final List<HotKey> _registeredHotKeys = [];
+  final Map<String, SingleActivator> _activatorsById = {};
 
   @override
   void initState() {
     super.initState();
+    _registerShortcuts();
+  }
+
+  void _registerShortcuts() {
     for (final entry in widget.shortcuts.entries) {
       final hotKey = entry.key._toHotKey();
       hotKeyManager.register(hotKey, keyDownHandler: _onKeyDown);
       _registeredHotKeys.add(hotKey);
+      _activatorsById[hotKey.identifier] = entry.key;
+    }
+  }
+
+  void _unregisterShortcuts() {
+    for (final hotKey in _registeredHotKeys) {
+      hotKeyManager.unregister(hotKey);
+    }
+    _registeredHotKeys.clear();
+    _activatorsById.clear();
+  }
+
+  @override
+  void didUpdateWidget(covariant GlobalShortcuts oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.shortcuts != widget.shortcuts) {
+      _unregisterShortcuts();
+      _registerShortcuts();
     }
   }
 
   @override
   void dispose() {
+    _unregisterShortcuts();
     super.dispose();
-    for (final hotKey in _registeredHotKeys) {
-      hotKeyManager.unregister(hotKey);
-    }
-    _registeredHotKeys.clear();
   }
 
   void _onKeyDown(HotKey hotKey) {
-    final activator = widget.shortcuts.keys.firstWhere(
-      (activator) => activator._toHotKey().identifier == hotKey.identifier,
-    );
+    if (!mounted) return;
+    final activator = _activatorsById[hotKey.identifier];
     final Intent? matchedIntent = widget.shortcuts[activator];
     if (matchedIntent != null) {
       final Action<Intent>? action = Actions.maybeFind<Intent>(
@@ -69,12 +84,8 @@ class _GlobalShortcutsState extends State<GlobalShortcuts> {
         intent: matchedIntent,
       );
       if (action != null) {
-        final (bool enabled, Object? invokeResult) =
-            Actions.of(context).invokeActionIfEnabled(
-          action,
-          matchedIntent,
-          context,
-        );
+        final (bool enabled, Object? invokeResult) = Actions.of(context)
+            .invokeActionIfEnabled(action, matchedIntent, context);
         if (enabled) {
           action.toKeyEventResult(matchedIntent, invokeResult);
         }
@@ -106,33 +117,52 @@ class CallbackGlobalShortcuts extends StatefulWidget {
 
 class _CallbackGlobalShortcutsState extends State<CallbackGlobalShortcuts> {
   final List<HotKey> _registeredHotKeys = [];
+  final Map<String, SingleActivator> _activatorsById = {};
 
   Map<SingleActivator, VoidCallback> get bindings => widget.bindings;
 
   @override
   void initState() {
     super.initState();
+    _registerShortcuts();
+  }
+
+  void _registerShortcuts() {
     for (final entry in widget.bindings.entries) {
       final hotKey = entry.key._toHotKey();
       hotKeyManager.register(hotKey, keyDownHandler: _onKeyDown);
       _registeredHotKeys.add(hotKey);
+      _activatorsById[hotKey.identifier] = entry.key;
+    }
+  }
+
+  void _unregisterShortcuts() {
+    for (final hotKey in _registeredHotKeys) {
+      hotKeyManager.unregister(hotKey);
+    }
+    _registeredHotKeys.clear();
+    _activatorsById.clear();
+  }
+
+  @override
+  void didUpdateWidget(covariant CallbackGlobalShortcuts oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.bindings != widget.bindings) {
+      _unregisterShortcuts();
+      _registerShortcuts();
     }
   }
 
   @override
   void dispose() {
+    _unregisterShortcuts();
     super.dispose();
-    for (final hotKey in _registeredHotKeys) {
-      hotKeyManager.unregister(hotKey);
-    }
-    _registeredHotKeys.clear();
   }
 
   void _onKeyDown(HotKey hotKey) {
-    final activator = bindings.keys.firstWhere(
-      (activator) => activator._toHotKey().identifier == hotKey.identifier,
-    );
-    bindings[activator]!.call();
+    if (!mounted) return;
+    final activator = _activatorsById[hotKey.identifier];
+    bindings[activator]?.call();
   }
 
   @override

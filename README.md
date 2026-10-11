@@ -37,6 +37,61 @@ English | [简体中文](./README-ZH.md)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## Native API
+
+System shortcuts use the C++ nativeapi core through Dart FFI. No per-platform
+hotkey_manager plugin or method channel is needed.
+
+Requires Dart 3.13+, Flutter 3.47+ and **nativeapi 0.5.3+**. This migration depends
+on the new `ShortcutReleasedEvent` in that release; when developing before it is
+published, use local dependency overrides for both `nativeapi` and `cnativeapi`.
+
+```dart
+import 'package:hotkey_manager/hotkey_manager.dart' as hotkey;
+
+final manager = hotkey.ShortcutManager.instance;
+final listenerId = manager.addListener((event) {
+  if (event is hotkey.ShortcutActivatedEvent) {
+    print('Pressed: ${event.accelerator}');
+  } else if (event is hotkey.ShortcutReleasedEvent) {
+    print('Released: ${event.accelerator}'); // macOS
+  }
+});
+final shortcut = manager.registerWithOptions(const hotkey.ShortcutOptions(
+  accelerator: 'Ctrl+Alt+Q',
+  description: 'Quick action',
+  scope: hotkey.ShortcutScope.global,
+  enabled: true,
+));
+if (shortcut == null) {
+  throw StateError('Shortcut unavailable or unsupported');
+}
+
+// When the registration is no longer needed:
+manager.unregisterWithId(shortcut.id);
+shortcut.dispose();
+manager.removeListener(listenerId);
+```
+
+Use `addListener` for Flutter callbacks: events are delivered asynchronously to
+the registering Dart isolate. A shortcut handle must be unregistered before it
+is disposed; disposing the handle alone does not remove the native registration.
+
+The existing `HotKeyManager`, `HotKey`, `HotKeyRecorder`, `HotKeyVirtualView`,
+`GlobalShortcuts` and `CallbackGlobalShortcuts` remain available from the same
+import, and from `package:hotkey_manager/legacy.dart`. Old hotkey JSON is supported.
+In-app shortcuts continue to use Flutter's `HardwareKeyboard`, with down and up
+events on all Flutter platforms. System key-up events are available on macOS;
+Windows and Linux report system key-down only. Fn and CapsLock system modifiers
+are supported on macOS; unsupported keys/modifiers throw `PlatformException`.
+Linux system shortcuts require X11 (including XWayland), not native Wayland.
+
+Repeated registration of the same identifier replaces its handlers. Different
+identifiers with the same combination share one native registration and each
+receive events. `hotKeyManager.unregisterAll()` clears this package's shortcuts,
+including leftovers after a hot restart, while preserving shortcuts registered
+directly through `ShortcutManager`.
+
 ## Platform Support
 
 | Linux | macOS | Windows |
@@ -67,12 +122,8 @@ dependencies:
 
 #### Linux requirements
 
-- [`keybinder-3.0`](https://github.com/kupferlauncher/keybinder)
-
-Run the following command
-
-```
-sudo apt-get install keybinder-3.0
+```bash
+sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev libx11-dev libxi-dev
 ```
 
 ### Usage
@@ -147,8 +198,8 @@ HotKeyRecorder(
 
 ## Related Links
 
-- https://github.com/soffes/HotKey
-- https://github.com/kupferlauncher/keybinder
+- [nativeapi](https://github.com/libnativeapi/nativeapi)
+- [nativeapi C++ core](https://github.com/libnativeapi/nativeapi-core)
 
 ## License
 

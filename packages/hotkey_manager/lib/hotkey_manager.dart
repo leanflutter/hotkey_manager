@@ -1,5 +1,19 @@
-export 'package:hotkey_manager/src/hotkey_manager.dart';
-export 'package:hotkey_manager/src/widgets/global_shortcuts.dart';
-export 'package:hotkey_manager/src/widgets/hotkey_recorder.dart';
-export 'package:hotkey_manager/src/widgets/hotkey_virtual_view.dart';
-export 'package:hotkey_manager_platform_interface/hotkey_manager_platform_interface.dart';
+library;
+
+export 'package:nativeapi/nativeapi.dart'
+    show
+        ListenerId,
+        Shortcut,
+        ShortcutActivatedEvent,
+        ShortcutEvent,
+        ShortcutId,
+        ShortcutManager,
+        ShortcutOptions,
+        ShortcutRegisteredEvent,
+        ShortcutRegistrationFailedEvent,
+        ShortcutReleasedEvent,
+        ShortcutScope,
+        ShortcutUnregisteredEvent;
+
+// Existing imports keep the HotKey model, manager and Flutter widgets working.
+export 'legacy.dart';

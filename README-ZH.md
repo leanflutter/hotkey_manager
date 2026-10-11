@@ -37,6 +37,29 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## nativeapi 迁移
+
+系统快捷键通过 Dart FFI 使用 nativeapi C++ 核心，不再依赖各平台插件。
+需要 Dart 3.13+、Flutter 3.47+ 和 **nativeapi 0.5.3+**；本次迁移使用该版本新增的
+`ShortcutReleasedEvent`。发布前可通过本地 `dependency_overrides` 同时指定
+`nativeapi` 和 `cnativeapi`。
+
+主入口新增导出 `ShortcutManager`、`ShortcutOptions` 和快捷键事件，推荐使用
+`registerWithOptions` 注册、`addListener` 接收事件，回调会异步送达 Dart isolate。
+注销时先调用 `unregisterWithId(shortcut.id)`，再调用 `shortcut.dispose()`；仅释放句柄
+不会注销原生快捷键。完整示例见 [英文文档](README.md#native-api) 和 example 应用。
+
+旧 `HotKeyManager`、`HotKey`、录制/展示组件及全局快捷键组件仍可从原入口导入，
+也可使用 `package:hotkey_manager/legacy.dart`，历史 JSON 格式继续兼容。
+应用内快捷键仍由 Flutter 处理，各平台都支持按下和抬起事件。
+系统快捷键的抬起事件仅支持 macOS；Windows、Linux 仅支持按下事件。
+Fn、CapsLock 系统修饰键仅支持 macOS，不支持的键位/修饰键会抛出 `PlatformException`。
+Linux 系统快捷键需要 X11（含 XWayland），暂不支持原生 Wayland。
+
+同一 identifier 重复注册会替换回调；不同 identifier 注册相同组合键会共享原生注册，
+并分别收到事件。`hotKeyManager.unregisterAll()` 只清理本包快捷键（含热重启遗留），
+不会影响直接通过 `ShortcutManager` 注册的快捷键。
+
 ## 平台支持
 
 | Linux | macOS | Windows |
@@ -67,12 +90,8 @@ dependencies:
 
 #### Linux requirements
 
-- [`keybinder-3.0`](https://github.com/kupferlauncher/keybinder)
-
-运行以下命令
-
-```
-sudo apt-get install keybinder-3.0
+```bash
+sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev libx11-dev libxi-dev
 ```
 
 ### 用法
@@ -147,8 +166,8 @@ HotKeyRecorder(
 
 ## 相关链接
 
-- https://github.com/soffes/HotKey
-- https://github.com/kupferlauncher/keybinder
+- [nativeapi](https://github.com/libnativeapi/nativeapi)
+- [nativeapi C++ core](https://github.com/libnativeapi/nativeapi-core)
 
 ## 许可证
 

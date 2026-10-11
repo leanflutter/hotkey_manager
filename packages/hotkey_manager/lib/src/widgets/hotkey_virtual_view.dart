@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hotkey_manager_platform_interface/hotkey_manager_platform_interface.dart';
+import 'package:hotkey_manager/legacy.dart';
 
 class _VirtualKeyView extends StatelessWidget {
-  const _VirtualKeyView({
-    required this.keyLabel,
-  });
+  const _VirtualKeyView({required this.keyLabel});
 
   final String keyLabel;
 
@@ -14,14 +12,11 @@ class _VirtualKeyView extends StatelessWidget {
       padding: const EdgeInsets.only(left: 5, right: 5, top: 3, bottom: 3),
       decoration: BoxDecoration(
         color: Theme.of(context).canvasColor,
-        border: Border.all(
-          color: Theme.of(context).dividerColor,
-          width: 1,
-        ),
+        border: Border.all(color: Theme.of(context).dividerColor, width: 1),
         borderRadius: BorderRadius.circular(3),
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             offset: const Offset(0.0, 1.0),
           ),
         ],
@@ -38,10 +33,7 @@ class _VirtualKeyView extends StatelessWidget {
 }
 
 class HotKeyVirtualView extends StatelessWidget {
-  const HotKeyVirtualView({
-    super.key,
-    required this.hotKey,
-  });
+  const HotKeyVirtualView({super.key, required this.hotKey});
 
   final HotKey hotKey;
 
@@ -51,12 +43,8 @@ class HotKeyVirtualView extends StatelessWidget {
       spacing: 8,
       children: [
         for (HotKeyModifier modifier in hotKey.modifiers ?? [])
-          _VirtualKeyView(
-            keyLabel: modifier.physicalKeys.first.keyLabel,
-          ),
-        _VirtualKeyView(
-          keyLabel: hotKey.physicalKey.keyLabel,
-        ),
+          _VirtualKeyView(keyLabel: modifier.physicalKeys.first.keyLabel),
+        _VirtualKeyView(keyLabel: hotKey.physicalKey.keyLabel),
       ],
     );
   }

@@ -1,1 +1,8 @@
-include: package:mostly_reasonable_lints/flutter.yaml
+analyzer:
+  exclude:
+    - build/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+include: package:flutter_lints/flutter.yaml

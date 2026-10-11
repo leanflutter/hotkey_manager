@@ -1,7 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
-import 'package:hotkey_manager_example/pages/home.dart';
+import 'package:hotkey_manager_example/pages/native_shortcuts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,11 +26,11 @@ class _MyAppState extends State<MyApp> {
         primaryColor: const Color(0xff416ff4),
         canvasColor: Colors.white,
         scaffoldBackgroundColor: const Color(0xffF7F9FB),
-        dividerColor: Colors.grey.withOpacity(0.3),
+        dividerColor: Colors.grey.withValues(alpha: 0.3),
       ),
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
-      home: const HomePage(),
+      home: const NativeShortcutsPage(),
     );
   }
 }

@@ -1,1 +1,4 @@
-include: package:mostly_reasonable_lints/analysis_options.yaml
+analyzer:
+  exclude:
+    - build/**
+include: package:flutter_lints/flutter.yaml

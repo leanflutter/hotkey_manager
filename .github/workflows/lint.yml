@@ -10,10 +10,10 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.19.2"
+          flutter-version: "3.47.6"
           channel: "stable"
       - uses: bluefireteam/melos-action@v3
       - run: melos run analyze
@@ -21,10 +21,10 @@ jobs:
   format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.19.2"
+          flutter-version: "3.47.6"
           channel: "stable"
           cache: true
       - uses: bluefireteam/melos-action@v3

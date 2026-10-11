@@ -1,3 +1,17 @@
+## Unreleased
+
+- Migrate system shortcuts to nativeapi 0.5.3 through Dart FFI; remove the Linux,
+  macOS, Windows and platform-interface packages from this repository.
+- Export the native Shortcut API while preserving the existing HotKey API,
+  Flutter widgets and old JSON format. Add a `legacy.dart` entry point.
+- Preserve macOS system key-up events through `ShortcutReleasedEvent`.
+- Share native registrations for matching combinations; replace handlers by
+  identifier, roll back failed registrations, ignore stale events and reclaim
+  this package's registrations after a hot restart.
+- Fix in-app release tracking, including multiple matching handlers and
+  releasing modifiers before the primary key.
+- Requires Dart 3.13+, Flutter 3.47+ and nativeapi 0.5.3+.
+
 ## 0.2.3
 
 * bug fix that multi eventHandler does not fire (#53)

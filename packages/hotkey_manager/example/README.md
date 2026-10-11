@@ -1,16 +1,13 @@
-# hotkey_manager_example
+# hotkey_manager example
 
-Demonstrates how to use the hotkey_manager plugin.
+Run `flutter pub get`, then `flutter run -d macos`, `windows` or `linux`.
+The nativeapi 0.5.3 dependency must be available; before publication, add local
+`nativeapi` and `cnativeapi` overrides in both the package and this example.
 
-## Getting Started
+The opening page registers **Ctrl + Alt + H** through `ShortcutManager`, counts
+activation and release events, and unregisters the shortcut on disposal.
+Release events are available on macOS. The compatibility example demonstrates
+`HotKeyManager`, recording, rendering, and Flutter global shortcut widgets.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The web build remains supported for applications that also use the package for
+in-app shortcuts; system registration is disabled on the opening page.

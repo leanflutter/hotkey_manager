@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hotkey_manager/src/widgets/hotkey_virtual_view.dart';
-import 'package:hotkey_manager_platform_interface/hotkey_manager_platform_interface.dart';
+import 'package:hotkey_manager/legacy.dart';
 
 class HotKeyRecorder extends StatefulWidget {
   const HotKeyRecorder({

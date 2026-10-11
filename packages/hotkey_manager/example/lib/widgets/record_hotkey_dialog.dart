@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 class RecordHotKeyDialog extends StatefulWidget {
-  const RecordHotKeyDialog({
-    super.key,
-    required this.onHotKeyRecorded,
-  });
+  const RecordHotKeyDialog({super.key, required this.onHotKeyRecorded});
 
   final ValueChanged<HotKey> onHotKeyRecorded;
 
@@ -42,9 +39,7 @@ class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
               height: 60,
               margin: const EdgeInsets.only(top: 20),
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: Theme.of(context).primaryColor,
-                ),
+                border: Border.all(color: Theme.of(context).primaryColor),
               ),
               child: Stack(
                 alignment: Alignment.center,
