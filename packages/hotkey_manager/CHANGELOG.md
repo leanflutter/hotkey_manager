@@ -10,6 +10,8 @@
   this package's registrations after a hot restart.
 - Fix in-app release tracking, including multiple matching handlers and
   releasing modifiers before the primary key.
+- Report unmapped keyboard keys as platform errors and reclaim the native
+  example's shortcut after a hot restart.
 - Requires Dart 3.13+, Flutter 3.47+ and nativeapi 0.5.3+.
 
 ## 0.2.3

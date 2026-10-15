@@ -45,4 +45,14 @@ void main() {
       throwsA(isA<PlatformException>()),
     );
   });
+  test('unmapped logical and physical keys report a platform error', () {
+    expect(
+      () => hotKeyAccelerator(HotKey(key: LogicalKeyboardKey.hyper)),
+      throwsA(isA<PlatformException>()),
+    );
+    expect(
+      () => HotKey(key: const PhysicalKeyboardKey(0xffff)).logicalKey,
+      throwsA(isA<PlatformException>()),
+    );
+  });
 }

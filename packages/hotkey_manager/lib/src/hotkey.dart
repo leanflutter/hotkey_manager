@@ -53,7 +53,8 @@ class HotKey {
     if (key is LogicalKeyboardKey) {
       return key as LogicalKeyboardKey;
     } else if (key is PhysicalKeyboardKey) {
-      return (key as PhysicalKeyboardKey).logicalKey!;
+      final logicalKey = (key as PhysicalKeyboardKey).logicalKey;
+      if (logicalKey != null) return logicalKey;
     }
     throw PlatformException(
       code: 'invalid_keyboard_key',
@@ -65,7 +66,8 @@ class HotKey {
     if (key is PhysicalKeyboardKey) {
       return key as PhysicalKeyboardKey;
     } else if (key is LogicalKeyboardKey) {
-      return (key as LogicalKeyboardKey).physicalKey!;
+      final physicalKey = (key as LogicalKeyboardKey).physicalKey;
+      if (physicalKey != null) return physicalKey;
     }
     throw PlatformException(
       code: 'invalid_keyboard_key',

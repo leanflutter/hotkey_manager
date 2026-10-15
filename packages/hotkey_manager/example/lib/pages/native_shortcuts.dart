@@ -32,7 +32,9 @@ class _NativeShortcutsPageState extends State<NativeShortcutsPage> {
     final shortcut = _manager.registerWithOptions(
       const hotkey.ShortcutOptions(
         accelerator: 'Ctrl+Alt+H',
-        description: 'hotkey_manager native example',
+        // The startup unregisterAll() also reclaims this example's shortcut
+        // when its Dart state is lost in a hot restart.
+        description: 'hotkey_manager:native-example',
         scope: hotkey.ShortcutScope.global,
         enabled: true,
       ),
