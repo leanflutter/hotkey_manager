@@ -27,6 +27,7 @@ dependencies:
   uuid: '>=3.0.7 <5.0.0'
 
 dev_dependencies:
+  cnativeapi: ^0.5.3
   dependency_validator: ^3.0.0
   flutter_test:
     sdk: flutter
