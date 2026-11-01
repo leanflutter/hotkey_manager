@@ -43,8 +43,7 @@ System shortcuts use the C++ nativeapi core through Dart FFI. No per-platform
 native hotkey_manager plugin or method channel is needed.
 
 Requires Dart 3.13+, Flutter 3.47+ and **nativeapi/cnativeapi 0.5.4+** with native keycode support.
-Until that dependency release is published, these compatibility fixes require
-the matching nativeapi workspace sources through local dependency overrides.
+Both dependencies are published on pub.dev; no local dependency overrides are needed.
 
 ```dart
 import 'package:hotkey_manager/native.dart' as hotkey;
@@ -99,6 +98,31 @@ Repeated registration of the same identifier retains any omitted handlers.
 receive events. `hotKeyManager.unregisterAll()` clears this package's shortcuts,
 including leftovers after a hot restart, while preserving shortcuts registered
 directly through `ShortcutManager`.
+
+### Input focus, modifiers and registration errors
+
+In-app hotkeys observe Flutter key events without consuming text input. Filter a
+callback using the relevant `FocusNode.hasFocus` when it should be inactive while
+typing. Use Flutter `Shortcuts`/`Actions` for shortcuts that should consume events
+or follow focused-widget priority. Modifier-only in-app hotkeys are supported;
+use `PhysicalKeyboardKey.shiftLeft` and `PhysicalKeyboardKey.shiftRight` for
+independent bindings. Entries in `HotKey.modifiers` intentionally match either
+side; a handler can inspect `HardwareKeyboard.instance.physicalKeysPressed` if
+it needs to distinguish the side of a modifier in a chord.
+
+`HotKeyScope.system` works regardless of which application is focused. To reserve
+a shortcut only in the background, register it when your application becomes
+inactive/hidden and unregister it when it becomes active/visible again. This is
+an application lifecycle policy rather than another hotkey scope.
+
+Always await registration and handle `PlatformException`: reserved or already
+owned combinations fail without replacing another application's shortcut.
+Unmodified keys such as Space are subject to the operating system's rules.
+macOS keys without a native keycode, including the media Play/Pause key, fail
+with `unsupported_hotkey` instead of terminating the process. That error does
+not claim support for delivery of those media keys. System-reserved combinations
+(such as the task switcher or Spotlight) must first be disabled or reassigned in
+the operating system; this package does not override those reservations.
 
 ## Platform Support
 

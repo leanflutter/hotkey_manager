@@ -1,10 +1,10 @@
 {
   "date": "2026-11-01",
-  "branch": "codex/hotkey-compatibility",
+  "branch": "codex/hotkey-issue-audit",
   "auditBaseline": "1962b2e",
   "legacyBaseline": "ddbb7bf",
-  "coreRevision": "acc76c7a6d705e7d69450b47b05564fdc83e28b3",
-  "workspaceRevision": "55b27bdb0dea2d89fa55b40c98ac72cb1442dddd",
+  "coreRevision": "bd12037f2b61eafea7370f71d1a6e648f8b5493b",
+  "workspaceRevision": "96e94d4ea86b93acd37a7153816156bdfc17976a",
   "publicLegacyExportsRestored": true,
   "publishedPlatformInterfaceTypeIdentityPreserved": true,
   "originalFlutterImportsCompile": true,
@@ -21,29 +21,31 @@
   },
   "tests": {
     "macos": {
-      "passed": 40,
-      "skipped": 0,
+      "passed": 46,
+      "skipped": 1,
       "exampleAnalyze": "passed",
-      "exampleBuild": "debug macOS app built successfully"
+      "exampleBuild": "release AOT issue probe built and 12 runtime checks passed"
     },
     "windows-laptop": {
-      "passed": 39,
+      "passed": 46,
       "skipped": 1,
-      "desktopSession": 1
+      "desktopSession": 1,
+      "externalProcessGrabConflict": "passed",
+      "exampleBuild": "release AOT issue probe built; 12 checks passed in desktop session 1"
     },
     "ubuntu-nuc": {
-      "passed": 39,
-      "skipped": 1,
+      "passed": 45,
+      "skipped": 2,
       "display": "Xvfb",
       "nativeX11Checks": 11
     },
     "omarchy": {
-      "passed": 39,
-      "skipped": 1,
+      "passed": 45,
+      "skipped": 2,
       "display": "Hyprland XWayland :0",
       "nativeX11Checks": 11
     },
-    "skippedCase": "macOS-only Carbon down/release test",
+    "skippedCase": "OS-specific macOS Carbon and Windows external-grab cases are skipped on other platforms; native registration cases ran on every supported desktop.",
     "coreMacCTest": [
       "shortcut_accelerator_test",
       "shortcut_release_macos_test"
@@ -84,17 +86,18 @@
     "matchesLegacy": true
   },
   "dependencies": {
-    "nativeapi": "^0.5.4 with core acc76c7a6d705e7d69450b47b05564fdc83e28b3",
-    "cnativeapi": "^0.5.4 with core acc76c7a6d705e7d69450b47b05564fdc83e28b3",
+    "nativeapi": "^0.5.4, hosted pub.dev",
+    "cnativeapi": "^0.5.4, hosted pub.dev",
     "hotkey_manager_platform_interface": "^0.2.0, published canonical models and platform API",
-    "verificationUsedLocalOverrides": true,
+    "verificationUsedLocalOverrides": false,
     "overridesCommitted": false,
-    "nativeapi054PubAvailability": "404 checked on pub.dev; dependency release still required"
+    "nativeapi054PubAvailability": "published and archive SHA256 verified on all four test machines"
   },
   "remainingConstraints": [
     "Dart 3.13 / Flutter 3.47 minimum remains necessary for the nativeapi build-hook dependency; the original older SDK environment is not restored.",
     "No physical keyboard input was generated. Windows/Linux callbacks use nativeapi emitShortcutActivated; macOS also uses Carbon events sent only to the test process.",
-    "Physical held-key repetition and alternate layouts are not certified. Pure Wayland global shortcuts remain unsupported, as with the old X11 backend.",
-    "Native dependency release is required before merging this branch into main or using it without local overrides."
-  ]
+    "Physical held-key repetition and alternate layouts are not certified. Pure Wayland global shortcuts remain unsupported, as with the old X11 backend."
+  ],
+  "publishedVerification": "published_0.5.4_verification.json",
+  "historicalCoreMacCTestRevision": "acc76c7a6d705e7d69450b47b05564fdc83e28b3"
 }

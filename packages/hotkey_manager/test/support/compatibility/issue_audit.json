@@ -1,0 +1,168 @@
+{
+  "date": "2026-11-01",
+  "repository": "leanflutter/hotkey_manager",
+  "candidate": "next patch release using nativeapi",
+  "baseline": "aa61f740302e870564751810e425ba34ce254733",
+  "apiPolicy": "Preserve the published HotKey models, public method signatures, JSON and platform-interface type identity.",
+  "issues": [
+    {
+      "number": 73,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/73",
+      "status": "resolved_migration",
+      "finding": "Removed uninitialized-variable paths with the old Linux plugin; Linux release CI passes."
+    },
+    {
+      "number": 70,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/70",
+      "status": "resolved_migration",
+      "finding": "Dart-only plugin/native assets remove the Swift HotKey plugin and its SPM/CocoaPods requirement."
+    },
+    {
+      "number": 67,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/67",
+      "status": "resolved_migration",
+      "finding": "Same removed Linux uninitialized-variable paths as #73."
+    },
+    {
+      "number": 65,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/65",
+      "status": "verified_fix",
+      "finding": "Unmodified Space registration succeeds or reports PlatformException; a valid subsequent registration and event still work."
+    },
+    {
+      "number": 64,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/64",
+      "status": "resolved_migration",
+      "finding": "Removed the Swift dependency that defined the retroactive conformance."
+    },
+    {
+      "number": 63,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/63",
+      "status": "verified_fix",
+      "finding": "Real Windows release app automatically registers the Dart plugin and cleans up without MissingPluginException."
+    },
+    {
+      "number": 62,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/62",
+      "status": "pending_nativeapi",
+      "finding": "The NSNull crash is fixed and unsupported keys are explicit errors; actual macOS system Play/Pause support remains to implement."
+    },
+    {
+      "number": 61,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/61",
+      "status": "verified_fix",
+      "finding": "Real macOS/Windows AOT release apps receive non-null physical-key recordings for Shift+A and Shift+Alt+Q."
+    },
+    {
+      "number": 54,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/54",
+      "status": "verified_fix",
+      "finding": "Independent left/right Shift primary-key registrations and all standalone left/right modifiers are covered. Chord modifier enum entries remain side-agnostic; handlers can filter physicalKeysPressed."
+    },
+    {
+      "number": 51,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/51",
+      "status": "verified_fix",
+      "finding": "In-app callbacks observe without consuming keys, so the caller can filter by input FocusNode without suppressing text input."
+    },
+    {
+      "number": 44,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/44",
+      "status": "documented_policy",
+      "finding": "System scope is independent of focus. Background-only reservation is implemented by registering/unregistering on application lifecycle changes."
+    },
+    {
+      "number": 42,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/42",
+      "status": "verified_fix",
+      "finding": "Recorder uses physical keys and records Shift/Shift+Alt combinations in widget and AOT release tests."
+    },
+    {
+      "number": 36,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/36",
+      "status": "documented_os_restriction",
+      "finding": "OS-reserved task-switcher/Spotlight combinations are not portable registrations. Explicit failure is preserved and documented; the library must not steal OS reservations."
+    },
+    {
+      "number": 29,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/29",
+      "status": "verified_fix",
+      "finding": "Standalone Shift is excluded from its own required modifier set and receives both in-app callbacks."
+    },
+    {
+      "number": 22,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/22",
+      "status": "verified_fix",
+      "finding": "Standalone Control receives both in-app callbacks for Ctrl+mouse selection. System-wide modifier-only observation is not claimed."
+    },
+    {
+      "number": 21,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/21",
+      "status": "pending_nativeapi",
+      "finding": "Native Wayland global shortcuts still need a Portal backend; X11/XWayland registration is verified."
+    },
+    {
+      "number": 20,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/20",
+      "status": "verified_fix",
+      "finding": "Real release app hides its native window directly inside the in-app callback, shows it and successfully dispatches the next chord and release."
+    },
+    {
+      "number": 19,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/19",
+      "status": "verified_fix",
+      "finding": "Matching uses the current primary key, and synthesized held-key downs are ignored. AOT probe checks modifier-only input after a chord, window restore and editable focus."
+    },
+    {
+      "number": 14,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/14",
+      "status": "pending_android",
+      "finding": "The package still declares only desktop Dart plugins; Android hardware-keyboard in-app support needs registration/build verification."
+    },
+    {
+      "number": 12,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/12",
+      "status": "pending_nativeapi",
+      "finding": "GlobalShortcuts Portal is asynchronous and permission-mediated; it is not implemented by the current X11 backend."
+    },
+    {
+      "number": 10,
+      "url": "https://github.com/leanflutter/hotkey_manager/issues/10",
+      "status": "verified_fix",
+      "finding": "Windows external-process hotkey ownership and Linux independent-connection conflicts/rollback are tested; no existing OS grab is replaced."
+    }
+  ],
+  "pullRequests": [
+    {
+      "number": 66,
+      "url": "https://github.com/leanflutter/hotkey_manager/pull/66",
+      "status": "closed_without_merge",
+      "finding": "Superseded by removal of the Linux native plugin; replacement release builds pass."
+    },
+    {
+      "number": 69,
+      "url": "https://github.com/leanflutter/hotkey_manager/pull/69",
+      "status": "closed_without_merge",
+      "finding": "Superseded by removal of the Linux native plugin; replacement release builds pass."
+    },
+    {
+      "number": 71,
+      "url": "https://github.com/leanflutter/hotkey_manager/pull/71",
+      "status": "closed_without_merge",
+      "finding": "Superseded by removing the per-platform Swift plugin; native assets build without that dependency."
+    },
+    {
+      "number": 72,
+      "url": "https://github.com/leanflutter/hotkey_manager/pull/72",
+      "status": "pending_nativeapi",
+      "finding": "Reviewed the Portal protocol and old-plugin diff. New support must be implemented in nativeapi rather than restoring the removed Linux plugin."
+    }
+  ],
+  "releaseReady": false,
+  "remainingReleaseWork": [
+    "Implement and verify native Wayland Portal registrations in nativeapi (#12, #21, PR #72).",
+    "Implement and verify actual macOS system media Play/Pause registration (#62); safe failure alone is not media-key support.",
+    "Enable and verify Android/Chromebook in-app hardware-keyboard use (#14), documenting platform-wide key restrictions.",
+    "Complete final candidate CI, package dry run and patch-version metadata."
+  ]
+}

@@ -1,5 +1,11 @@
 ## Unreleased
 
+- Fix standalone left/right modifier hotkeys in application scope (#29, #22, #54).
+- Observe application keys without swallowing text input; callbacks can filter by focus (#51).
+- Ignore synthesized held-key presses when recovering window focus, and retain release tracking (#19, #20).
+- Verify Shift/Alt recorder combinations and non-null recording in real macOS/Windows release apps (#42, #61).
+- Verify recoverable unmodified-space/media registration and OS-grab conflicts against published nativeapi 0.5.4 (#65, #62, #10).
+
 - Restore the original platform-interface exports and injectable backend; keep native shortcut types in `native.dart` to avoid Flutter import conflicts.
 - Preserve omitted handlers on re-registration and the live `registeredHotKeyList`.
 - Preserve legacy native keycodes (including media, international and keypad keys), Windows repeat behavior and platform modifier handling; requires nativeapi/cnativeapi 0.5.4.
@@ -20,7 +26,7 @@
   example's shortcut after a hot restart.
 - Bundle nativeapi's native assets in the Linux example and cover native
   registrations on Windows and Linux as well as macOS.
-- **Breaking:** requires Dart 3.13+, Flutter 3.47+ and nativeapi 0.5.3+.
+- **Breaking:** requires Dart 3.13+, Flutter 3.47+ and nativeapi 0.5.4+.
 
 ## 0.2.3
 

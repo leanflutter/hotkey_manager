@@ -20,6 +20,34 @@ void main() {
       );
     }
   });
+
+  testWidgets(
+    'recorder records Shift and Shift+Alt combinations without null',
+    (tester) async {
+      final recorded = <hotkey.HotKey>[];
+      await tester.pumpWidget(
+        MaterialApp(
+          home: hotkey.HotKeyRecorder(onHotKeyRecorded: recorded.add),
+        ),
+      );
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.keyA);
+      expect(recorded.last.key, PhysicalKeyboardKey.keyA);
+      expect(recorded.last.modifiers, [hotkey.HotKeyModifier.shift]);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.keyA);
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.altLeft);
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.keyQ);
+      expect(recorded.last.key, PhysicalKeyboardKey.keyQ);
+      expect(recorded.last.modifiers, [
+        hotkey.HotKeyModifier.alt,
+        hotkey.HotKeyModifier.shift,
+      ]);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.keyQ);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.altLeft);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
   test(
     'legacy enum parsers, labels and modifier conversions remain available',
     () {

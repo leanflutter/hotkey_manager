@@ -241,4 +241,121 @@ void main() {
     await tester.sendKeyUpEvent(LogicalKeyboardKey.keyQ);
     expect(ups, 0);
   });
+
+  testWidgets('standalone left and right modifier keys dispatch down and up', (
+    tester,
+  ) async {
+    final events = <String>[];
+    for (final entry in <(PhysicalKeyboardKey, LogicalKeyboardKey)>[
+      (PhysicalKeyboardKey.shiftLeft, LogicalKeyboardKey.shiftLeft),
+      (PhysicalKeyboardKey.shiftRight, LogicalKeyboardKey.shiftRight),
+      (PhysicalKeyboardKey.controlLeft, LogicalKeyboardKey.controlLeft),
+      (PhysicalKeyboardKey.controlRight, LogicalKeyboardKey.controlRight),
+      (PhysicalKeyboardKey.altLeft, LogicalKeyboardKey.altLeft),
+      (PhysicalKeyboardKey.altRight, LogicalKeyboardKey.altRight),
+      (PhysicalKeyboardKey.metaLeft, LogicalKeyboardKey.metaLeft),
+      (PhysicalKeyboardKey.metaRight, LogicalKeyboardKey.metaRight),
+    ]) {
+      final id = entry.$1.debugName!;
+      final hotKey = key(id, key: entry.$1, scope: HotKeyScope.inapp);
+      await manager.register(
+        hotKey,
+        keyDownHandler: (_) => events.add('$id:down'),
+        keyUpHandler: (_) => events.add('$id:up'),
+      );
+      await tester.sendKeyDownEvent(entry.$2);
+      await tester.sendKeyUpEvent(entry.$2);
+      expect(events, ['$id:down', '$id:up'], reason: id);
+      events.clear();
+      await manager.unregister(hotKey);
+    }
+  });
+
+  test('in-app observation leaves keys available to text input', () async {
+    var hasTextFocus = true;
+    var calls = 0;
+    await manager.register(
+      key('space', key: PhysicalKeyboardKey.space, scope: HotKeyScope.inapp),
+      keyDownHandler: (_) {
+        if (!hasTextFocus) calls++;
+      },
+    );
+    bool send(bool down) => HardwareKeyboard.instance.handleKeyEvent(
+      down
+          ? const KeyDownEvent(
+              physicalKey: PhysicalKeyboardKey.space,
+              logicalKey: LogicalKeyboardKey.space,
+              timeStamp: Duration.zero,
+            )
+          : const KeyUpEvent(
+              physicalKey: PhysicalKeyboardKey.space,
+              logicalKey: LogicalKeyboardKey.space,
+              timeStamp: Duration.zero,
+            ),
+    );
+    final downInText = send(true);
+    final upInText = send(false);
+    expect(downInText, isFalse);
+    expect(upInText, isFalse);
+    expect(calls, 0);
+    hasTextFocus = false;
+    final downOutsideText = send(true);
+    final upOutsideText = send(false);
+    expect(downOutsideText, isFalse);
+    expect(upOutsideText, isFalse);
+    expect(calls, 1);
+  });
+
+  testWidgets('left and right Shift have independent in-app registrations', (
+    tester,
+  ) async {
+    final events = <String>[];
+    for (final entry in <(PhysicalKeyboardKey, String)>[
+      (PhysicalKeyboardKey.shiftLeft, 'left'),
+      (PhysicalKeyboardKey.shiftRight, 'right'),
+    ]) {
+      await manager.register(
+        key(entry.$2, key: entry.$1, scope: HotKeyScope.inapp),
+        keyDownHandler: (_) => events.add('${entry.$2}:down'),
+        keyUpHandler: (_) => events.add('${entry.$2}:up'),
+      );
+    }
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftRight);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftRight);
+    expect(events, ['left:down', 'right:down', 'left:up', 'right:up']);
+  });
+
+  testWidgets('focus recovery does not activate synthesized held keys', (
+    tester,
+  ) async {
+    final events = <String>[];
+    await manager.register(
+      key('q', scope: HotKeyScope.inapp),
+      keyDownHandler: (_) => events.add('down'),
+      keyUpHandler: (_) => events.add('up'),
+    );
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.keyQ);
+    HardwareKeyboard.instance.handleKeyEvent(
+      const KeyUpEvent(
+        physicalKey: PhysicalKeyboardKey.keyQ,
+        logicalKey: LogicalKeyboardKey.keyQ,
+        timeStamp: Duration.zero,
+        synthesized: true,
+      ),
+    );
+    HardwareKeyboard.instance.handleKeyEvent(
+      const KeyDownEvent(
+        physicalKey: PhysicalKeyboardKey.keyQ,
+        logicalKey: LogicalKeyboardKey.keyQ,
+        timeStamp: Duration.zero,
+        synthesized: true,
+      ),
+    );
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.keyQ);
+    expect(events, ['down', 'up']);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyQ);
+    expect(events, ['down', 'up', 'down', 'up']);
+  });
 }

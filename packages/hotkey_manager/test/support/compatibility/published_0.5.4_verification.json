@@ -1,0 +1,122 @@
+{
+  "verifiedAt": "2026-11-01T08:35:10.412499+00:00",
+  "dependencyRelease": "https://github.com/libnativeapi/nativeapi/releases/tag/v0.5.4",
+  "nativeapiWorkspaceRevision": "96e94d4ea86b93acd37a7153816156bdfc17976a",
+  "coreRevision": "bd12037f2b61eafea7370f71d1a6e648f8b5493b",
+  "dependencies": {
+    "nativeapi": {
+      "version": "0.5.4",
+      "source": "hosted pub.dev",
+      "archive_sha256": "c518bd8b8fb3c1e12893b56254280af2754cf72abc2b7438f5fd454949fcd63a"
+    },
+    "cnativeapi": {
+      "version": "0.5.4",
+      "source": "hosted pub.dev",
+      "archive_sha256": "f02f367ff99efb2665062cbb2a67e456566b1b8e0b49d4480c25cae1e6913789"
+    }
+  },
+  "localOverrides": false,
+  "packageAndExampleDependencyResolutionVerified": true,
+  "hosts": {
+    "windows-laptop": {
+      "flutter": "3.47.6",
+      "dart": "3.13.5",
+      "passed": 46,
+      "skipped": 1,
+      "desktopSession": 1,
+      "legacySpecialKeyOsRegistrationChecks": 10,
+      "specialKeyChecksPassed": 10,
+      "externalProcessGrabConflict": "passed",
+      "releaseAotProbe": {
+        "passed": true,
+        "checks": [
+          "automatic Dart plugin registration and cleanup",
+          "release recorder returns a non-null Shift+A hotkey",
+          "release recorder returns a non-null Shift+Alt+Q hotkey",
+          "real application window visible",
+          "in-app callback hides the real window (1)",
+          "real window shows again (1)",
+          "in-app release still arrives (1)",
+          "in-app callback hides the real window (2)",
+          "real window shows again (2)",
+          "in-app release still arrives (2)",
+          "real editable text field focused",
+          "modifier alone in text field does not repeat the previous chord"
+        ],
+        "releaseMode": true,
+        "platform": "windows",
+        "osKeyboardInputGenerated": false,
+        "source": "packages/hotkey_manager/example/test_support/release_issue_probe.dart"
+      }
+    },
+    "ubuntu-nuc": {
+      "flutter": "3.47.6",
+      "dart": "3.13.5",
+      "passed": 45,
+      "skipped": 2,
+      "display": "Xvfb :99",
+      "nativeX11Checks": 11,
+      "nativeX11ChecksPassed": 11
+    },
+    "omarchy": {
+      "flutter": "3.47.5",
+      "dart": "3.13.4",
+      "passed": 45,
+      "skipped": 2,
+      "display": "Hyprland XWayland :0",
+      "nativeX11Checks": 11,
+      "nativeX11ChecksPassed": 11
+    },
+    "macos": {
+      "passed": 46,
+      "skipped": 1,
+      "releaseAotProbe": {
+        "passed": true,
+        "checks": [
+          "automatic Dart plugin registration and cleanup",
+          "release recorder returns a non-null Shift+A hotkey",
+          "release recorder returns a non-null Shift+Alt+Q hotkey",
+          "real application window visible",
+          "in-app callback hides the real window (1)",
+          "real window shows again (1)",
+          "in-app release still arrives (1)",
+          "in-app callback hides the real window (2)",
+          "real window shows again (2)",
+          "in-app release still arrives (2)",
+          "real editable text field focused",
+          "modifier alone in text field does not repeat the previous chord"
+        ],
+        "releaseMode": true,
+        "platform": "macos",
+        "osKeyboardInputGenerated": false,
+        "source": "packages/hotkey_manager/example/test_support/release_issue_probe.dart"
+      }
+    }
+  },
+  "nativeX11ProbeSource": "published cnativeapi 0.5.4 cxx_impl/tests/shortcut_native_linux_test.cpp",
+  "nativeX11ProbeLinkedLibrary": "same libcnativeapi.so built by the published package build hook and used by Flutter tests",
+  "constraints": [
+    "No physical keyboard input generated. Windows/Linux callback tests use nativeapi emitShortcutActivated.",
+    "Physical held-key repetition, alternate keyboard layouts and pure Wayland global shortcuts are not certified."
+  ],
+  "sourceFilesSha256": {
+    "packages/hotkey_manager/lib/src/hotkey_manager.dart": "08f53cd111610252b5a6d82304dd8c3ce7ebb13e9fcebbff96322fcc6c5d96e4",
+    "packages/hotkey_manager/test/hotkey_manager_test.dart": "64071176d8b3077f053942970c18a7a0e254437d97ea159ed4e6b12ce8817619",
+    "packages/hotkey_manager/test/native_backend_test.dart": "7691a143b0657f4f5331bc7bd7821217b095270fd6e95d31f6a7b47762ab9710",
+    "packages/hotkey_manager/test/legacy_widgets_test.dart": "b44783be565e9cb527454ba846d8aa7e5daf4e23a4c88182f88d45723979fe8c",
+    "packages/hotkey_manager/test/support/windows_grab.py": "061977ee23259de9ad2d4e4c35320a3e822608eaa4eaa8b27b85c4155ebf5ce9"
+  },
+  "candidateBaseRevision": "aa61f740302e870564751810e425ba34ce254733",
+  "skippedTests": {
+    "windows-laptop": [
+      "macOS Carbon-only case"
+    ],
+    "macos": [
+      "Windows external-grab-only case"
+    ],
+    "linux": [
+      "macOS Carbon-only case",
+      "Windows external-grab-only case"
+    ]
+  }
+}

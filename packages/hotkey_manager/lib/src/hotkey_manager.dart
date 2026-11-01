@@ -71,19 +71,30 @@ class HotKeyManager {
           entry.keyUpHandler?.call(entry.hotKey);
         }
       }
-      return true;
+      return false;
     }
-    if (event is KeyRepeatEvent) {
-      return _pressedInApp.containsKey(event.physicalKey);
-    }
-    if (event is! KeyDownEvent) return false;
+    // Observe in-app keys without consuming Flutter text input. Callers may
+    // filter their callbacks by focus; use Shortcuts/Actions to consume a key.
+    // Focus recovery can synthesize held keys without a new user key press.
+    if (event is! KeyDownEvent || event.synthesized) return false;
 
     final modifiers = HotKeyModifier.values
-        .where((modifier) => modifier.isModifierPressed)
+        .where(
+          (modifier) =>
+              modifier.isModifierPressed &&
+              !modifier.physicalKeys.contains(event.physicalKey),
+        )
         .toSet();
     final matches = _hotKeyList
         .where((hotKey) {
-          final required = hotKey.modifiers?.toSet() ?? <HotKeyModifier>{};
+          final required =
+              hotKey.modifiers
+                  ?.where(
+                    (modifier) =>
+                        !modifier.physicalKeys.contains(event.physicalKey),
+                  )
+                  .toSet() ??
+              <HotKeyModifier>{};
           return hotKey.scope == HotKeyScope.inapp &&
               event.logicalKey == hotKey.logicalKey &&
               modifiers.length == required.length &&
@@ -100,7 +111,7 @@ class HotKeyManager {
         entry.keyDownHandler?.call(entry.hotKey);
       }
     }
-    return true;
+    return false;
   }
 
   /// Registers a hotkey. Registering an existing identifier retains handlers
@@ -108,6 +119,9 @@ class HotKeyManager {
   ///
   /// System key-up events are supported on macOS. In-app key-up events work
   /// on every Flutter platform. Registration failure leaves existing state intact.
+  /// In-app callbacks observe keys without consuming text input. A callback can
+  /// check its text field's focus before acting; Flutter Shortcuts/Actions can
+  /// be used when key consumption or focus-dependent shortcut priority is needed.
   Future<void> register(
     HotKey hotKey, {
     HotKeyHandler? keyDownHandler,

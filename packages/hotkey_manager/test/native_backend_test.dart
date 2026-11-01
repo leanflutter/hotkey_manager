@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cnativeapi/cnativeapi.dart' as native_loop;
@@ -386,4 +387,88 @@ void main() {
       await hotKeyManager.unregisterAll();
     }
   }, skip: !Platform.isMacOS);
+
+  testWidgets('unmodified space and unsupported media keys fail recoverably', (
+    tester,
+  ) async {
+    for (final key in [
+      PhysicalKeyboardKey.space,
+      PhysicalKeyboardKey.mediaPlayPause,
+    ]) {
+      final hotKey = HotKey(key: key);
+      try {
+        await hotKeyManager.register(hotKey);
+        expect(hotKeyManager.registeredHotKeyList, contains(hotKey));
+      } on PlatformException catch (error) {
+        // The OS can reserve bare keys; media keys without a native keycode
+        // are unsupported. Neither case may abort the native process or
+        // leave the serialized registration queue unusable.
+        expect(error.code, anyOf('register_failed', 'unsupported_hotkey'));
+        expect(hotKeyManager.registeredHotKeyList, isNot(contains(hotKey)));
+      } finally {
+        await hotKeyManager.unregister(hotKey);
+      }
+    }
+    final recovery = HotKey(
+      key: PhysicalKeyboardKey.f8,
+      modifiers: [HotKeyModifier.control, HotKeyModifier.shift],
+    );
+    var calls = 0;
+    await hotKeyManager.register(recovery, keyDownHandler: (_) => calls++);
+    final native = ShortcutManager.instance;
+    final shortcut = native.getWithAccelerator(hotKeyAccelerator(recovery));
+    expect(shortcut, isNotNull);
+    try {
+      if (Platform.isMacOS) {
+        expect(CarbonHotKeys().send(shortcut!.id, down: true), 0);
+      } else {
+        native.emitShortcutActivated(shortcut!.id, hotKeyAccelerator(recovery));
+      }
+      await tester.runAsync(deliverNativeEvents);
+      expect(calls, 1);
+    } finally {
+      shortcut?.dispose();
+      await hotKeyManager.unregisterAll();
+    }
+  }, skip: !_supportsNativeTests);
+
+  test(
+    'Windows rejects an externally owned chord without stealing it',
+    () async {
+      final owner = await Process.start('python', [
+        File('test/support/windows_grab.py').absolute.path,
+      ]);
+      final hotKey = HotKey(
+        key: PhysicalKeyboardKey.f19,
+        modifiers: [
+          HotKeyModifier.control,
+          HotKeyModifier.alt,
+          HotKeyModifier.shift,
+        ],
+      );
+      try {
+        final line = await owner.stdout
+            .transform(utf8.decoder)
+            .transform(const LineSplitter())
+            .first
+            .timeout(const Duration(seconds: 10));
+        expect(jsonDecode(line)['registered'], isTrue);
+        await expectLater(
+          hotKeyManager.register(hotKey),
+          throwsA(isA<PlatformException>()),
+        );
+        expect(hotKeyManager.registeredHotKeyList, isNot(contains(hotKey)));
+      } finally {
+        await owner.stdin.close();
+        expect(await owner.exitCode.timeout(const Duration(seconds: 10)), 0);
+      }
+      try {
+        await hotKeyManager.register(hotKey);
+        expect(hotKeyManager.registeredHotKeyList, contains(hotKey));
+      } finally {
+        await hotKeyManager.unregister(hotKey);
+      }
+    },
+    skip: !Platform.isWindows || !_supportsNativeTests,
+  );
 }
