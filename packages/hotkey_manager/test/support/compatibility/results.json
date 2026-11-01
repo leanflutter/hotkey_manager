@@ -339,5 +339,6 @@
     "nativeapi": "0.5.3 from pub.dev",
     "cnativeapi": "0.5.3 from pub.dev",
     "localOverrides": false
-  }
+  },
+  "followupVerification": "verification.json"
 }

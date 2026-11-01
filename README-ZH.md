@@ -39,11 +39,12 @@
 
 ## nativeapi 迁移
 
-系统快捷键通过 Dart FFI 使用 nativeapi C++ 核心，不再依赖各平台插件。
-需要 Dart 3.13+、Flutter 3.47+ 和 **nativeapi 0.5.3+**，包含
-`ShortcutReleasedEvent`。nativeapi 依赖可直接从 pub.dev 获取，无需本地依赖覆盖。
+系统快捷键通过 Dart FFI 使用 nativeapi C++ 核心，不再依赖各平台原生插件。
+需要 Dart 3.13+、Flutter 3.47+ 和 **nativeapi/cnativeapi 0.5.4+** 的原生键码支持。
+该依赖版本发布前，需要通过本地覆盖指向匹配的 nativeapi 工作区源码。
 
-主入口新增导出 `ShortcutManager`、`ShortcutOptions` 和快捷键事件，推荐使用
+`package:hotkey_manager/native.dart` 单独导出 `ShortcutManager`、`ShortcutOptions`
+和快捷键事件，避免与 Flutter 的同名类型冲突。推荐使用
 `registerWithOptions` 注册、`addListener` 接收事件，回调会异步送达 Dart isolate。
 注销时先调用 `unregisterWithId(shortcut.id)`，再调用 `shortcut.dispose()`；仅释放句柄
 不会注销原生快捷键。完整示例见 [英文文档](README.md#native-api) 和 example 应用。
@@ -52,10 +53,14 @@
 也可使用 `package:hotkey_manager/legacy.dart`，历史 JSON 格式继续兼容。
 应用内快捷键仍由 Flutter 处理，各平台都支持按下和抬起事件。
 系统快捷键的抬起事件仅支持 macOS；Windows、Linux 仅支持按下事件。
-Fn、CapsLock 系统修饰键仅支持 macOS，不支持的键位/修饰键会抛出 `PlatformException`。
+Fn 系统修饰键支持 macOS；CapsLock 支持 macOS 和 Linux。Windows 保持旧版忽略
+Fn/CapsLock 的行为，Linux 忽略 Fn。旧平台键码继续覆盖媒体键、国际键和小键盘键；
+Windows 系统快捷键保留原生长按连发策略。无法映射的键位会抛出 `PlatformException`。
 Linux 系统快捷键需要 X11（含 XWayland），暂不支持原生 Wayland。
 
-同一 identifier 重复注册会替换回调；不同 identifier 注册相同组合键会共享原生注册，
+原 `HotKeyManagerPlatform` 和 `MethodChannelHotKeyManager` 接口及平台替换能力继续保留，
+默认实现使用 nativeapi。`registeredHotKeyList` 保持实时列表；
+同一 identifier 重复注册时，未重传的回调继续保留；不同 identifier 注册相同组合键会共享原生注册，
 并分别收到事件。`hotKeyManager.unregisterAll()` 只清理本包快捷键（含热重启遗留），
 不会影响直接通过 `ShortcutManager` 注册的快捷键。
 

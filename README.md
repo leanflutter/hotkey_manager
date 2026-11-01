@@ -40,14 +40,14 @@ English | [简体中文](./README-ZH.md)
 ## Native API
 
 System shortcuts use the C++ nativeapi core through Dart FFI. No per-platform
-hotkey_manager plugin or method channel is needed.
+native hotkey_manager plugin or method channel is needed.
 
-Requires Dart 3.13+, Flutter 3.47+ and **nativeapi 0.5.3+**, including
-`ShortcutReleasedEvent`. The nativeapi packages resolve from pub.dev; no local
-dependency overrides are needed.
+Requires Dart 3.13+, Flutter 3.47+ and **nativeapi/cnativeapi 0.5.4+** with native keycode support.
+Until that dependency release is published, these compatibility fixes require
+the matching nativeapi workspace sources through local dependency overrides.
 
 ```dart
-import 'package:hotkey_manager/hotkey_manager.dart' as hotkey;
+import 'package:hotkey_manager/native.dart' as hotkey;
 
 final manager = hotkey.ShortcutManager.instance;
 final listenerId = manager.addListener((event) {
@@ -78,16 +78,24 @@ the registering Dart isolate. A shortcut handle must be unregistered before it
 is disposed; disposing the handle alone does not remove the native registration.
 
 The existing `HotKeyManager`, `HotKey`, `HotKeyRecorder`, `HotKeyVirtualView`,
-`GlobalShortcuts` and `CallbackGlobalShortcuts` remain available from the same
-import, and from `package:hotkey_manager/legacy.dart`. Old hotkey JSON is supported.
+`GlobalShortcuts` and `CallbackGlobalShortcuts` remain available from the original
+`package:hotkey_manager/hotkey_manager.dart` import, and from `package:hotkey_manager/legacy.dart`. Old hotkey JSON is supported.
 In-app shortcuts continue to use Flutter's `HardwareKeyboard`, with down and up
 events on all Flutter platforms. System key-up events are available on macOS;
-Windows and Linux report system key-down only. Fn and CapsLock system modifiers
-are supported on macOS; unsupported keys/modifiers throw `PlatformException`.
+Windows and Linux report system key-down only. Fn is supported on macOS;
+CapsLock is supported on macOS and Linux. Windows retains the old behavior of
+ignoring Fn/CapsLock, and Linux ignores Fn. Unmapped system keys throw
+`PlatformException`. The original platform keycodes preserve media, international
+and keypad keys, and Windows system shortcuts retain native automatic repetition.
 Linux system shortcuts require X11 (including XWayland), not native Wayland.
 
-Repeated registration of the same identifier replaces its handlers. Different
-identifiers with the same combination share one native registration and each
+The original injectable `HotKeyManagerPlatform` and `MethodChannelHotKeyManager`
+interfaces are retained; the default implementation uses nativeapi. The native
+shortcut types are exported separately from `package:hotkey_manager/native.dart`
+to avoid collisions with Flutter’s `ShortcutManager`.
+
+Repeated registration of the same identifier retains any omitted handlers.
+`registeredHotKeyList` remains a live list. Different identifiers with the same combination share one native registration and each
 receive events. `hotKeyManager.unregisterAll()` clears this package's shortcuts,
 including leftovers after a hot restart, while preserving shortcuts registered
 directly through `ShortcutManager`.

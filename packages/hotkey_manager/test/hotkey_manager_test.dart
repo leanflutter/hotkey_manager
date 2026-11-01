@@ -95,7 +95,7 @@ void main() {
       expect(backend.nextId, 1);
       await manager.register(hotKey);
       backend.emit(1, true);
-      expect(newCalls, 1);
+      expect(newCalls, 2);
     },
   );
 
@@ -169,8 +169,14 @@ void main() {
       backend.emit(1, true);
       backend.emit(2, true);
       expect(calls, 1);
-      manager.registeredHotKeyList.clear();
-      expect(manager.registeredHotKeyList, hasLength(1));
+      final live = manager.registeredHotKeyList;
+      expect(live, hasLength(1));
+      await manager.unregisterAll();
+      expect(live, isEmpty);
+      await manager.register(key('b'));
+      expect(live, hasLength(1));
+      live.clear();
+      expect(manager.registeredHotKeyList, isEmpty);
     },
   );
 

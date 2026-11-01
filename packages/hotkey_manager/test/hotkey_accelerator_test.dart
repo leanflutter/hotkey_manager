@@ -2,9 +2,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:hotkey_manager/src/hotkey_accelerator.dart';
+import 'package:uni_platform/uni_platform.dart';
 
 void main() {
-  test('modifier order and duplicates normalize to one accelerator', () {
+  late String system;
+  setUp(() => system = UniPlatform.operatingSystem);
+  tearDown(() => UniPlatform.operatingSystem = system);
+  test('modifier order and duplicates normalize to one native accelerator', () {
+    UniPlatform.operatingSystem = 'macos';
     final hotKey = HotKey(
       key: PhysicalKeyboardKey.keyQ,
       modifiers: [
@@ -13,46 +18,82 @@ void main() {
         HotKeyModifier.shift,
       ],
     );
-    expect(hotKeyAccelerator(hotKey), 'Alt+Shift+Q');
+    expect(hotKeyAccelerator(hotKey), 'Alt+Shift+NativeKey12');
   });
-  test('physical positions, function keys and keypad keep distinct tokens', () {
-    final keys = <KeyboardKey, String>{
-      PhysicalKeyboardKey.keyZ: 'Z',
-      PhysicalKeyboardKey.digit0: '0',
-      PhysicalKeyboardKey.digit9: '9',
-      PhysicalKeyboardKey.f12: 'F12',
-      PhysicalKeyboardKey.f13: 'F13',
-      PhysicalKeyboardKey.f24: 'F24',
-      PhysicalKeyboardKey.numpad0: 'Num0',
-      PhysicalKeyboardKey.numpad9: 'Num9',
-      PhysicalKeyboardKey.numpadEnter: 'NumEnter',
-      PhysicalKeyboardKey.numpadAdd: 'NumAdd',
-      PhysicalKeyboardKey.comma: 'Comma',
-      PhysicalKeyboardKey.equal: 'Equal',
-      PhysicalKeyboardKey.backquote: 'Grave',
-      PhysicalKeyboardKey.arrowLeft: 'Left',
-      PhysicalKeyboardKey.delete: 'Delete',
-      PhysicalKeyboardKey.enter: 'Enter',
-      LogicalKeyboardKey.keyQ: 'Q',
-    };
-    for (final entry in keys.entries) {
-      expect(hotKeyAccelerator(HotKey(key: entry.key)), entry.value);
-    }
-  });
-  test('unsupported keys fail explicitly instead of using the wrong key', () {
-    expect(
-      () => hotKeyAccelerator(HotKey(key: PhysicalKeyboardKey.fn)),
-      throwsA(isA<PlatformException>()),
+  test(
+    'legacy native keycodes retain keypad, international and media keys',
+    () {
+      final mappings = <String, Map<PhysicalKeyboardKey, int>>{
+        'macos': {
+          PhysicalKeyboardKey.keyA: 0,
+          PhysicalKeyboardKey.numpadEqual: 81,
+          PhysicalKeyboardKey.numLock: 71,
+          PhysicalKeyboardKey.intlBackslash: 10,
+          PhysicalKeyboardKey.audioVolumeUp: 72,
+          PhysicalKeyboardKey.audioVolumeDown: 73,
+          PhysicalKeyboardKey.audioVolumeMute: 74,
+          PhysicalKeyboardKey.numpad0: 82,
+          PhysicalKeyboardKey.digit0: 29,
+        },
+        'windows': {
+          PhysicalKeyboardKey.audioVolumeUp: 175,
+          PhysicalKeyboardKey.audioVolumeDown: 174,
+          PhysicalKeyboardKey.audioVolumeMute: 173,
+          PhysicalKeyboardKey.mediaPlayPause: 179,
+          PhysicalKeyboardKey.printScreen: 44,
+          PhysicalKeyboardKey.pause: 19,
+          PhysicalKeyboardKey.contextMenu: 93,
+          PhysicalKeyboardKey.browserBack: 166,
+          PhysicalKeyboardKey.numLock: 144,
+          PhysicalKeyboardKey.numpadEqual: 146,
+          PhysicalKeyboardKey.f24: 135,
+        },
+        'linux': {
+          PhysicalKeyboardKey.audioVolumeUp: 0x1008ff13,
+          PhysicalKeyboardKey.audioVolumeDown: 0x1008ff11,
+          PhysicalKeyboardKey.numpadEqual: 0xffbd,
+          PhysicalKeyboardKey.numLock: 0xff7f,
+        },
+      };
+      for (final platform in mappings.entries) {
+        UniPlatform.operatingSystem = platform.key;
+        for (final key in platform.value.entries) {
+          expect(
+            hotKeyAccelerator(HotKey(key: key.key)),
+            'NativeKey${key.value}',
+            reason: '${platform.key}: ${key.key.debugName}',
+          );
+        }
+      }
+    },
+  );
+  test('legacy platform-specific modifier handling is retained', () {
+    final key = HotKey(
+      key: PhysicalKeyboardKey.keyQ,
+      modifiers: HotKeyModifier.values,
     );
-  });
-  test('unmapped logical and physical keys report a platform error', () {
+    UniPlatform.operatingSystem = 'macos';
     expect(
-      () => hotKeyAccelerator(HotKey(key: LogicalKeyboardKey.hyper)),
-      throwsA(isA<PlatformException>()),
+      hotKeyAccelerator(key),
+      'Alt+CapsLock+Ctrl+Fn+Meta+Shift+NativeKey12',
     );
-    expect(
-      () => HotKey(key: const PhysicalKeyboardKey(0xffff)).logicalKey,
-      throwsA(isA<PlatformException>()),
-    );
+    UniPlatform.operatingSystem = 'windows';
+    expect(hotKeyAccelerator(key), 'Alt+Ctrl+Meta+Shift+NativeKey81');
+    UniPlatform.operatingSystem = 'linux';
+    expect(hotKeyAccelerator(key), 'Alt+CapsLock+Ctrl+Meta+Shift+NativeKey113');
   });
+  test(
+    'unmapped keys fail explicitly instead of narrowing a fallback keycode',
+    () {
+      expect(
+        () => hotKeyAccelerator(HotKey(key: const PhysicalKeyboardKey(0xffff))),
+        throwsA(isA<PlatformException>()),
+      );
+      UniPlatform.operatingSystem = 'macos';
+      expect(
+        () => hotKeyAccelerator(HotKey(key: LogicalKeyboardKey.hyper)),
+        throwsA(isA<PlatformException>()),
+      );
+    },
+  );
 }

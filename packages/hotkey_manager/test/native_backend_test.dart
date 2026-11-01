@@ -5,9 +5,22 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' hide ShortcutManager;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:hotkey_manager/native.dart';
 import 'package:hotkey_manager/src/system_hotkey_backend.dart';
 
 import 'support/carbon_hotkeys.dart';
+import 'support/x11_keys.dart';
+
+import 'package:hotkey_manager/src/hotkey_accelerator.dart';
+
+String _legacyAccelerator(String portable) => hotKeyAccelerator(
+  HotKey(
+    key: portable.endsWith('F9')
+        ? PhysicalKeyboardKey.f9
+        : PhysicalKeyboardKey.f10,
+    modifiers: [HotKeyModifier.control, HotKeyModifier.shift],
+  ),
+);
 
 class _AuditIntent extends Intent {
   const _AuditIntent();
@@ -38,6 +51,7 @@ final _supportsNativeTests =
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUpAll(() {
+    NativeHotKeyManagerPlatform.registerWith();
     if (_supportsNativeTests && !Platform.isMacOS) {
       native_loop.cnativeapi_start_event_loop();
     }
@@ -74,7 +88,7 @@ void main() {
         );
         final id = backend.register(hotKey);
         final registered = native.getWithId(id);
-        expect(registered?.accelerator, 'Ctrl+Shift+F10');
+        expect(registered?.accelerator, hotKeyAccelerator(hotKey));
         registered?.dispose();
         native.emitShortcutActivated(id, 'Ctrl+Shift+F10');
         await tester.runAsync(deliverNativeEvents);
@@ -156,6 +170,7 @@ void main() {
             ],
           );
       Future<void> activate(String accelerator) async {
+        accelerator = _legacyAccelerator(accelerator);
         final shortcut = native.getWithAccelerator(accelerator);
         expect(shortcut, isNotNull);
         native.emitShortcutActivated(shortcut!.id, accelerator);
@@ -170,11 +185,17 @@ void main() {
       await activate('Ctrl+Shift+F10');
       expect((first, second), (1, 2));
       await tester.pumpWidget(widget(showFirst: false, changeSecond: true));
-      expect(native.getWithAccelerator('Ctrl+Shift+F10'), isNull);
+      expect(
+        native.getWithAccelerator(_legacyAccelerator('Ctrl+Shift+F10')),
+        isNull,
+      );
       await activate('Ctrl+Shift+F9');
       expect((first, second), (1, 3));
       await tester.pumpWidget(const SizedBox());
-      expect(native.getWithAccelerator('Ctrl+Shift+F9'), isNull);
+      expect(
+        native.getWithAccelerator(_legacyAccelerator('Ctrl+Shift+F9')),
+        isNull,
+      );
     },
     skip: !_supportsNativeTests,
   );
@@ -199,7 +220,9 @@ void main() {
       );
       final native = ShortcutManager.instance;
       Future<void> activate() async {
-        final shortcut = native.getWithAccelerator('Ctrl+Shift+F9');
+        final shortcut = native.getWithAccelerator(
+          _legacyAccelerator('Ctrl+Shift+F9'),
+        );
         expect(shortcut, isNotNull);
         try {
           native.emitShortcutActivated(shortcut!.id, 'Ctrl+Shift+F9');
@@ -216,7 +239,10 @@ void main() {
       await activate();
       expect(calls, 1);
       await tester.pumpWidget(const SizedBox());
-      expect(native.getWithAccelerator('Ctrl+Shift+F9'), isNull);
+      expect(
+        native.getWithAccelerator(_legacyAccelerator('Ctrl+Shift+F9')),
+        isNull,
+      );
     },
     skip: !_supportsNativeTests,
   );
@@ -255,6 +281,80 @@ void main() {
     }
   }, skip: !_supportsNativeTests);
 
+  testWidgets('legacy special keys register, deliver events and unregister', (
+    tester,
+  ) async {
+    final keys = Platform.isMacOS
+        ? [
+            PhysicalKeyboardKey.numpadEqual,
+            PhysicalKeyboardKey.numLock,
+            PhysicalKeyboardKey.intlBackslash,
+            PhysicalKeyboardKey.audioVolumeUp,
+            PhysicalKeyboardKey.audioVolumeDown,
+            PhysicalKeyboardKey.audioVolumeMute,
+          ]
+        : Platform.isWindows
+        ? [
+            PhysicalKeyboardKey.audioVolumeUp,
+            PhysicalKeyboardKey.audioVolumeDown,
+            PhysicalKeyboardKey.audioVolumeMute,
+            PhysicalKeyboardKey.mediaPlayPause,
+            PhysicalKeyboardKey.printScreen,
+            PhysicalKeyboardKey.pause,
+            PhysicalKeyboardKey.contextMenu,
+            PhysicalKeyboardKey.browserBack,
+            PhysicalKeyboardKey.numLock,
+            PhysicalKeyboardKey.numpadEqual,
+          ]
+        : [
+            PhysicalKeyboardKey.numpadEqual,
+            PhysicalKeyboardKey.numLock,
+            PhysicalKeyboardKey.audioVolumeUp,
+            PhysicalKeyboardKey.audioVolumeDown,
+          ];
+    var tested = 0;
+    for (final key in keys) {
+      final hotKey = HotKey(
+        key: key,
+        modifiers: [HotKeyModifier.control, HotKeyModifier.shift],
+      );
+      final accelerator = hotKeyAccelerator(hotKey);
+      if (Platform.isLinux &&
+          !x11HasKey(int.parse(accelerator.split('NativeKey').last))) {
+        continue;
+      }
+      var downs = 0;
+      var ups = 0;
+      await hotKeyManager.register(
+        hotKey,
+        keyDownHandler: (_) => downs++,
+        keyUpHandler: (_) => ups++,
+      );
+      final native = ShortcutManager.instance;
+      final shortcut = native.getWithAccelerator(accelerator);
+      expect(shortcut, isNotNull, reason: key.debugName);
+      try {
+        if (Platform.isMacOS) {
+          final carbon = CarbonHotKeys();
+          expect(carbon.send(shortcut!.id, down: true), 0);
+          expect(carbon.send(shortcut.id, down: false), 0);
+        } else {
+          native.emitShortcutActivated(shortcut!.id, accelerator);
+        }
+        await tester.runAsync(deliverNativeEvents);
+        expect(downs, 1, reason: key.debugName);
+        expect(ups, Platform.isMacOS ? 1 : 0, reason: key.debugName);
+        await hotKeyManager.unregister(hotKey);
+        expect(native.getWithId(shortcut.id), isNull);
+        tested++;
+      } finally {
+        shortcut?.dispose();
+        await hotKeyManager.unregisterAll();
+      }
+    }
+    expect(tested, greaterThan(0));
+  }, skip: !_supportsNativeTests);
+
   testWidgets('macOS Carbon down and release reach every legacy handler', (
     tester,
   ) async {
@@ -271,7 +371,9 @@ void main() {
         keyUpHandler: (key) => events.add('${key.identifier}:up'),
       );
     }
-    final shortcut = native.getWithAccelerator('Ctrl+Shift+F10');
+    final shortcut = native.getWithAccelerator(
+      _legacyAccelerator('Ctrl+Shift+F10'),
+    );
     expect(shortcut, isNotNull);
     try {
       final carbon = CarbonHotKeys();

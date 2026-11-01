@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:hotkey_manager/hotkey_manager.dart' as hotkey;
+import 'package:hotkey_manager/native.dart' as hotkey;
 import 'package:hotkey_manager_example/pages/home.dart';
 
 class NativeShortcutsPage extends StatefulWidget {

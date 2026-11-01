@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:hotkey_manager/src/hotkey.dart';
@@ -7,9 +9,10 @@ import 'package:nativeapi/nativeapi.dart' as nativeapi;
 /// Internal seam for testing registration failures and queued native events.
 abstract class SystemHotKeyBackend {
   void Function(int id, bool isKeyDown)? onKeyEvent;
-  int register(HotKey hotKey);
-  void unregister(int id);
-  void unregisterAll();
+  Object get registrationContext => this;
+  FutureOr<int> register(HotKey hotKey);
+  FutureOr<void> unregister(int id);
+  FutureOr<void> unregisterAll();
 }
 
 class NativeSystemHotKeyBackend extends SystemHotKeyBackend {

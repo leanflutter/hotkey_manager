@@ -1,12 +1,18 @@
 ## Unreleased
 
-- Migrate system shortcuts to nativeapi 0.5.3 through Dart FFI; remove the Linux,
-  macOS, Windows and platform-interface packages from this repository.
-- Export the native Shortcut API while preserving the existing HotKey API,
+- Restore the original platform-interface exports and injectable backend; keep native shortcut types in `native.dart` to avoid Flutter import conflicts.
+- Preserve omitted handlers on re-registration and the live `registeredHotKeyList`.
+- Preserve legacy native keycodes (including media, international and keypad keys), Windows repeat behavior and platform modifier handling; requires nativeapi/cnativeapi 0.5.4.
+- Serialize asynchronous registration and cleanup, sharing pending registrations without losing callbacks.
+
+- Migrate system shortcuts to nativeapi 0.5.4 through Dart FFI; remove the Linux,
+  macOS and Windows native packages from this repository; reuse the published
+  platform-interface models and injectable platform API.
+- Export the native Shortcut API from `native.dart` while preserving the existing HotKey API,
   Flutter widgets and old JSON format. Add a `legacy.dart` entry point.
 - Preserve macOS system key-up events through `ShortcutReleasedEvent`.
-- Share native registrations for matching combinations; replace handlers by
-  identifier, roll back failed registrations, ignore stale events and reclaim
+- Share native registrations for matching combinations; update supplied handlers by
+  identifier while retaining omitted handlers, roll back failed registrations, ignore stale events and reclaim
   this package's registrations after a hot restart.
 - Fix in-app release tracking, including multiple matching handlers and
   releasing modifiers before the primary key.
