@@ -243,6 +243,23 @@ HotKeyRecorder(
 | unregister    | Unregister a hotkey.                       | ✔️    | ✔️    | ✔️      | ✔️ |
 | unregisterAll | Unregister all owned hotkeys.              | ✔️    | ✔️    | ✔️      | ✔️ |
 
+### macOS media keys
+
+`PhysicalKeyboardKey.mediaPlayPause` and its logical-key equivalent work with
+both `HotKeyScope.system` and `HotKeyScope.inapp`. Track next/previous, brightness
+and eject keys use macOS auxiliary-control events. In-app volume keys use the
+same AppKit transport; existing global volume shortcuts retain their Carbon
+keycodes and permission requirements. App-scope media callbacks use AppKit and do not need global
+input access. Native down/up callbacks preserve shared registrations and cleanup.
+
+System media shortcuts require macOS to authorize a Quartz event tap. The app's
+privacy permissions and sandbox configuration can restrict this API; failed
+registration reports `PlatformException` rather than terminating the app.
+Grant the app the required access in System Settings → Privacy & Security.
+If access is revoked, affected native global registrations are removed and can
+be registered again after access is restored. Ordinary Carbon shortcuts do not
+need this media tap.
+
 ### Android and Chromebooks
 
 Use `HotKeyScope.inapp` with a hardware keyboard. Callbacks run while your Flutter

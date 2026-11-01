@@ -35,6 +35,9 @@ jobs:
       - working-directory: ./packages/hotkey_manager/example
         run: |
           flutter build macos --release
+      - name: macOS media AOT regression
+        working-directory: ./packages/hotkey_manager/example
+        run: python3 test_support/run_macos_media_probe.py --allow-unavailable-global
 
   build-web:
     runs-on: macos-latest

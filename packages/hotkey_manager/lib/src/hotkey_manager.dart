@@ -22,7 +22,7 @@ class HotKeyManager {
 
   final SystemHotKeyBackend _backend;
   final _registrations = <String, _Registration>{};
-  final _systemRegistrations = <(Object, String), int>{};
+  final _nativeRegistrations = <(Object, String), int>{};
   final _hotKeyList = <HotKey>[];
   Future<void>? _pending;
   final _registrationAttempts = <_RegistrationAttempt>{};
@@ -63,7 +63,7 @@ class HotKeyManager {
         if (entry.nativeId == id) entry.hotKey.identifier,
     };
     _hotKeyList.removeWhere((key) => identifiers.contains(key.identifier));
-    _systemRegistrations.removeWhere((key, value) => value == id);
+    _nativeRegistrations.removeWhere((key, value) => value == id);
     // Retain handler history for a caller re-registering after service loss.
   }
 
@@ -118,6 +118,7 @@ class HotKeyManager {
                   .toSet() ??
               <HotKeyModifier>{};
           return hotKey.scope == HotKeyScope.inapp &&
+              !usesNativeHotKeyEvents(hotKey) &&
               event.logicalKey == hotKey.logicalKey &&
               modifiers.length == required.length &&
               modifiers.containsAll(required);
@@ -167,12 +168,12 @@ class HotKeyManager {
         String? accelerator;
         int? nativeId;
         final context = _backend.registrationContext;
-        if (hotKey.scope == HotKeyScope.system) {
+        if (usesNativeHotKeyEvents(hotKey)) {
           accelerator = hotKeyAccelerator(hotKey);
-          nativeId = _systemRegistrations[(context, accelerator)];
+          nativeId = _nativeRegistrations[(context, accelerator)];
           if (nativeId == null) {
             nativeId = await _backend.register(hotKey);
-            _systemRegistrations[(context, accelerator)] = nativeId;
+            _nativeRegistrations[(context, accelerator)] = nativeId;
           }
         }
         final entry = _Registration(
@@ -215,7 +216,7 @@ class HotKeyManager {
                 !_registrations.values.any(
                   (other) => other.nativeId == nativeId,
                 )) {
-              _systemRegistrations.remove((context, accelerator));
+              _nativeRegistrations.remove((context, accelerator));
               try {
                 await _backend.unregister(nativeId);
               } catch (_) {
@@ -261,8 +262,8 @@ class HotKeyManager {
       return;
     }
     await _backend.unregister(nativeId);
-    if (_systemRegistrations[(entry.context, accelerator)] == nativeId) {
-      _systemRegistrations.remove((entry.context, accelerator));
+    if (_nativeRegistrations[(entry.context, accelerator)] == nativeId) {
+      _nativeRegistrations.remove((entry.context, accelerator));
     }
   }
 
@@ -277,7 +278,7 @@ class HotKeyManager {
       } finally {
         _hotKeyList.clear();
         _registrations.clear();
-        _systemRegistrations.clear();
+        _nativeRegistrations.clear();
         _pressedInApp.clear();
       }
     });

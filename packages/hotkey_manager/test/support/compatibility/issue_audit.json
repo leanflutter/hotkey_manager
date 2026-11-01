@@ -44,8 +44,8 @@
     {
       "number": 62,
       "url": "https://github.com/leanflutter/hotkey_manager/issues/62",
-      "status": "pending_nativeapi",
-      "finding": "The NSNull crash is fixed and unsupported keys are explicit errors; actual macOS system Play/Pause support remains to implement."
+      "status": "implemented_pending_dependency_release",
+      "finding": "NativeAPI media tap/AppKit backend implemented; old HotKey API routes system and in-app Play/Pause without NSNull casts. Real global tap installation, native callback decoder/C ABI, lifecycle/permission-loss regressions and 14 real Flutter AOT checks (including the original empty-modifier Physical/Logical examples in both scopes) pass. Shared physical/logical registrations, down/up, repeat handling, scope coexistence and cleanup are verified using process-local native events. Physical media keys are not certified; global tap requires OS access. Await dependency release and final candidate CI before closure."
     },
     {
       "number": 61,
@@ -160,8 +160,8 @@
   ],
   "releaseReady": false,
   "remainingReleaseWork": [
-    "Release the nativeapi dependency containing Portal support and verify the final hosted-package hotkey candidate on Windows and both Linux hosts (#12, #21, PR #72).",
-    "Implement and verify actual macOS system media Play/Pause registration (#62); safe failure alone is not media-key support.",
+    "Release the nativeapi dependency containing Portal and macOS media support and verify the final hosted-package hotkey candidate on Windows and both Linux hosts (#12, #21, PR #72).",
+    "Ship the verified macOS global/in-app media implementation against the released nativeapi dependency and final candidate CI (#62).",
     "Ship the verified Android/Chromebook in-app implementation and pass its new Android AOT CI against the final hosted dependency (#14).",
     "Complete final candidate CI, package dry run and patch-version metadata."
   ]

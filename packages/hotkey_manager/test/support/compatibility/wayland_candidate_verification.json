@@ -73,7 +73,6 @@
     ]
   },
   "remaining": [
-    "Implement and verify macOS media shortcuts (#62)",
     "Prepare nativeapi dependency release, final hosted-package Windows/Linux regressions, hotkey patch metadata and publication dry run"
   ],
   "sourceFilesSha256": {

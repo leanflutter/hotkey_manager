@@ -53,7 +53,9 @@ class NativeSystemHotKeyBackend extends SystemHotKeyBackend {
           accelerator: accelerator,
           description:
               'Hotkey ${[for (final modifier in hotKey.modifiers ?? <HotKeyModifier>[]) modifier.physicalKeys.first.keyLabel, _keyLabel(hotKey)].join('+')}',
-          scope: nativeapi.ShortcutScope.global,
+          scope: hotKey.scope == HotKeyScope.inapp
+              ? nativeapi.ShortcutScope.application
+              : nativeapi.ShortcutScope.global,
           enabled: true,
         ),
         // One native registration is shared by every callback using this chord.

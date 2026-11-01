@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Support macOS Play/Pause, transport, volume, brightness and eject keys through nativeapi, in both system and in-app scope (#62). Preserve down/up delivery, shared registrations and cleanup; retire global media registrations when input permission is revoked.
+
 - Add Android Dart plugin registration, an Android example and in-app hardware-keyboard support for Android/Chromebook apps (#14). Report unavailable system-wide scope explicitly; keep nativeapi startup cleanup usable.
 
 - Support asynchronous native Wayland GlobalShortcuts Portal registration with nativeapi 0.5.6, stable shared-action keys and human-readable desktop descriptions (#12, #21, PR #72).

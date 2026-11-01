@@ -83,6 +83,54 @@ void main() {
       }
     },
   );
+  test(
+    'macOS media uses NX codes with distinct application/global identities',
+    () {
+      UniPlatform.operatingSystem = 'macos';
+      for (final key in [
+        PhysicalKeyboardKey.mediaPlayPause,
+        LogicalKeyboardKey.mediaPlayPause,
+      ]) {
+        final global = HotKey(key: key, modifiers: [HotKeyModifier.control]);
+        final local = HotKey(
+          key: key,
+          modifiers: [HotKeyModifier.control],
+          scope: HotKeyScope.inapp,
+        );
+        expect(hotKeyAccelerator(global), 'Ctrl+MediaPlayPause');
+        expect(hotKeyAccelerator(local), 'Ctrl+NativeMediaKey16');
+        expect(usesNativeHotKeyEvents(local), isTrue);
+      }
+      expect(
+        hotKeyAccelerator(HotKey(key: PhysicalKeyboardKey.audioVolumeUp)),
+        'NativeKey72',
+      );
+      expect(
+        hotKeyAccelerator(HotKey(key: PhysicalKeyboardKey.audioVolumeDown)),
+        'NativeKey73',
+      );
+      expect(
+        hotKeyAccelerator(HotKey(key: PhysicalKeyboardKey.audioVolumeMute)),
+        'NativeKey74',
+      );
+      expect(
+        usesNativeHotKeyEvents(
+          HotKey(key: PhysicalKeyboardKey.keyK, scope: HotKeyScope.inapp),
+        ),
+        isFalse,
+      );
+      UniPlatform.operatingSystem = 'linux';
+      expect(
+        usesNativeHotKeyEvents(
+          HotKey(
+            key: PhysicalKeyboardKey.mediaPlayPause,
+            scope: HotKeyScope.inapp,
+          ),
+        ),
+        isFalse,
+      );
+    },
+  );
   test('legacy platform-specific modifier handling is retained', () {
     final key = HotKey(
       key: PhysicalKeyboardKey.keyQ,

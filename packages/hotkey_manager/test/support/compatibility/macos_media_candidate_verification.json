@@ -1,0 +1,86 @@
+{
+  "verifiedAt": "2026-11-01T14:25:43.329138+00:00",
+  "issue": 62,
+  "releaseReady": false,
+  "dependency": {
+    "source": "local workspace overrides, not hosted 0.5.6",
+    "localManifestVersion": "0.5.5",
+    "targetVersion": "0.5.6",
+    "coreCommit": "38b5ab7ca8f2b90546404444ecf65ad772d58f08",
+    "workspaceCommit": "c5baf8e5bec7fb4f78cad3a537a73b04641ded03"
+  },
+  "aotProbe": {
+    "passed": true,
+    "checks": [
+      "real macOS AOT engine",
+      "automatic native Dart plugin registration",
+      "physical/logical app media share one native registration",
+      "one application media OS handle",
+      "real global media tap registration coexists with app scope",
+      "AppKit media -> SDK/C ABI/Dart -> unchanged legacy down callbacks",
+      "media autorepeat does not duplicate activation",
+      "native up reaches both scopes after modifier release",
+      "global cleanup preserves app callbacks and removes global callbacks",
+      "removing one identifier preserves its shared logical-key handler",
+      "cleanup removes all owned media resources and callbacks",
+      "Apple transport-key alias delivers track-next down/up",
+      "original unmodified physical/logical media forms share native handles",
+      "original empty-modifier Play/Pause examples receive down/up without a null cast"
+    ],
+    "releaseMode": true,
+    "globalMediaVerified": true,
+    "osKeyboardInputGenerated": false,
+    "physicalMediaKeyTested": false,
+    "delivery": "process-local NSEvent -> real SDK native asset -> legacy callbacks",
+    "verifiedAt": "2026-11-01T14:24:56.943788+00:00",
+    "localDependencyOverrides": true
+  },
+  "native": {
+    "globalTapCreated": true,
+    "assertionsPassed": 27,
+    "ctestPassed": 3,
+    "permissionLossTest": "controlled IOHID check result; OS permissions unchanged",
+    "timeoutRecovery": "overlapping permission check and disabled-tap notification",
+    "applicationBlur": "held-state release and next chord preserved"
+  },
+  "hotkeyTests": {
+    "platform": "macOS",
+    "passed": 62,
+    "skipped": 1
+  },
+  "analysis": "package and example: no issues",
+  "bindingChecks": {
+    "codegen": "75 C ABI and 339 bindings/reference files current; no new skipped symbols",
+    "rust": "cargo check --workspace passed",
+    "dart": "SDK analyze passed; media AOT probe passed",
+    "csharp": "build passed, zero warnings/errors",
+    "js": {
+      "build": "passed",
+      "typecheck": "passed",
+      "testsPassed": 5,
+      "skipped": 1
+    },
+    "python": {
+      "build": "passed",
+      "testsPassed": 13,
+      "skipped": 15
+    },
+    "go": "native build and uncached tests passed"
+  },
+  "coreCi": {
+    "url": "https://github.com/libnativeapi/nativeapi-core/actions/runs/41315685966",
+    "statusAtRecording": "in progress"
+  },
+  "remaining": [
+    "Wait for exact core/workspace CI; release the nativeapi dependency.",
+    "Run the final hosted-dependency hotkey candidate on Windows, both Linux hosts and new platform probes; finish patch metadata and pub dry run."
+  ],
+  "sourceFilesSha256": {
+    "packages/hotkey_manager/lib/src/hotkey_accelerator.dart": "25e0138ef67f470acbb61c42f44cf49a4e8a46a26b98f7ed89e1dbe0263b28eb",
+    "packages/hotkey_manager/lib/src/hotkey_manager.dart": "eb6152acb2c7f4e2a36130862c575a07a3b4e1f04a6d916abd49dc5a226938fd",
+    "packages/hotkey_manager/lib/src/system_hotkey_backend.dart": "6e43fe40f7ae82d70e47f2807d4635ec77fcb664857de2c64208a67e6e570fa3",
+    "packages/hotkey_manager/example/test_support/macos_media_host.mm": "80cfb3918400fc4cb4130bec1aa8a1e5ee4adac0f6941c2d5a812956cb0dc653",
+    "packages/hotkey_manager/example/test_support/macos_media_probe.dart": "56e72059f3b56b49e4de7f5242fec00810fc02bd7baa4f1010eb706549b07a6a",
+    "packages/hotkey_manager/example/test_support/run_macos_media_probe.py": "566dd60179b275ae0e619140a4e9dfa904549cb20e0a68e0c03566d2beec2d7f"
+  }
+}
