@@ -1,6 +1,6 @@
-> **hotkey_manager 从 0.3.0 起基于 [nativeapi](https://pub.dev/packages/nativeapi) 构建**，
-> 通过 Dart FFI 使用共享的 [libnativeapi C++ 核心](https://github.com/libnativeapi/nativeapi-core)。
-> 从 0.2.x 升级？原有 HotKey API 保持兼容，环境要求和平台差异见 [nativeapi 迁移](#nativeapi-迁移)。
+> **hotkey_manager 基于 [nativeapi](https://github.com/libnativeapi/nativeapi) 构建**——它是统一的
+> C++ 核心库（[libnativeapi/nativeapi](https://github.com/libnativeapi/nativeapi)）的 Flutter 绑定，macOS、Windows、Linux
+> 共用同一套实现。从 0.2.x 升级？请看[从 0.2.x 升级](#从-02x-升级)。
 
 # hotkey_manager
 
@@ -86,6 +86,12 @@ Wayland 请使用 `await hotKeyManager.register(...)` 等待桌面结果，最�
 dependencies:
   hotkey_manager: ^0.3.0
 ```
+
+#### 从 0.2.x 升级
+
+继续使用 `package:hotkey_manager/hotkey_manager.dart` 导入即可，原有 HotKey
+模型、方法、组件和 JSON 格式保持兼容。0.3.0 需要 Dart 3.13+、Flutter 3.47+，
+并使用已发布的 nativeapi 0.5.6+ 依赖。
 
 #### Linux requirements
 

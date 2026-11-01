@@ -1,7 +1,6 @@
-> **hotkey_manager 0.3.0+ is built on [nativeapi](https://pub.dev/packages/nativeapi)**,
-> Dart bindings for the shared [libnativeapi C++ core](https://github.com/libnativeapi/nativeapi-core).
-> Coming from 0.2.x? The existing HotKey API is preserved; see [Native API](#native-api)
-> for requirements and platform differences.
+> **hotkey_manager is built on [nativeapi](https://github.com/libnativeapi/nativeapi)**, a
+> Flutter binding of one C++ core library ([libnativeapi/nativeapi](https://github.com/libnativeapi/nativeapi))
+> shared by macOS, Windows and Linux. Coming from 0.2.x? See [Upgrading from 0.2.x](#upgrading-from-02x).
 
 # hotkey_manager
 
@@ -157,6 +156,12 @@ Add the published package to your `pubspec.yaml`:
 dependencies:
   hotkey_manager: ^0.3.0
 ```
+
+#### Upgrading from 0.2.x
+
+Keep importing `package:hotkey_manager/hotkey_manager.dart`: the existing HotKey
+models, methods, widgets and JSON remain compatible. Version 0.3.0 requires
+Dart 3.13+, Flutter 3.47+ and uses the published nativeapi 0.5.6+ dependency.
 
 #### Linux requirements
 
