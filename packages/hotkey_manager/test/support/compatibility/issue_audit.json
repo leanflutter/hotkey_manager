@@ -1,7 +1,7 @@
 {
   "date": "2026-11-01",
   "repository": "leanflutter/hotkey_manager",
-  "candidate": "next patch release using nativeapi",
+  "candidate": "hotkey_manager 0.2.4 using published nativeapi 0.5.6",
   "baseline": "aa61f740302e870564751810e425ba34ce254733",
   "apiPolicy": "Preserve the published HotKey models, public method signatures, JSON and platform-interface type identity.",
   "issues": [
@@ -44,8 +44,8 @@
     {
       "number": 62,
       "url": "https://github.com/leanflutter/hotkey_manager/issues/62",
-      "status": "implemented_pending_dependency_release",
-      "finding": "NativeAPI media tap/AppKit backend implemented; old HotKey API routes system and in-app Play/Pause without NSNull casts. Real global tap installation, native callback decoder/C ABI, lifecycle/permission-loss regressions and 14 real Flutter AOT checks (including the original empty-modifier Physical/Logical examples in both scopes) pass. Shared physical/logical registrations, down/up, repeat handling, scope coexistence and cleanup are verified using process-local native events. Physical media keys are not certified; global tap requires OS access. Await dependency release and final candidate CI before closure."
+      "status": "verified_fix",
+      "finding": "Main uses published nativeapi 0.5.6 media tap/AppKit support. Final real Flutter AOT passed 14 checks, including empty-modifier Physical/Logical Play/Pause in both scopes, actual global tap creation, down/up, repeats, shared handlers and cleanup. Core focus/tap/permission-loss regressions pass. Physical media hardware is not certified; global taps require OS access. macOS CI passed; issue closed."
     },
     {
       "number": 61,
@@ -98,8 +98,8 @@
     {
       "number": 21,
       "url": "https://github.com/leanflutter/hotkey_manager/issues/21",
-      "status": "implemented_pending_dependency_release",
-      "finding": "NativeAPI Portal backend and unchanged HotKey API integration implemented. Omarchy pure-Wayland AOT app passed two rounds across two launches through real compositor activation; cancellation, denial, restart cleanup and service loss have deterministic regressions. Await nativeapi dependency release and final hosted-package cross-platform verification before closure."
+      "status": "verified_fix",
+      "finding": "Released nativeapi 0.5.6 Portal support and unchanged HotKey API are on main. Final hosted-package Omarchy pure-Wayland AOT passed two launches and four real compositor/Portal activation rounds. Both Linux hosts passed 61 tests and 14 published-library native X11 checks. Working GlobalShortcuts providers/application identity are required; NUC certifies isolated X11, not GNOME Wayland. Closed after verification."
     },
     {
       "number": 20,
@@ -116,14 +116,14 @@
     {
       "number": 14,
       "url": "https://github.com/leanflutter/hotkey_manager/issues/14",
-      "status": "implemented_pending_dependency_release",
-      "finding": "Android Dart plugin registration and example implemented. Two Android 16 arm64 AOT runs pass 14 native Activity key-delivery checks each, including recorder, key-down/up, repeat handling, shared chords, cleanup and editable text. Ordinary Android release example builds and reaches its UI. Hardware Chromebook is untested; system-wide registration explicitly remains unavailable. Await final hosted nativeapi dependency and candidate CI before closure."
+      "status": "verified_fix",
+      "finding": "Main declares the Android Dart plugin and preserves the in-app hardware-keyboard API. Hosted nativeapi 0.5.6 Android 16 Release/AOT probes passed 14 checks on arm64 locally and x86_64 in CI; ordinary Android release example CI also passed. Physical Chromebook hardware is untested. System-wide Android shortcuts remain explicitly unavailable. Issue closed."
     },
     {
       "number": 12,
       "url": "https://github.com/leanflutter/hotkey_manager/issues/12",
-      "status": "implemented_pending_dependency_release",
-      "finding": "NativeAPI Portal backend and unchanged HotKey API integration implemented. Omarchy pure-Wayland AOT app passed two rounds across two launches through real compositor activation; cancellation, denial, restart cleanup and service loss have deterministic regressions. Await nativeapi dependency release and final hosted-package cross-platform verification before closure."
+      "status": "verified_fix",
+      "finding": "Released nativeapi 0.5.6 Portal support and unchanged HotKey API are on main. Final hosted-package Omarchy pure-Wayland AOT passed two launches and four real compositor/Portal activation rounds. Both Linux hosts passed 61 tests and 14 published-library native X11 checks. Working GlobalShortcuts providers/application identity are required; NUC certifies isolated X11, not GNOME Wayland. Closed after verification."
     },
     {
       "number": 10,
@@ -154,15 +154,18 @@
     {
       "number": 72,
       "url": "https://github.com/leanflutter/hotkey_manager/pull/72",
-      "status": "implemented_pending_dependency_release",
-      "finding": "NativeAPI Portal backend and unchanged HotKey API integration implemented. Omarchy pure-Wayland AOT app passed two rounds across two launches through real compositor activation; cancellation, denial, restart cleanup and service loss have deterministic regressions. Await nativeapi dependency release and final hosted-package cross-platform verification before closure."
+      "status": "closed_without_merge",
+      "finding": "Superseded by released nativeapi 0.5.6 Portal support and the verified unchanged HotKey bridge on main; final hosted-package pure-Wayland and X11 checks pass. Closed without merging."
     }
   ],
-  "releaseReady": false,
-  "remainingReleaseWork": [
-    "Release the nativeapi dependency containing Portal and macOS media support and verify the final hosted-package hotkey candidate on Windows and both Linux hosts (#12, #21, PR #72).",
-    "Ship the verified macOS global/in-app media implementation against the released nativeapi dependency and final candidate CI (#62).",
-    "Ship the verified Android/Chromebook in-app implementation and pass its new Android AOT CI against the final hosted dependency (#14).",
-    "Complete final candidate CI, package dry run and patch-version metadata."
-  ]
+  "releaseReady": true,
+  "remainingReleaseWork": [],
+  "finalVerification": {
+    "testedCodeCommit": "96d8bad3ddd85d8de640bfc684a5df6fe541e526",
+    "report": "release_0.2.4_verification.json",
+    "sdkPublished": "0.5.6",
+    "hotkeyPackagePublished": false,
+    "ci": "lint, tests and Linux/macOS/Windows/Web/Android AOT builds all passed",
+    "pubDryRunWarnings": 0
+  }
 }

@@ -1,0 +1,154 @@
+{
+  "verifiedAt": "2026-11-01T15:24:42.985165+00:00",
+  "version": "0.2.4",
+  "releaseReady": true,
+  "hotkeyPackagePublished": false,
+  "testedCodeCommit": "96d8bad3ddd85d8de640bfc684a5df6fe541e526",
+  "dependencyMode": "published pub.dev packages; no local SDK overrides",
+  "dependencies": {
+    "cnativeapi": {
+      "version": "0.5.6",
+      "archive_sha256": "4bccdb9f1f543b4c2c89f81ecc2515c623e2e49dcbf284bdde6cde61e8bb042c",
+      "archive_url": "https://pub.dev/api/archives/cnativeapi-0.5.6.tar.gz"
+    },
+    "nativeapi": {
+      "version": "0.5.6",
+      "archive_sha256": "5bdd8de1f9239a7e35725b91696e2f1465b45ee21b9cf60ecb1af3167d8efbdd",
+      "archive_url": "https://pub.dev/api/archives/nativeapi-0.5.6.tar.gz"
+    },
+    "nativeapi_flutter": {
+      "version": "0.5.6",
+      "archive_sha256": "98d61786a3aef4a1cc8062bc51c8129d92431a240961609de74cba9f622beca2",
+      "archive_url": "https://pub.dev/api/archives/nativeapi_flutter-0.5.6.tar.gz"
+    }
+  },
+  "publicApi": "HotKey models, method signatures, JSON and canonical platform-interface identity retained; minimum SDK requirements are documented as breaking",
+  "hosts": {
+    "windows-laptop": {
+      "testsPassed": 62,
+      "skipped": 1,
+      "analysis": "package and example passed",
+      "releaseBuild": "passed",
+      "releaseChecks": 12,
+      "packageAndExampleDependencyHashesVerified": true,
+      "display": "logged-on desktop session 1",
+      "nativeOsKeyRegistrations": 10,
+      "externalProcessConflict": "passed"
+    },
+    "ubuntu-nuc": {
+      "testsPassed": 61,
+      "skipped": 2,
+      "analysis": "package and example passed",
+      "releaseBuild": "passed",
+      "releaseChecks": 12,
+      "packageAndExampleDependencyHashesVerified": true,
+      "display": "private Xvfb, software rendering and private D-Bus session",
+      "publishedNativeCppChecks": 14
+    },
+    "omarchy": {
+      "testsPassed": 61,
+      "skipped": 2,
+      "analysis": "package and example passed",
+      "releaseBuild": "passed",
+      "releaseChecks": 12,
+      "packageAndExampleDependencyHashesVerified": true,
+      "display": "Hyprland XWayland",
+      "publishedNativeCppChecks": 14
+    }
+  },
+  "pureWayland": {
+    "host": "Omarchy",
+    "processLaunches": 2,
+    "registrationActivationRounds": 4,
+    "activation": "real Hyprland global-action IPC -> real Portal -> SDK -> unchanged legacy callbacks",
+    "osKeyboardInputGenerated": false,
+    "providerRequirement": "working GlobalShortcuts provider and desktop application identity",
+    "gnomeNucWaylandCertified": false
+  },
+  "macos": {
+    "testsPassed": 62,
+    "skipped": 1,
+    "mediaReleaseAotChecks": 14,
+    "globalTapVerified": true,
+    "physicalMediaKeyTested": false,
+    "nativeTransportAssertions": 27,
+    "nativeCtestsPassed": 3,
+    "coreCommit": "38b5ab7ca",
+    "nativeTransportDependencyMode": "local source before SDK release; final Flutter AOT uses hosted 0.5.6"
+  },
+  "android": {
+    "version": "16",
+    "arm64ReleaseAotChecks": 14,
+    "x86_64CiReleaseAotChecks": 14,
+    "ordinaryReleaseExampleBuild": "CI passed",
+    "physicalChromebookTested": false,
+    "systemWideShortcuts": "explicitly unsupported"
+  },
+  "ci": {
+    "lint": {
+      "url": "https://github.com/leanflutter/hotkey_manager/actions/runs/41319939299",
+      "conclusion": "success"
+    },
+    "test": {
+      "url": "https://github.com/leanflutter/hotkey_manager/actions/runs/41319939676",
+      "conclusion": "success"
+    },
+    "buildAndAndroidAot": {
+      "url": "https://github.com/leanflutter/hotkey_manager/actions/runs/41319939487",
+      "conclusion": "success"
+    }
+  },
+  "nativeapiCi": {
+    "core": "https://github.com/libnativeapi/nativeapi-core/actions/runs/41315685966",
+    "dartReleaseCommit": "https://github.com/libnativeapi/nativeapi/actions/runs/41316296179",
+    "release": "https://github.com/libnativeapi/nativeapi/actions/runs/41317408374",
+    "allConclusions": "success",
+    "otherBindings": "Rust, C#, JS, Python and Go CI passed at functional workspace commit c5baf8e"
+  },
+  "publishDryRun": {
+    "warnings": 0,
+    "compressedArchive": "304 KB",
+    "log": "hotkey-0.2.4-final-dry-run.log"
+  },
+  "limitations": [
+    "No OS keyboard input generated; callback checks use owned-process events, native Activity events or targeted compositor IPC.",
+    "Physical held-key behavior across keyboards/layouts and physical Chromebook/media-key hardware are not certified.",
+    "Ubuntu NUC has no logged-on graphical session; it certifies private X11, not a real GNOME Wayland provider.",
+    "Global macOS media requires OS authorization; hosted CI may explicitly report unavailable global support while the local final probe requires and verifies it.",
+    "Android supports in-app shortcuts; system-wide Android registration is unavailable."
+  ],
+  "verificationHarnessCorrections": [
+    "Pump GTK/Win32 events in headless native tests; keep async failure checks outside the fake widget clock.",
+    "Use Flutter-selected Java for direct Android instrumentation builds.",
+    "NUC GTK startup waits on the inactive user D-Bus session before Dart; use a private D-Bus session and separate Xvfb library paths from app runtime."
+  ],
+  "sourceFilesSha256": {
+    "packages/hotkey_manager/example/test_support/android_keyboard_probe.dart": "7fc6995d63ad39cb4207e100bbb17541f3b14bc7abc0233839cfc17dfda9effe",
+    "packages/hotkey_manager/example/test_support/macos_media_host.mm": "80cfb3918400fc4cb4130bec1aa8a1e5ee4adac0f6941c2d5a812956cb0dc653",
+    "packages/hotkey_manager/example/test_support/macos_media_probe.dart": "56e72059f3b56b49e4de7f5242fec00810fc02bd7baa4f1010eb706549b07a6a",
+    "packages/hotkey_manager/example/test_support/release_issue_probe.dart": "8d5ae23c90117c8d94f289f837157d6e26980fc1944dfa8b7eed6711497b770c",
+    "packages/hotkey_manager/example/test_support/run_android_keyboard_probe.py": "27823a4e419ccf7f8531c30c14b94abe36500af726ff926ac15ae9a89553cbc7",
+    "packages/hotkey_manager/example/test_support/run_macos_media_probe.py": "566dd60179b275ae0e619140a4e9dfa904549cb20e0a68e0c03566d2beec2d7f",
+    "packages/hotkey_manager/example/test_support/run_wayland_portal_probe.py": "9e47c3d10c6dea1943c3727e71561487166fcf57e04a87e6143351ffb4c45009",
+    "packages/hotkey_manager/example/test_support/wayland_portal_probe.dart": "1b57f5c1c4b61d8016fd6f0fc07440b539c7a451d8454e5f8c9f9bed673dc8b8",
+    "packages/hotkey_manager/lib/hotkey_manager.dart": "fe5ea1f92e1f6fea339be40aa9ce9f330d6293a0ae3909b524df96d0e483aaa8",
+    "packages/hotkey_manager/lib/legacy.dart": "35891974c2fa37d34a877968a94fdd482f3468fd9c59a7a3437142ec2aa1b8d5",
+    "packages/hotkey_manager/lib/native.dart": "6f20922fc5b76d72d92bb03b65a9a7f2efa2cb4b1a56ea0fafaaccab1a0ca3b9",
+    "packages/hotkey_manager/lib/src/enums/key_code.dart": "5f8a09ed611c6340a92243f73f48122ba709c5b7a9d25c9d93ee36c7fad0e3d9",
+    "packages/hotkey_manager/lib/src/enums/key_modifier.dart": "58e3b83d1013f87b281c184dee1f3ad75f8fb396ed995fca7a266080c2297680",
+    "packages/hotkey_manager/lib/src/extensions/keyboard_key.dart": "12334d80374dbf4b8020b8dd50432df2ce342f1c433f55c2c556f8dbc40ac158",
+    "packages/hotkey_manager/lib/src/hotkey.dart": "0baaa0ae4356d13bb1255b4a8fc8f3b233668fcd1bbf2a492d23c0ce02fefcb6",
+    "packages/hotkey_manager/lib/src/hotkey_accelerator.dart": "25e0138ef67f470acbb61c42f44cf49a4e8a46a26b98f7ed89e1dbe0263b28eb",
+    "packages/hotkey_manager/lib/src/hotkey_manager.dart": "eb6152acb2c7f4e2a36130862c575a07a3b4e1f04a6d916abd49dc5a226938fd",
+    "packages/hotkey_manager/lib/src/hotkey_manager_method_channel.dart": "698c3fb204237cadc971acaa8a717a2f700a8fedddc2818ba14eede0e9f48eb1",
+    "packages/hotkey_manager/lib/src/hotkey_manager_platform_interface.dart": "5d98774195280ba8aaa2117f0815560b8846a24abe7249f76e07ac124caac707",
+    "packages/hotkey_manager/lib/src/native_hotkey_manager_platform.dart": "a967740c39be5607c2b1afb8647ce749dc574773f570ac946d9cadb6680c5955",
+    "packages/hotkey_manager/lib/src/platform_system_hotkey_backend.dart": "550adecb246b668aa63dd20fa37b473bd2fbdf7be403289c5256c2a2d1a83b2c",
+    "packages/hotkey_manager/lib/src/system_hotkey_backend.dart": "6e43fe40f7ae82d70e47f2807d4635ec77fcb664857de2c64208a67e6e570fa3",
+    "packages/hotkey_manager/lib/src/widgets/global_shortcuts.dart": "cc9fc2f98b384697ba95c172d3c59bb788f95e7967dc9dfc8a2f2c6bfa903309",
+    "packages/hotkey_manager/lib/src/widgets/hotkey_recorder.dart": "8ed27bcf834e13ac5940ff4424772dc88c3499dcf1a1824ae503ccb50a75fae9",
+    "packages/hotkey_manager/lib/src/widgets/hotkey_virtual_view.dart": "b9673bfe71af22f6a8c2a6fd35552e27dfba5ecd2a7c63b177a713ead465e8d2",
+    "packages/hotkey_manager/pubspec.yaml": "3be15fff45d7c45b855cb6130f1e6346399c4da556f3fee0c88558bb69489cc8",
+    "packages/hotkey_manager/test/native_backend_test.dart": "75696e53f871240c7a9c97e0af8e1c95eb61fec1d8551b878a002d19ae51502c"
+  }
+}
