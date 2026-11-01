@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Support asynchronous native Wayland GlobalShortcuts Portal registration with nativeapi 0.5.6, stable shared-action keys and human-readable desktop descriptions (#12, #21, PR #72).
+- Cancel pending approvals during unregister, widget disposal and hot restart cleanup without affecting other nativeapi callers. Retain ownership when native cleanup fails so it can be retried.
+- Keep X11/Windows/macOS immediate registration and serialized shared-key cleanup; test early replies, denied requests, cancellation races and queued registrations.
+
 - Fix standalone left/right modifier hotkeys in application scope (#29, #22, #54).
 - Observe application keys without swallowing text input; callbacks can filter by focus (#51).
 - Ignore synthesized held-key presses when recovering window focus, and retain release tracking (#19, #20).
@@ -8,10 +12,10 @@
 
 - Restore the original platform-interface exports and injectable backend; keep native shortcut types in `native.dart` to avoid Flutter import conflicts.
 - Preserve omitted handlers on re-registration and the live `registeredHotKeyList`.
-- Preserve legacy native keycodes (including media, international and keypad keys), Windows repeat behavior and platform modifier handling; requires nativeapi/cnativeapi 0.5.4.
+- Preserve legacy native keycodes (including media, international and keypad keys), Windows repeat behavior and platform modifier handling; requires nativeapi/cnativeapi 0.5.6.
 - Serialize asynchronous registration and cleanup, sharing pending registrations without losing callbacks.
 
-- Migrate system shortcuts to nativeapi 0.5.4 through Dart FFI; remove the Linux,
+- Migrate system shortcuts to nativeapi through Dart FFI; remove the Linux,
   macOS and Windows native packages from this repository; reuse the published
   platform-interface models and injectable platform API.
 - Export the native Shortcut API from `native.dart` while preserving the existing HotKey API,
@@ -26,7 +30,7 @@
   example's shortcut after a hot restart.
 - Bundle nativeapi's native assets in the Linux example and cover native
   registrations on Windows and Linux as well as macOS.
-- **Breaking:** requires Dart 3.13+, Flutter 3.47+ and nativeapi 0.5.4+.
+- **Breaking:** requires Dart 3.13+, Flutter 3.47+ and nativeapi 0.5.6+.
 
 ## 0.2.3
 

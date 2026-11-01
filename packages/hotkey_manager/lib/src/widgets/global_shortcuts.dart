@@ -1,5 +1,31 @@
+import 'dart:async';
+
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
+
+void _registerGlobalHotKey(HotKey hotKey, HotKeyHandler handler) {
+  unawaited(
+    hotKeyManager.register(hotKey, keyDownHandler: handler).catchError((
+      Object error,
+      StackTrace stack,
+    ) {
+      // Disposing or updating a widget can cancel its permission request.
+      if (error is PlatformException &&
+          error.code == 'registration_cancelled') {
+        return;
+      }
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stack,
+          library: 'hotkey_manager',
+          context: ErrorDescription('while registering a global shortcut'),
+        ),
+      );
+    }),
+  );
+}
 
 extension _SingleActivatorExtension on SingleActivator {
   HotKey _toHotKey() {
@@ -45,7 +71,7 @@ class _GlobalShortcutsState extends State<GlobalShortcuts> {
   void _registerShortcuts() {
     for (final entry in widget.shortcuts.entries) {
       final hotKey = entry.key._toHotKey();
-      hotKeyManager.register(hotKey, keyDownHandler: _onKeyDown);
+      _registerGlobalHotKey(hotKey, _onKeyDown);
       _registeredHotKeys.add(hotKey);
       _activatorsById[hotKey.identifier] = entry.key;
     }
@@ -130,7 +156,7 @@ class _CallbackGlobalShortcutsState extends State<CallbackGlobalShortcuts> {
   void _registerShortcuts() {
     for (final entry in widget.bindings.entries) {
       final hotKey = entry.key._toHotKey();
-      hotKeyManager.register(hotKey, keyDownHandler: _onKeyDown);
+      _registerGlobalHotKey(hotKey, _onKeyDown);
       _registeredHotKeys.add(hotKey);
       _activatorsById[hotKey.identifier] = entry.key;
     }

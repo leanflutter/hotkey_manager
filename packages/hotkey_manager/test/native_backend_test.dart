@@ -87,7 +87,7 @@ void main() {
           key: PhysicalKeyboardKey.f10,
           modifiers: [HotKeyModifier.control, HotKeyModifier.shift],
         );
-        final id = backend.register(hotKey);
+        final id = await backend.register(hotKey);
         final registered = native.getWithId(id);
         expect(registered?.accelerator, hotKeyAccelerator(hotKey));
         registered?.dispose();

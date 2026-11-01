@@ -98,8 +98,8 @@
     {
       "number": 21,
       "url": "https://github.com/leanflutter/hotkey_manager/issues/21",
-      "status": "pending_nativeapi",
-      "finding": "Native Wayland global shortcuts still need a Portal backend; X11/XWayland registration is verified."
+      "status": "implemented_pending_dependency_release",
+      "finding": "NativeAPI Portal backend and unchanged HotKey API integration implemented. Omarchy pure-Wayland AOT app passed two rounds across two launches through real compositor activation; cancellation, denial, restart cleanup and service loss have deterministic regressions. Await nativeapi dependency release and final hosted-package cross-platform verification before closure."
     },
     {
       "number": 20,
@@ -122,8 +122,8 @@
     {
       "number": 12,
       "url": "https://github.com/leanflutter/hotkey_manager/issues/12",
-      "status": "pending_nativeapi",
-      "finding": "GlobalShortcuts Portal is asynchronous and permission-mediated; it is not implemented by the current X11 backend."
+      "status": "implemented_pending_dependency_release",
+      "finding": "NativeAPI Portal backend and unchanged HotKey API integration implemented. Omarchy pure-Wayland AOT app passed two rounds across two launches through real compositor activation; cancellation, denial, restart cleanup and service loss have deterministic regressions. Await nativeapi dependency release and final hosted-package cross-platform verification before closure."
     },
     {
       "number": 10,
@@ -154,13 +154,13 @@
     {
       "number": 72,
       "url": "https://github.com/leanflutter/hotkey_manager/pull/72",
-      "status": "pending_nativeapi",
-      "finding": "Reviewed the Portal protocol and old-plugin diff. New support must be implemented in nativeapi rather than restoring the removed Linux plugin."
+      "status": "implemented_pending_dependency_release",
+      "finding": "NativeAPI Portal backend and unchanged HotKey API integration implemented. Omarchy pure-Wayland AOT app passed two rounds across two launches through real compositor activation; cancellation, denial, restart cleanup and service loss have deterministic regressions. Await nativeapi dependency release and final hosted-package cross-platform verification before closure."
     }
   ],
   "releaseReady": false,
   "remainingReleaseWork": [
-    "Implement and verify native Wayland Portal registrations in nativeapi (#12, #21, PR #72).",
+    "Release the nativeapi dependency containing Portal support and verify the final hosted-package hotkey candidate on Windows and both Linux hosts (#12, #21, PR #72).",
     "Implement and verify actual macOS system media Play/Pause registration (#62); safe failure alone is not media-key support.",
     "Enable and verify Android/Chromebook in-app hardware-keyboard use (#14), documenting platform-wide key restrictions.",
     "Complete final candidate CI, package dry run and patch-version metadata."

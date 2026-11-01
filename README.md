@@ -42,7 +42,7 @@ English | [简体中文](./README-ZH.md)
 System shortcuts use the C++ nativeapi core through Dart FFI. No per-platform
 native hotkey_manager plugin or method channel is needed.
 
-Requires Dart 3.13+, Flutter 3.47+ and **nativeapi/cnativeapi 0.5.4+** with native keycode support.
+Requires Dart 3.13+, Flutter 3.47+ and **nativeapi/cnativeapi 0.5.6+** with asynchronous desktop shortcut registration.
 Both dependencies are published on pub.dev; no local dependency overrides are needed.
 
 ```dart
@@ -80,13 +80,28 @@ The existing `HotKeyManager`, `HotKey`, `HotKeyRecorder`, `HotKeyVirtualView`,
 `GlobalShortcuts` and `CallbackGlobalShortcuts` remain available from the original
 `package:hotkey_manager/hotkey_manager.dart` import, and from `package:hotkey_manager/legacy.dart`. Old hotkey JSON is supported.
 In-app shortcuts continue to use Flutter's `HardwareKeyboard`, with down and up
-events on all Flutter platforms. System key-up events are available on macOS;
-Windows and Linux report system key-down only. Fn is supported on macOS;
-CapsLock is supported on macOS and Linux. Windows retains the old behavior of
+events on all Flutter platforms. System key-up events are available on macOS and
+Wayland Portal providers that send release notifications; Windows and X11 report
+system key-down only. Fn is supported on macOS;
+CapsLock is supported on macOS and X11. Windows retains the old behavior of
 ignoring Fn/CapsLock, and Linux ignores Fn. Unmapped system keys throw
 `PlatformException`. The original platform keycodes preserve media, international
 and keypad keys, and Windows system shortcuts retain native automatic repetition.
-Linux system shortcuts require X11 (including XWayland), not native Wayland.
+Linux uses X11 (including XWayland) or the GlobalShortcuts Portal on native
+Wayland. An explicitly X11 GTK application retains the X11 path.
+
+On Wayland, `await hotKeyManager.register(...)` waits for the desktop's result
+without blocking Flutter. Unregistering a pending hotkey, disposing its global
+shortcut widget, or calling `unregisterAll()` cancels its request. The desktop
+controls approval and the final binding: your combination is a preference and
+may be changed, ignored or left unassigned. Some desktops, including Hyprland,
+require assigning the advertised action in the compositor's configuration.
+The `HotKey` model retains your requested combination. Native callers can read
+`Shortcut.triggerDescription` for the current desktop label (empty or absent if unassigned).
+Shared combinations have stable registration keys even when HotKey UUIDs change.
+Unregistering releases the live session; it does not erase saved desktop choices.
+The Hyprland Portal backend may retain the advertised action in its catalog after
+the client session closes; this is separate from an active SDK registration.
 
 The original injectable `HotKeyManagerPlatform` and `MethodChannelHotKeyManager`
 interfaces are retained; the default implementation uses nativeapi. The native
@@ -146,6 +161,13 @@ dependencies:
 ```
 
 #### Linux requirements
+
+Native Wayland additionally requires a running desktop session with a working
+`org.freedesktop.portal.GlobalShortcuts` provider. The generic portal package
+alone is insufficient. Unsandboxed applications must install a `.desktop` file
+whose basename matches their GTK application ID; sandboxed applications use the
+identity supplied by their runtime. Unsupported providers, denied permission or
+invalid application identity produce a `PlatformException`.
 
 ```bash
 sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev libx11-dev libxi-dev

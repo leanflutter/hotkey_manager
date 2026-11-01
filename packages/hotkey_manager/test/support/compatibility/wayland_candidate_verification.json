@@ -1,0 +1,91 @@
+{
+  "verifiedAt": "2026-11-01T12:11:03.773358+00:00",
+  "status": "implemented_pending_dependency_release",
+  "releaseReady": false,
+  "nativeapiCoreRevision": "fdce2aad1b01dc244a834eecb51d89aa684156f4",
+  "nativeapiWorkspaceRevision": "f8e4204f30e64de44e4406d70de830df240fe7d2",
+  "dependencyMode": "local worktree source preparing nativeapi 0.5.6; hosted-package verification still required",
+  "publicHotKeyApi": "unchanged models, method signatures, JSON and canonical platform-interface identity",
+  "macos": {
+    "flutterTestsPassed": 60,
+    "skipped": 1,
+    "analyze": "passed"
+  },
+  "windows": {
+    "nativeCoreBuild": "passed",
+    "requestLifecycleTest": "passed",
+    "unregisterFailureTest": "passed",
+    "candidateFlutterRegression": "pending final hosted dependency"
+  },
+  "linux": {
+    "ubuntu-nuc": {
+      "isolatedPortalProtocol": "passed",
+      "realManagerPortalIntegration": "passed",
+      "requestLifecycle": "passed",
+      "nativeX11ChecksPassed": 14,
+      "actualDesktopPortal": "unavailable: no logged-on user graphical session; service failed"
+    },
+    "omarchy": {
+      "isolatedPortalProtocol": "passed",
+      "nativeX11ChecksPassed": 14,
+      "pureWaylandReleaseProbe": {
+        "passed": true,
+        "processLaunches": 2,
+        "registrationRoundsPerLaunch": 2,
+        "activationPath": "Hyprland targeted global-action IPC -> real Portal -> nativeapi -> unchanged HotKeyManager keyDownHandler",
+        "nativeHandlesAfterEachCleanup": 0,
+        "releaseKeyLabel": "F19",
+        "operatingSystemKeyboardInputGenerated": false,
+        "providerCatalogRetained": true,
+        "providerVersions": {
+          "xdg-desktop-portal": "1.22.1-2",
+          "xdg-desktop-portal-hyprland": "1.4.1-2",
+          "Hyprland": "0.56.2-2"
+        }
+      }
+    }
+  },
+  "bindingChecks": {
+    "codegen": "75 C ABI files and 339 bindings/reference files current; no new skipped APIs",
+    "dartAnalyze": "passed",
+    "rustCargoCheck": "passed",
+    "csharpBuild": "passed",
+    "jsTests": {
+      "passed": 5,
+      "skipped": 1
+    },
+    "pythonTests": {
+      "passed": 13,
+      "skipped": 15
+    },
+    "goTests": "passed"
+  },
+  "coreCi": {
+    "url": "https://github.com/libnativeapi/nativeapi-core/actions/runs/41303556754",
+    "conclusion": "success",
+    "platforms": [
+      "Windows",
+      "macOS",
+      "Linux",
+      "Android arm64/armv7/x86_64",
+      "iOS device/simulator",
+      "OpenHarmony"
+    ]
+  },
+  "remaining": [
+    "Fix workspace C# formatter and Linux codegen CI drift before releasing dependency",
+    "Implement and verify macOS media shortcuts (#62)",
+    "Enable and verify Android/Chromebook in-app keyboard support (#14)",
+    "Prepare nativeapi dependency release, final hosted-package Windows/Linux regressions, hotkey patch metadata and publication dry run"
+  ],
+  "sourceFilesSha256": {
+    "packages/hotkey_manager/lib/src/hotkey_manager.dart": "0cc1741c41902b0aea826ac46e5a282f738eca90222df020248fca3bc57c23fe",
+    "packages/hotkey_manager/lib/src/native_hotkey_manager_platform.dart": "a967740c39be5607c2b1afb8647ce749dc574773f570ac946d9cadb6680c5955",
+    "packages/hotkey_manager/lib/src/platform_system_hotkey_backend.dart": "550adecb246b668aa63dd20fa37b473bd2fbdf7be403289c5256c2a2d1a83b2c",
+    "packages/hotkey_manager/lib/src/system_hotkey_backend.dart": "8438979b011b2042faa4c796e232204b6b712d7080accfa08152d98307c9b16e",
+    "packages/hotkey_manager/lib/src/widgets/global_shortcuts.dart": "cc9fc2f98b384697ba95c172d3c59bb788f95e7967dc9dfc8a2f2c6bfa903309",
+    "packages/hotkey_manager/test/async_registration_test.dart": "176b7c2fe6914052304c76d4291cab2fd7070aac9f1a4e313ba8eafc0c85f994",
+    "packages/hotkey_manager/example/test_support/wayland_portal_probe.dart": "1b57f5c1c4b61d8016fd6f0fc07440b539c7a451d8454e5f8c9f9bed673dc8b8",
+    "packages/hotkey_manager/example/test_support/run_wayland_portal_probe.py": "9e47c3d10c6dea1943c3727e71561487166fcf57e04a87e6143351ffb4c45009"
+  }
+}
