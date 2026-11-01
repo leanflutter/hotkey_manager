@@ -1,4 +1,7 @@
-> **🚀 Ship Your App Faster**: Try [Fastforge](https://fastforge.dev) - The simplest way to build, package and distribute your Flutter apps.
+> **hotkey_manager 0.3.0+ is built on [nativeapi](https://pub.dev/packages/nativeapi)**,
+> Dart bindings for the shared [libnativeapi C++ core](https://github.com/libnativeapi/nativeapi-core).
+> Coming from 0.2.x? The existing HotKey API is preserved; see [Native API](#native-api)
+> for requirements and platform differences.
 
 # hotkey_manager
 
@@ -79,8 +82,8 @@ is disposed; disposing the handle alone does not remove the native registration.
 The existing `HotKeyManager`, `HotKey`, `HotKeyRecorder`, `HotKeyVirtualView`,
 `GlobalShortcuts` and `CallbackGlobalShortcuts` remain available from the original
 `package:hotkey_manager/hotkey_manager.dart` import, and from `package:hotkey_manager/legacy.dart`. Old hotkey JSON is supported.
-In-app shortcuts continue to use Flutter's `HardwareKeyboard`, with down and up
-events on all Flutter platforms. System key-up events are available on macOS and
+Ordinary in-app shortcuts use Flutter's `HardwareKeyboard`; macOS media keys
+use nativeapi. Both support down and up events. System key-up events are available on macOS and
 Wayland Portal providers that send release notifications; Windows and X11 report
 system key-down only. Fn is supported on macOS;
 CapsLock is supported on macOS and X11. Windows retains the old behavior of
@@ -133,31 +136,26 @@ an application lifecycle policy rather than another hotkey scope.
 Always await registration and handle `PlatformException`: reserved or already
 owned combinations fail without replacing another application's shortcut.
 Unmodified keys such as Space are subject to the operating system's rules.
-macOS keys without a native keycode, including the media Play/Pause key, fail
-with `unsupported_hotkey` instead of terminating the process. That error does
-not claim support for delivery of those media keys. System-reserved combinations
+Unmapped system keys report `unsupported_hotkey`; supported macOS media keys
+follow the permission rules above. System-reserved combinations
 (such as the task switcher or Spotlight) must first be disabled or reassigned in
 the operating system; this package does not override those reservations.
 
 ## Platform Support
 
-| Linux | macOS | Windows |
-| :---: | :---: | :-----: |
-|   ✔️   |   ✔️   |    ✔️    |
+| Linux | macOS | Windows | Android |
+| :---: | :---: | :-----: | :-----: |
+| ✔️ | ✔️ | ✔️ | In-app only |
 
 ## Quick Start
 
 ### Installation
 
-Use the Git dependency for the nativeapi migration described here:
+Add the published package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  hotkey_manager:
-    git:
-      path: packages/hotkey_manager
-      url: https://github.com/leanflutter/hotkey_manager.git
-      ref: main
+  hotkey_manager: ^0.3.0
 ```
 
 #### Linux requirements
@@ -203,7 +201,7 @@ await hotKeyManager.register(
   keyDownHandler: (hotKey) {
     print('onKeyDown+${hotKey.toJson()}');
   },
-  // System key-up is macOS only; in-app key-up works on all platforms.
+  // System key-up: macOS and Wayland providers with release notifications; in-app supports key-up.
   keyUpHandler: (hotKey){
     print('onKeyUp+${hotKey.toJson()}');
   } ,

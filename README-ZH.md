@@ -1,4 +1,6 @@
-> **🚀 快速发布您的应用**: 试试 [Fastforge](https://fastforge.dev) - 构建、打包和分发您的 Flutter 应用最简单的方式。
+> **hotkey_manager 从 0.3.0 起基于 [nativeapi](https://pub.dev/packages/nativeapi) 构建**，
+> 通过 Dart FFI 使用共享的 [libnativeapi C++ 核心](https://github.com/libnativeapi/nativeapi-core)。
+> 从 0.2.x 升级？原有 HotKey API 保持兼容，环境要求和平台差异见 [nativeapi 迁移](#nativeapi-迁移)。
 
 # hotkey_manager
 
@@ -12,7 +14,7 @@
 
 [visits-count-image]: https://img.shields.io/badge/dynamic/json?label=Visits%20Count&query=value&url=https://api.countapi.xyz/hit/leanflutter.hotkey_manager/visits
 
-这个插件允许 Flutter 桌面应用定义系统/应用范围内的热键（即快捷键）。
+这个插件支持 Flutter 桌面应用的系统和应用内快捷键，以及 Android 应用的应用内硬件键盘快捷键。
 
 ---
 
@@ -40,8 +42,8 @@
 ## nativeapi 迁移
 
 系统快捷键通过 Dart FFI 使用 nativeapi C++ 核心，不再依赖各平台原生插件。
-需要 Dart 3.13+、Flutter 3.47+ 和 **nativeapi/cnativeapi 0.5.4+** 的原生键码支持。
-该依赖版本发布前，需要通过本地覆盖指向匹配的 nativeapi 工作区源码。
+需要 Dart 3.13+、Flutter 3.47+ 和 **nativeapi/cnativeapi 0.5.6+**。
+两个依赖均已发布到 pub.dev，无需本地依赖覆盖。
 
 `package:hotkey_manager/native.dart` 单独导出 `ShortcutManager`、`ShortcutOptions`
 和快捷键事件，避免与 Flutter 的同名类型冲突。推荐使用
@@ -51,12 +53,16 @@
 
 旧 `HotKeyManager`、`HotKey`、录制/展示组件及全局快捷键组件仍可从原入口导入，
 也可使用 `package:hotkey_manager/legacy.dart`，历史 JSON 格式继续兼容。
-应用内快捷键仍由 Flutter 处理，各平台都支持按下和抬起事件。
-系统快捷键的抬起事件仅支持 macOS；Windows、Linux 仅支持按下事件。
-Fn 系统修饰键支持 macOS；CapsLock 支持 macOS 和 Linux。Windows 保持旧版忽略
+普通应用内快捷键由 Flutter 处理，macOS 媒体键通过 nativeapi 处理，均支持按下和抬起事件。
+系统快捷键的抬起事件支持 macOS，以及发送释放通知的 Wayland Portal 提供方；
+Windows 和 X11 仅支持按下事件。macOS 系统媒体键需要操作系统授权。
+Android 仅支持应用内硬件键盘快捷键，系统级注册会明确返回错误。
+Fn 系统修饰键支持 macOS；CapsLock 支持 macOS 和 X11。Windows 保持旧版忽略
 Fn/CapsLock 的行为，Linux 忽略 Fn。旧平台键码继续覆盖媒体键、国际键和小键盘键；
 Windows 系统快捷键保留原生长按连发策略。无法映射的键位会抛出 `PlatformException`。
-Linux 系统快捷键需要 X11（含 XWayland），暂不支持原生 Wayland。
+Linux 支持 X11（含 XWayland），也支持通过 GlobalShortcuts Portal 注册原生 Wayland 快捷键。
+Wayland 请使用 `await hotKeyManager.register(...)` 等待桌面结果，最终组合键由桌面决定；注销、组件销毁和热重启清理
+会取消尚未完成的请求。
 
 原 `HotKeyManagerPlatform` 和 `MethodChannelHotKeyManager` 接口及平台替换能力继续保留，
 默认实现使用 nativeapi。`registeredHotKeyList` 保持实时列表；
@@ -66,26 +72,26 @@ Linux 系统快捷键需要 X11（含 XWayland），暂不支持原生 Wayland�
 
 ## 平台支持
 
-| Linux | macOS | Windows |
-| :---: | :---: | :-----: |
-|   ✔️   |   ✔️   |    ✔️    |
+| Linux | macOS | Windows | Android |
+| :---: | :---: | :-----: | :-----: |
+| ✔️ | ✔️ | ✔️ | 仅应用内 |
 
 ## 快速开始
 
 ### 安装
 
-使用以下 Git 依赖体验本文描述的 nativeapi 迁移：
+在 `pubspec.yaml` 中添加已发布的依赖：
 
 ```yaml
 dependencies:
-  hotkey_manager:
-    git:
-      path: packages/hotkey_manager
-      url: https://github.com/leanflutter/hotkey_manager.git
-      ref: main
+  hotkey_manager: ^0.3.0
 ```
 
 #### Linux requirements
+
+原生 Wayland 需要运行中的桌面会话和支持 `org.freedesktop.portal.GlobalShortcuts`
+的提供方；仅安装通用 Portal 软件包不够。非沙箱应用还需安装与 GTK 应用 ID 同名的
+`.desktop` 文件。桌面不支持、权限拒绝或应用身份无效时会返回 `PlatformException`。
 
 ```bash
 sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev libx11-dev libxi-dev
@@ -121,7 +127,7 @@ await hotKeyManager.register(
   keyDownHandler: (hotKey) {
     print('onKeyDown+${hotKey.toJson()}');
   },
-  // 系统快捷键的抬起事件仅限 macOS，应用内快捷键各平台都支持。
+  // 系统抬起事件支持 macOS 和提供释放通知的 Wayland Portal；应用内快捷键支持抬起事件。
   keyUpHandler: (hotKey){
     print('onKeyUp+${hotKey.toJson()}');
   } ,
