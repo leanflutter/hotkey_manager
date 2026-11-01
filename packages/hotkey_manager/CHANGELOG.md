@@ -1,4 +1,4 @@
-## 0.2.4
+## 0.3.0
 
 - Migrate desktop shortcuts to nativeapi 0.5.6 through Dart FFI and native assets; remove the platform native packages and Swift HotKey dependency.
 - Preserve the published HotKey models, methods, JSON, platform-interface identity, widgets and injectable backend. Keep additional native shortcut types in `native.dart` and provide `legacy.dart`.

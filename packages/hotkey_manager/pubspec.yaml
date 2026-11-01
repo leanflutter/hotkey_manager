@@ -1,6 +1,6 @@
 name: hotkey_manager
 description: System-wide desktop shortcuts and in-app hardware-keyboard shortcuts for Flutter desktop and Android apps.
-version: 0.2.4
+version: 0.3.0
 homepage: https://github.com/leanflutter/hotkey_manager
 
 platforms:
