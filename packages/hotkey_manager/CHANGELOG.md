@@ -1,39 +1,13 @@
-## Unreleased
+## 0.2.4
 
-- Support macOS Play/Pause, transport, volume, brightness and eject keys through nativeapi, in both system and in-app scope (#62). Preserve down/up delivery, shared registrations and cleanup; retire global media registrations when input permission is revoked.
-
-- Add Android Dart plugin registration, an Android example and in-app hardware-keyboard support for Android/Chromebook apps (#14). Report unavailable system-wide scope explicitly; keep nativeapi startup cleanup usable.
-
-- Support asynchronous native Wayland GlobalShortcuts Portal registration with nativeapi 0.5.6, stable shared-action keys and human-readable desktop descriptions (#12, #21, PR #72).
-- Cancel pending approvals during unregister, widget disposal and hot restart cleanup without affecting other nativeapi callers. Retain ownership when native cleanup fails so it can be retried.
-- Keep X11/Windows/macOS immediate registration and serialized shared-key cleanup; test early replies, denied requests, cancellation races and queued registrations.
-
-- Fix standalone left/right modifier hotkeys in application scope (#29, #22, #54).
-- Observe application keys without swallowing text input; callbacks can filter by focus (#51).
-- Ignore synthesized held-key presses when recovering window focus, and retain release tracking (#19, #20).
-- Verify Shift/Alt recorder combinations and non-null recording in real macOS/Windows release apps (#42, #61).
-- Verify recoverable unmodified-space/media registration and OS-grab conflicts against published nativeapi 0.5.4 (#65, #62, #10).
-
-- Restore the original platform-interface exports and injectable backend; keep native shortcut types in `native.dart` to avoid Flutter import conflicts.
-- Preserve omitted handlers on re-registration and the live `registeredHotKeyList`.
-- Preserve legacy native keycodes (including media, international and keypad keys), Windows repeat behavior and platform modifier handling; requires nativeapi/cnativeapi 0.5.6.
-- Serialize asynchronous registration and cleanup, sharing pending registrations without losing callbacks.
-
-- Migrate system shortcuts to nativeapi through Dart FFI; remove the Linux,
-  macOS and Windows native packages from this repository; reuse the published
-  platform-interface models and injectable platform API.
-- Export the native Shortcut API from `native.dart` while preserving the existing HotKey API,
-  Flutter widgets and old JSON format. Add a `legacy.dart` entry point.
-- Preserve macOS system key-up events through `ShortcutReleasedEvent`.
-- Share native registrations for matching combinations; update supplied handlers by
-  identifier while retaining omitted handlers, roll back failed registrations, ignore stale events and reclaim
-  this package's registrations after a hot restart.
-- Fix in-app release tracking, including multiple matching handlers and
-  releasing modifiers before the primary key.
-- Report unmapped keyboard keys as platform errors and reclaim the native
-  example's shortcut after a hot restart.
-- Bundle nativeapi's native assets in the Linux example and cover native
-  registrations on Windows and Linux as well as macOS.
+- Migrate desktop shortcuts to nativeapi 0.5.6 through Dart FFI and native assets; remove the platform native packages and Swift HotKey dependency.
+- Preserve the published HotKey models, methods, JSON, platform-interface identity, widgets and injectable backend. Keep additional native shortcut types in `native.dart` and provide `legacy.dart`.
+- Support native Wayland GlobalShortcuts Portal registration, desktop-selected bindings, stable shared action keys and cancellation on supported providers (#12, #21, PR #72).
+- Support macOS Play/Pause and other media keys in system and application scope, including down/up delivery and permission-loss cleanup (#62). Preserve existing Carbon volume-key registrations.
+- Add Android/Chromebook in-app hardware-keyboard support and an Android example (#14). System-wide Android shortcuts remain unavailable.
+- Share matching native registrations; preserve omitted handlers, serialize cleanup, ignore stale callbacks and reclaim owned registrations after hot restart. Preserve desktop native keycodes and OS conflict failures.
+- Fix standalone left/right application modifiers, modifier-first release and focus recovery; observe in-app keys without consuming editable text (#19, #20, #22, #29, #51, #54).
+- Fix Shift/Alt recorder combinations and non-null recordings in release builds (#42, #61). Cover plugin registration, unmodified Space, native grab conflicts and real window hide/show recovery (#10, #63, #65).
 - **Breaking:** requires Dart 3.13+, Flutter 3.47+ and nativeapi 0.5.6+.
 
 ## 0.2.3
