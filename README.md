@@ -42,9 +42,9 @@ English | [简体中文](./README-ZH.md)
 System shortcuts use the C++ nativeapi core through Dart FFI. No per-platform
 hotkey_manager plugin or method channel is needed.
 
-Requires Dart 3.13+, Flutter 3.47+ and **nativeapi 0.5.3+**. This migration depends
-on the new `ShortcutReleasedEvent` in that release; when developing before it is
-published, use local dependency overrides for both `nativeapi` and `cnativeapi`.
+Requires Dart 3.13+, Flutter 3.47+ and **nativeapi 0.5.3+**, including
+`ShortcutReleasedEvent`. The nativeapi packages resolve from pub.dev; no local
+dependency overrides are needed.
 
 ```dart
 import 'package:hotkey_manager/hotkey_manager.dart' as hotkey;
@@ -102,14 +102,7 @@ directly through `ShortcutManager`.
 
 ### Installation
 
-Add this to your package's pubspec.yaml file:
-
-```yaml
-dependencies:
-  hotkey_manager: ^0.2.3
-```
-
-Or
+Use the Git dependency for the nativeapi migration described here:
 
 ```yaml
 dependencies:
@@ -134,7 +127,7 @@ import 'package:hotkey_manager/hotkey_manager.dart';
 void main() async {
   // Must add this line.
   WidgetsFlutterBinding.ensureInitialized();
-  // For hot reload, `unregisterAll()` needs to be called.
+  // Reclaim native registrations left over after a hot restart.
   await hotKeyManager.unregisterAll();
 
   runApp(MyApp());
@@ -156,7 +149,7 @@ await hotKeyManager.register(
   keyDownHandler: (hotKey) {
     print('onKeyDown+${hotKey.toJson()}');
   },
-  // Only works on macOS.
+  // System key-up is macOS only; in-app key-up works on all platforms.
   keyUpHandler: (hotKey){
     print('onKeyUp+${hotKey.toJson()}');
   } ,

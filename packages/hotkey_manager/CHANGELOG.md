@@ -14,7 +14,7 @@
   example's shortcut after a hot restart.
 - Bundle nativeapi's native assets in the Linux example and cover native
   registrations on Windows and Linux as well as macOS.
-- Requires Dart 3.13+, Flutter 3.47+ and nativeapi 0.5.3+.
+- **Breaking:** requires Dart 3.13+, Flutter 3.47+ and nativeapi 0.5.3+.
 
 ## 0.2.3
 

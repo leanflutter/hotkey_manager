@@ -40,9 +40,8 @@
 ## nativeapi 迁移
 
 系统快捷键通过 Dart FFI 使用 nativeapi C++ 核心，不再依赖各平台插件。
-需要 Dart 3.13+、Flutter 3.47+ 和 **nativeapi 0.5.3+**；本次迁移使用该版本新增的
-`ShortcutReleasedEvent`。发布前可通过本地 `dependency_overrides` 同时指定
-`nativeapi` 和 `cnativeapi`。
+需要 Dart 3.13+、Flutter 3.47+ 和 **nativeapi 0.5.3+**，包含
+`ShortcutReleasedEvent`。nativeapi 依赖可直接从 pub.dev 获取，无需本地依赖覆盖。
 
 主入口新增导出 `ShortcutManager`、`ShortcutOptions` 和快捷键事件，推荐使用
 `registerWithOptions` 注册、`addListener` 接收事件，回调会异步送达 Dart isolate。
@@ -70,14 +69,7 @@ Linux 系统快捷键需要 X11（含 XWayland），暂不支持原生 Wayland�
 
 ### 安装
 
-将此添加到你的软件包的 pubspec.yaml 文件：
-
-```yaml
-dependencies:
-  hotkey_manager: ^0.2.3
-```
-
-或
+使用以下 Git 依赖体验本文描述的 nativeapi 迁移：
 
 ```yaml
 dependencies:
@@ -102,7 +94,7 @@ import 'package:hotkey_manager/hotkey_manager.dart';
 void main() async {
   // 必须加上这一行。
   WidgetsFlutterBinding.ensureInitialized();
-  // 对于热重载，`unregisterAll()` 需要被调用。
+  // 清理热重启后遗留的原生注册。
   await hotKeyManager.unregisterAll();
 
   runApp(MyApp());
@@ -124,7 +116,7 @@ await hotKeyManager.register(
   keyDownHandler: (hotKey) {
     print('onKeyDown+${hotKey.toJson()}');
   },
-  // 只在 macOS 上工作。
+  // 系统快捷键的抬起事件仅限 macOS，应用内快捷键各平台都支持。
   keyUpHandler: (hotKey){
     print('onKeyUp+${hotKey.toJson()}');
   } ,

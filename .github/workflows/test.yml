@@ -22,6 +22,11 @@ jobs:
           cache: true
       - name: Install Linux native dependencies
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libx11-dev libxi-dev
+        run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libx11-dev libxi-dev xvfb xauth
       - uses: bluefireteam/melos-action@v3
-      - run: melos run test --no-select
+      - name: Test with native X11 registration
+        if: runner.os == 'Linux'
+        run: xvfb-run -a melos run test --no-select
+      - name: Test
+        if: runner.os != 'Linux'
+        run: melos run test --no-select
