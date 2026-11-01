@@ -1,0 +1,23 @@
+import 'dart:convert';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:hotkey_manager/hotkey_manager.dart' as h;
+
+void main() {
+ TestWidgetsFlutterBinding.ensureInitialized();
+ testWidgets('record legacy re-registration and list-view behavior', (tester) async {
+  final messenger = TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+  for (final name in ['dev.leanflutter.plugins/hotkey_manager', 'dev.leanflutter.plugins/hotkey_manager_event']) {
+   messenger.setMockMethodCallHandler(MethodChannel(name), (_) async => null);
+  }
+  await h.hotKeyManager.unregisterAll();
+  final before = h.hotKeyManager.registeredHotKeyList;
+  var calls = 0;
+  await h.hotKeyManager.register(h.HotKey(identifier:'same-id', key:PhysicalKeyboardKey.keyQ, scope:h.HotKeyScope.inapp), keyDownHandler: (_) => calls++);
+  final observedListLength = before.length;
+  await h.hotKeyManager.register(h.HotKey(identifier:'same-id', key:PhysicalKeyboardKey.keyW, scope:h.HotKeyScope.inapp));
+  await tester.sendKeyEvent(LogicalKeyboardKey.keyW);
+  print('AUDIT_BEHAVIOR ${jsonEncode({'cachedListLengthAfterRegister':observedListLength,'retainedCallbackCallsAfterChangingKey':calls})}');
+  await h.hotKeyManager.unregisterAll();
+ });
+}

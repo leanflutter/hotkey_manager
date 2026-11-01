@@ -1,0 +1,31 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:hotkey_manager/src/hotkey_accelerator.dart';
+import 'package:uni_platform/uni_platform.dart';
+void main() {
+ test('inventory legacy platform-key mappings rejected by the migration', () {
+  final original = UniPlatform.operatingSystem;
+  final result = <String, Object>{};
+  try {
+   for (final platform in ['macos','windows','linux']) {
+    UniPlatform.operatingSystem = platform;
+    final rejected = <String,int>{};
+    var legacyMapped = 0;
+    var converted = 0;
+    for (final key in PhysicalKeyboardKey.knownPhysicalKeys) {
+     final code = key.keyCode;
+     if (code == null || code < 0 || code > 0x7fffffff) continue;
+     legacyMapped++;
+     try { hotKeyAccelerator(HotKey(key:key)); converted++; }
+     on PlatformException { rejected[key.debugName ?? key.usbHidUsage.toString()] = code; }
+    }
+    result[platform] = {'legacyMapped':legacyMapped,'converted':converted,'rejected':rejected};
+   }
+  } finally { UniPlatform.operatingSystem = original; }
+  File('build/compatibility_audit/key_coverage.json').writeAsStringSync(const JsonEncoder.withIndent('  ').convert(result));
+  print('AUDIT_KEY_COVERAGE ${jsonEncode(result)}');
+ });
+}

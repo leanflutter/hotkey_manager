@@ -1,0 +1,343 @@
+{
+  "date": "2026-11-01",
+  "branch": "codex/nativeapi-migration",
+  "legacyRevision": "ddbb7bf",
+  "migrationLibraryRevision": "903fabb",
+  "fullyCompatible": false,
+  "productionLibraryChangedDuringAudit": false,
+  "tests": {
+    "macos": {
+      "passed": 31,
+      "skipped": 0
+    },
+    "windows-laptop": {
+      "passed": 30,
+      "skipped": 1,
+      "desktopSession": 1
+    },
+    "ubuntu-nuc": {
+      "passed": 30,
+      "skipped": 1,
+      "display": "Xvfb"
+    },
+    "omarchy": {
+      "passed": 30,
+      "skipped": 1,
+      "display": "Logged-on Hyprland XWayland :0",
+      "nativeBuild": "Published cnativeapi 0.5.3 compiled successfully",
+      "nonFatalWarnings": [
+        "Fontconfig: No writable cache directories"
+      ]
+    },
+    "legacyRevisionSharedWidgetTests": {
+      "passed": 11
+    },
+    "analyze": {
+      "host": "macos",
+      "result": "No issues found"
+    }
+  },
+  "findings": [
+    {
+      "id": "removed-public-platform-api",
+      "verification": "Identical source has no compile errors on legacy; migration has undefined class/name errors.",
+      "removedExports": [
+        "HotKeyManagerPlatform",
+        "MethodChannelHotKeyManager"
+      ],
+      "fixture": "api_surface.dart.txt"
+    },
+    {
+      "id": "flutter-import-name-conflict",
+      "verification": "Identical unprefixed imports compile on legacy; migration reports ambiguous_import for ShortcutManager.",
+      "fixture": "flutter_imports.dart.txt"
+    },
+    {
+      "id": "legacy-system-keys-rejected",
+      "macos": {
+        "Numpad Equal": {
+          "legacyCarbonKeycode": 81,
+          "legacyCarbonStatus": 0,
+          "migrationError": "unsupported_hotkey"
+        },
+        "Num Lock": {
+          "legacyCarbonKeycode": 71,
+          "legacyCarbonStatus": 0,
+          "migrationError": "unsupported_hotkey"
+        },
+        "Intl Backslash": {
+          "legacyCarbonKeycode": 10,
+          "legacyCarbonStatus": 0,
+          "migrationError": "unsupported_hotkey"
+        },
+        "Audio Volume Up": {
+          "legacyCarbonKeycode": 72,
+          "legacyCarbonStatus": 0,
+          "migrationError": "unsupported_hotkey"
+        },
+        "Audio Volume Down": {
+          "legacyCarbonKeycode": 73,
+          "legacyCarbonStatus": 0,
+          "migrationError": "unsupported_hotkey"
+        },
+        "Audio Volume Mute": {
+          "legacyCarbonKeycode": 74,
+          "legacyCarbonStatus": 0,
+          "migrationError": "unsupported_hotkey"
+        }
+      },
+      "windows": {
+        "Volume Up": {
+          "legacyVirtualKey": 175,
+          "registered": true,
+          "error": 0
+        },
+        "Volume Down": {
+          "legacyVirtualKey": 174,
+          "registered": true,
+          "error": 0
+        },
+        "Mute": {
+          "legacyVirtualKey": 173,
+          "registered": true,
+          "error": 0
+        },
+        "Media Play Pause": {
+          "legacyVirtualKey": 179,
+          "registered": true,
+          "error": 0
+        },
+        "Print Screen": {
+          "legacyVirtualKey": 44,
+          "registered": true,
+          "error": 0
+        },
+        "Pause": {
+          "legacyVirtualKey": 19,
+          "registered": true,
+          "error": 0
+        },
+        "Context Menu": {
+          "legacyVirtualKey": 93,
+          "registered": true,
+          "error": 0
+        },
+        "Browser Back": {
+          "legacyVirtualKey": 166,
+          "registered": true,
+          "error": 0
+        },
+        "Num Lock": {
+          "legacyVirtualKey": 144,
+          "registered": true,
+          "error": 0
+        },
+        "Numpad Equal": {
+          "legacyVirtualKey": 146,
+          "registered": true,
+          "error": 0
+        }
+      },
+      "migrationWindowsResult": "All ten keys are rejected by hotKeyAccelerator with unsupported_hotkey.",
+      "qualification": "Successful native OS reservation is verified; physical key delivery was not exercised.",
+      "nativeReservationModifiers": {
+        "macos": "Control+Shift (0x1200)",
+        "windows": "MOD_CONTROL|MOD_SHIFT (0x0006), matching the old backend"
+      }
+    },
+    {
+      "id": "same-id-registration-clears-omitted-handlers",
+      "legacyRetainedCallbackCallsAfterChangingKey": 1,
+      "migrationRetainedCallbackCallsAfterChangingKey": 0,
+      "fixture": "behavior_probe.dart.txt"
+    },
+    {
+      "id": "registered-list-is-now-a-snapshot",
+      "legacyCachedListLengthAfterRegister": 1,
+      "migrationCachedListLengthAfterRegister": 0,
+      "qualification": "Behavioral difference; a snapshot may be intentional.",
+      "fixture": "behavior_probe.dart.txt"
+    },
+    {
+      "id": "minimum-toolchain-increased",
+      "legacy": {
+        "dart": ">=3.0.0 <4.0.0",
+        "flutter": ">=3.3.0"
+      },
+      "migration": {
+        "dart": "^3.13.0",
+        "flutter": ">=3.47.0"
+      }
+    }
+  ],
+  "mappingInventory": {
+    "results": {
+      "macos": {
+        "legacyMapped": 120,
+        "converted": 98,
+        "rejected": {
+          "Fn": 63,
+          "Caps Lock": 57,
+          "Num Lock": 71,
+          "Intl Backslash": 10,
+          "Context Menu": 110,
+          "Numpad Equal": 81,
+          "Audio Volume Mute": 74,
+          "Audio Volume Up": 72,
+          "Audio Volume Down": 73,
+          "Numpad Comma": 95,
+          "Intl Ro": 94,
+          "Intl Yen": 93,
+          "Lang 1": 104,
+          "Lang 2": 102,
+          "Control Left": 59,
+          "Shift Left": 56,
+          "Alt Left": 58,
+          "Meta Left": 55,
+          "Control Right": 62,
+          "Shift Right": 60,
+          "Alt Right": 61,
+          "Meta Right": 54
+        }
+      },
+      "windows": {
+        "legacyMapped": 145,
+        "converted": 101,
+        "rejected": {
+          "Sleep": 95,
+          "Game Button 8": 195,
+          "Game Button 9": 196,
+          "Game Button 10": 197,
+          "Game Button 11": 198,
+          "Game Button 12": 199,
+          "Game Button 13": 200,
+          "Game Button 14": 201,
+          "Game Button 15": 202,
+          "Game Button 16": 203,
+          "Caps Lock": 20,
+          "Print Screen": 44,
+          "Scroll Lock": 145,
+          "Pause": 19,
+          "Num Lock": 144,
+          "Context Menu": 93,
+          "Numpad Equal": 146,
+          "Help": 47,
+          "Select": 41,
+          "Audio Volume Mute": 173,
+          "Audio Volume Up": 175,
+          "Audio Volume Down": 174,
+          "Numpad Comma": 108,
+          "Convert": 28,
+          "Lang 1": 21,
+          "Control Left": 17,
+          "Shift Left": 16,
+          "Alt Left": 164,
+          "Meta Left": 91,
+          "Control Right": 163,
+          "Shift Right": 161,
+          "Alt Right": 165,
+          "Meta Right": 92,
+          "Media Stop": 178,
+          "Media Play Pause": 179,
+          "Launch Mail": 180,
+          "Print": 42,
+          "Browser Search": 170,
+          "Browser Home": 172,
+          "Browser Back": 166,
+          "Browser Forward": 167,
+          "Browser Stop": 169,
+          "Browser Refresh": 168,
+          "Browser Favorites": 171
+        }
+      },
+      "linux": {
+        "legacyMapped": 166,
+        "converted": 102,
+        "rejected": {
+          "Hyper": 65517,
+          "Suspend": 269025191,
+          "Sleep": 269025071,
+          "Wake Up": 269025067,
+          "Caps Lock": 65509,
+          "Print Screen": 64797,
+          "Scroll Lock": 65300,
+          "Pause": 65299,
+          "Num Lock": 65407,
+          "Context Menu": 65383,
+          "Numpad Equal": 65469,
+          "Open": 269025131,
+          "Help": 65386,
+          "Select": 65376,
+          "Undo": 65381,
+          "Cut": 269025112,
+          "Copy": 64789,
+          "Paste": 269025133,
+          "Find": 65384,
+          "Audio Volume Mute": 269025042,
+          "Audio Volume Up": 269025043,
+          "Audio Volume Down": 269025041,
+          "Intl Yen": 165,
+          "Control Left": 65507,
+          "Shift Left": 65505,
+          "Alt Left": 65513,
+          "Meta Left": 65511,
+          "Control Right": 65508,
+          "Shift Right": 65506,
+          "Alt Right": 65514,
+          "Meta Right": 65512,
+          "Brightness Up": 269025026,
+          "Brightness Down": 269025027,
+          "Launch Phone": 269025134,
+          "Media Play": 64790,
+          "Media Pause": 269025073,
+          "Media Record": 269025052,
+          "Media Fast Forward": 269025175,
+          "Media Rewind": 269025086,
+          "Media Track Next": 269025047,
+          "Media Track Previous": 269025046,
+          "Media Stop": 269025045,
+          "Eject": 269025068,
+          "Launch Mail": 269025049,
+          "Launch Calendar": 269025056,
+          "Log Off": 269025121,
+          "Spell Check": 269025148,
+          "Launch Screen Saver": 269025069,
+          "Close": 269025110,
+          "Save": 269025143,
+          "Print": 65377,
+          "Browser Search": 269025051,
+          "Browser Home": 269025048,
+          "Browser Back": 269025062,
+          "Browser Forward": 269025063,
+          "Browser Stop": 269025064,
+          "Browser Refresh": 269025065,
+          "Browser Favorites": 269025072,
+          "Zoom In": 269025163,
+          "Zoom Out": 269025164,
+          "Redo": 65382,
+          "Mail Reply": 269025138,
+          "Mail Forward": 269025168,
+          "Mail Send": 269025147
+        }
+      }
+    },
+    "qualification": "Mapping presence alone does not prove a legacy shortcut worked on the OS; do not interpret these counts as verified lost functionality."
+  },
+  "reproduction": {
+    "fixtures": "Copy *.dart.txt into build/compatibility_audit/ without the .txt suffix. Run flutter analyze on api_surface.dart and flutter_imports.dart; run flutter test on the other probes from the package directory.",
+    "legacy": "Extract git archive ddbb7bf into a temporary directory, run flutter pub get in packages/hotkey_manager, then run the identical public API fixtures and legacy_widgets_test.dart there.",
+    "windows": "powershell -NoProfile -ExecutionPolicy Bypass -File test/support/run_windows_compatibility.ps1",
+    "normalSuite": "flutter test --no-pub (Windows requires the desktop-session runner; Linux requires DISPLAY).",
+    "expected": "Positive suite passes while separate compatibility probes expose the differences recorded here."
+  },
+  "notFullyVerified": [
+    "No physical keyboard input was sent. Windows/Linux event routing tests use nativeapi emitShortcutActivated; macOS also tests Carbon events targeted to the test process.",
+    "Physical key delivery, held-key repetition, keyboard layouts and pure Wayland global dispatch are not certified by these tests.",
+    "Windows repeat behavior differs in source: the migration uses MOD_NOREPEAT; the old backend did not. Physical held-key behavior remains untested."
+  ],
+  "dependencies": {
+    "nativeapi": "0.5.3 from pub.dev",
+    "cnativeapi": "0.5.3 from pub.dev",
+    "localOverrides": false
+  }
+}

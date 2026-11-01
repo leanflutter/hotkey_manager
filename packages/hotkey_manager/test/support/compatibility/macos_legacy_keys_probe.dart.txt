@@ -1,0 +1,27 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:hotkey_manager/src/hotkey_accelerator.dart';
+import 'package:uni_platform/uni_platform.dart';
+import '../../test/support/carbon_hotkeys.dart';
+void main() {
+ TestWidgetsFlutterBinding.ensureInitialized();
+ test('compare legacy Carbon reservations with the migration converter', () {
+  final carbon = CarbonHotKeys();
+  final results = <String, Object>{};
+  for (final key in [PhysicalKeyboardKey.numpadEqual, PhysicalKeyboardKey.numLock,
+    PhysicalKeyboardKey.intlBackslash, PhysicalKeyboardKey.audioVolumeUp,
+    PhysicalKeyboardKey.audioVolumeDown, PhysicalKeyboardKey.audioVolumeMute]) {
+   final code = key.keyCode;
+   expect(code,isNotNull);
+   final oldStatus = carbon.probeRegistration(code!);
+   String? newError;
+   try { hotKeyAccelerator(HotKey(key:key)); } on PlatformException catch (e) { newError=e.code; }
+   results[key.debugName!]={'legacyCarbonKeycode':code,'legacyCarbonStatus':oldStatus,'migrationError':newError};
+  }
+  File('build/compatibility_audit/macos_legacy_keys.json').writeAsStringSync(const JsonEncoder.withIndent('  ').convert(results));
+  print('AUDIT_MACOS_KEYS ${jsonEncode(results)}');
+ },skip:!Platform.isMacOS);
+}
