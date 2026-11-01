@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -51,12 +52,20 @@ final _supportsNativeTests =
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  Timer? nativePump;
   setUpAll(() {
     NativeHotKeyManagerPlatform.registerWith();
     if (_supportsNativeTests && !Platform.isMacOS) {
       native_loop.cnativeapi_start_event_loop();
+      // flutter_tester owns no GTK/Win32 application loop. Keep native async
+      // registration-failure notifications moving even while a plain test is
+      // awaiting its result (there is no widget frame to pump them).
+      nativePump = Timer.periodic(const Duration(milliseconds: 10), (_) {
+        native_loop.cnativeapi_pump_event_loop(0);
+      });
     }
   });
+  tearDownAll(() => nativePump?.cancel());
   // flutter_tester has no GTK/Win32 application loop. Process deferred native
   // dispatch before waiting for the async Dart listener to receive its payload.
   Future<void> deliverNativeEvents() async {
@@ -388,49 +397,54 @@ void main() {
     }
   }, skip: !Platform.isMacOS);
 
-  testWidgets('unmodified space and unsupported media keys fail recoverably', (
-    tester,
-  ) async {
-    for (final key in [
-      PhysicalKeyboardKey.space,
-      PhysicalKeyboardKey.mediaPlayPause,
-    ]) {
-      final hotKey = HotKey(key: key);
+  test(
+    'unmodified space and unsupported media keys fail recoverably',
+    () async {
+      for (final key in [
+        PhysicalKeyboardKey.space,
+        PhysicalKeyboardKey.mediaPlayPause,
+      ]) {
+        final hotKey = HotKey(key: key);
+        try {
+          await hotKeyManager.register(hotKey);
+          expect(hotKeyManager.registeredHotKeyList, contains(hotKey));
+        } on PlatformException catch (error) {
+          // The OS can reserve bare keys; media keys without a native keycode
+          // are unsupported. Neither case may abort the native process or
+          // leave the serialized registration queue unusable.
+          expect(error.code, anyOf('register_failed', 'unsupported_hotkey'));
+          expect(hotKeyManager.registeredHotKeyList, isNot(contains(hotKey)));
+        } finally {
+          await hotKeyManager.unregister(hotKey);
+        }
+      }
+      final recovery = HotKey(
+        key: PhysicalKeyboardKey.f8,
+        modifiers: [HotKeyModifier.control, HotKeyModifier.shift],
+      );
+      var calls = 0;
+      await hotKeyManager.register(recovery, keyDownHandler: (_) => calls++);
+      final native = ShortcutManager.instance;
+      final shortcut = native.getWithAccelerator(hotKeyAccelerator(recovery));
+      expect(shortcut, isNotNull);
       try {
-        await hotKeyManager.register(hotKey);
-        expect(hotKeyManager.registeredHotKeyList, contains(hotKey));
-      } on PlatformException catch (error) {
-        // The OS can reserve bare keys; media keys without a native keycode
-        // are unsupported. Neither case may abort the native process or
-        // leave the serialized registration queue unusable.
-        expect(error.code, anyOf('register_failed', 'unsupported_hotkey'));
-        expect(hotKeyManager.registeredHotKeyList, isNot(contains(hotKey)));
+        if (Platform.isMacOS) {
+          expect(CarbonHotKeys().send(shortcut!.id, down: true), 0);
+        } else {
+          native.emitShortcutActivated(
+            shortcut!.id,
+            hotKeyAccelerator(recovery),
+          );
+        }
+        await deliverNativeEvents();
+        expect(calls, 1);
       } finally {
-        await hotKeyManager.unregister(hotKey);
+        shortcut?.dispose();
+        await hotKeyManager.unregisterAll();
       }
-    }
-    final recovery = HotKey(
-      key: PhysicalKeyboardKey.f8,
-      modifiers: [HotKeyModifier.control, HotKeyModifier.shift],
-    );
-    var calls = 0;
-    await hotKeyManager.register(recovery, keyDownHandler: (_) => calls++);
-    final native = ShortcutManager.instance;
-    final shortcut = native.getWithAccelerator(hotKeyAccelerator(recovery));
-    expect(shortcut, isNotNull);
-    try {
-      if (Platform.isMacOS) {
-        expect(CarbonHotKeys().send(shortcut!.id, down: true), 0);
-      } else {
-        native.emitShortcutActivated(shortcut!.id, hotKeyAccelerator(recovery));
-      }
-      await tester.runAsync(deliverNativeEvents);
-      expect(calls, 1);
-    } finally {
-      shortcut?.dispose();
-      await hotKeyManager.unregisterAll();
-    }
-  }, skip: !_supportsNativeTests);
+    },
+    skip: !_supportsNativeTests,
+  );
 
   test(
     'Windows rejects an externally owned chord without stealing it',

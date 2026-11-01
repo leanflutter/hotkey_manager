@@ -26,10 +26,10 @@ def main():
     adb = shutil.which('adb') or str(sdk / 'platform-tools' / ('adb.exe' if os.name == 'nt' else 'adb'))
     adb_args = [adb, '-s', args.serial]
 
-    def run(command, name, cwd=EXAMPLE, timeout=1800):
+    def run(command, name, cwd=EXAMPLE, timeout=1800, env=None):
         print(f'Running {name}', flush=True)
         result = subprocess.run(command, cwd=cwd, text=True, stdout=subprocess.PIPE,
-                                stderr=subprocess.STDOUT, timeout=timeout)
+                                stderr=subprocess.STDOUT, timeout=timeout, env=env)
         (output / f'{name}.log').write_text(result.stdout)
         if result.returncode:
             print(result.stdout[-12000:])
@@ -48,10 +48,20 @@ def main():
             raise RuntimeError('flutter must be available on PATH')
         run([flutter, 'build', 'apk', '--release', '--target-platform', target,
              '-t', 'test_support/android_keyboard_probe.dart'], 'release-build')
+        # Flutter can select Android Studio's bundled JDK even when the shell's
+        # java/JAVA_HOME points elsewhere. Use the same toolchain for the direct
+        # instrumentation task; a newer shell JDK may be unsupported by Gradle.
+        doctor = subprocess.run([flutter, 'doctor', '-v'], cwd=EXAMPLE, text=True,
+                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=120)
+        (output / 'flutter-toolchain.log').write_text(doctor.stdout)
+        java = re.search(r'Java binary at:\s*(.+)', doctor.stdout)
+        gradle_env = dict(os.environ)
+        if java:
+            gradle_env['JAVA_HOME'] = str(Path(java[1].strip()).parent.parent)
         gradle = ['cmd', '/c', 'gradlew.bat'] if os.name == 'nt' else ['./gradlew']
         run([*gradle, ':app:assembleReleaseAndroidTest',
              f'-Ptarget={EXAMPLE / "test_support/android_keyboard_probe.dart"}', f'-Ptarget-platform={target}'],
-            'instrumentation-build', EXAMPLE / 'android')
+            'instrumentation-build', EXAMPLE / 'android', env=gradle_env)
     run([*adb_args, 'install', '-r', str(EXAMPLE / 'build/app/outputs/apk/release/app-release.apk')], 'install-release')
     run([*adb_args, 'install', '-r', '-t',
          str(EXAMPLE / 'build/app/outputs/apk/androidTest/release/app-release-androidTest.apk')], 'install-instrumentation')
