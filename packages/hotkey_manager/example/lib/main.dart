@@ -1,7 +1,9 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:hotkey_manager_example/pages/native_shortcuts.dart';
+import 'package:hotkey_manager_example/pages/home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +32,9 @@ class _MyAppState extends State<MyApp> {
       ),
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
-      home: const NativeShortcutsPage(),
+      home: defaultTargetPlatform == TargetPlatform.android
+          ? const HomePage()
+          : const NativeShortcutsPage(),
     );
   }
 }

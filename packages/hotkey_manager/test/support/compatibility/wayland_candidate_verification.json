@@ -73,9 +73,7 @@
     ]
   },
   "remaining": [
-    "Fix workspace C# formatter and Linux codegen CI drift before releasing dependency",
     "Implement and verify macOS media shortcuts (#62)",
-    "Enable and verify Android/Chromebook in-app keyboard support (#14)",
     "Prepare nativeapi dependency release, final hosted-package Windows/Linux regressions, hotkey patch metadata and publication dry run"
   ],
   "sourceFilesSha256": {
@@ -87,5 +85,11 @@
     "packages/hotkey_manager/test/async_registration_test.dart": "176b7c2fe6914052304c76d4291cab2fd7070aac9f1a4e313ba8eafc0c85f994",
     "packages/hotkey_manager/example/test_support/wayland_portal_probe.dart": "1b57f5c1c4b61d8016fd6f0fc07440b539c7a451d8454e5f8c9f9bed673dc8b8",
     "packages/hotkey_manager/example/test_support/run_wayland_portal_probe.py": "9e47c3d10c6dea1943c3727e71561487166fcf57e04a87e6143351ffb4c45009"
+  },
+  "workspaceCiAfterPortabilityFix": {
+    "commit": "6dc63d750a0d5f104f30b6ecf35bcde31e290822",
+    "go": "https://github.com/libnativeapi/nativeapi/actions/runs/41306342061",
+    "csharp": "https://github.com/libnativeapi/nativeapi/actions/runs/41306341843",
+    "conclusion": "success"
   }
 }

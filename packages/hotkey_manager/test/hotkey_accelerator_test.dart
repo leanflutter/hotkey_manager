@@ -8,6 +8,22 @@ void main() {
   late String system;
   setUp(() => system = UniPlatform.operatingSystem);
   tearDown(() => UniPlatform.operatingSystem = system);
+
+  test('Android system scope reports the supported in-app alternative', () {
+    UniPlatform.operatingSystem = 'android';
+    expect(
+      () => hotKeyAccelerator(HotKey(key: PhysicalKeyboardKey.keyK)),
+      throwsA(
+        isA<PlatformException>()
+            .having((error) => error.code, 'code', 'unsupported_hotkey')
+            .having(
+              (error) => error.message,
+              'message',
+              contains('HotKeyScope.inapp'),
+            ),
+      ),
+    );
+  });
   test('modifier order and duplicates normalize to one native accelerator', () {
     UniPlatform.operatingSystem = 'macos';
     final hotKey = HotKey(

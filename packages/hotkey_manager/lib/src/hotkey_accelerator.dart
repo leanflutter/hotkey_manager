@@ -5,6 +5,14 @@ import 'package:uni_platform/uni_platform.dart';
 /// Retains the original platform keycodes, including media and international
 /// keys that do not have portable nativeapi accelerator names.
 String hotKeyAccelerator(HotKey hotKey) {
+  if (UniPlatform.isAndroid) {
+    throw PlatformException(
+      code: 'unsupported_hotkey',
+      message:
+          'Android supports HotKeyScope.inapp hardware-keyboard shortcuts. '
+          'System-wide registration is unavailable.',
+    );
+  }
   final modifiers = <String>{};
   for (final modifier in HotKeyModifier.values) {
     if (!(hotKey.modifiers?.contains(modifier) ?? false)) continue;

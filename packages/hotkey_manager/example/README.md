@@ -18,3 +18,23 @@ service sessions cannot register global shortcuts. Linux native tests need X11
 or XWayland; `xvfb-run -a flutter test` also runs them on an isolated display.
 The tests pump native dispatch where Flutter's headless test runner has no
 GTK/Win32 application loop. They do not send mouse or keyboard input.
+
+## Android hardware keyboards
+
+Run the example with `flutter run -d <android-device>`. It opens the compatibility
+page and records in-app shortcuts. Android system-wide registration is unavailable.
+
+The AOT regression probe uses native Android `KeyEvent`s dispatched only to this
+example Activity. Start an Android emulator, then run from this directory:
+
+```sh
+python3 test_support/run_android_keyboard_probe.py --serial emulator-5554
+```
+
+The script builds both the Release application and its matching instrumentation
+APK, installs them, and requires a fresh structured passing result. The Java driver
+uses Android's hardware input mode, waits for the example's keyboard focus, and
+coordinates through its private code cache so R8 can optimize Flutter normally.
+Results and build/runtime logs are in `build/compatibility_audit/android/`.
+This verifies Android input translation; it does not inject OS keys or certify
+physical Chromebook hardware or ChromeOS-reserved combinations.

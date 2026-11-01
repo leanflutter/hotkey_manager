@@ -1,5 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 class RecordHotKeyDialog extends StatefulWidget {
@@ -13,6 +14,7 @@ class RecordHotKeyDialog extends StatefulWidget {
 
 class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
   HotKey? _hotKey;
+  bool get _android => defaultTargetPlatform == TargetPlatform.android;
 
   void _handleSetAsInappWideChanged(bool newValue) {
     if (_hotKey == null) {
@@ -46,7 +48,13 @@ class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
                 children: [
                   HotKeyRecorder(
                     onHotKeyRecorded: (hotKey) {
-                      _hotKey = hotKey;
+                      _hotKey = _android
+                          ? HotKey(
+                              key: hotKey.key,
+                              modifiers: hotKey.modifiers,
+                              scope: HotKeyScope.inapp,
+                            )
+                          : hotKey;
                       setState(() {});
                     },
                   ),
@@ -54,21 +62,27 @@ class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
               ),
             ),
             GestureDetector(
-              onTap: () {
-                _handleSetAsInappWideChanged(
-                  _hotKey?.scope != HotKeyScope.inapp,
-                );
-              },
+              onTap: _android
+                  ? null
+                  : () {
+                      _handleSetAsInappWideChanged(
+                        _hotKey?.scope != HotKeyScope.inapp,
+                      );
+                    },
               child: Row(
                 children: [
                   Checkbox(
-                    value: _hotKey?.scope == HotKeyScope.inapp,
-                    onChanged: (newValue) {
-                      _handleSetAsInappWideChanged(newValue!);
-                    },
+                    value: _android || _hotKey?.scope == HotKeyScope.inapp,
+                    onChanged: _android
+                        ? null
+                        : (newValue) {
+                            _handleSetAsInappWideChanged(newValue!);
+                          },
                   ),
-                  const Text(
-                    'Set as inapp-wide hotkey. (default is system-wide)',
+                  Flexible(
+                    child: Text(
+                      _android ? 'Android: in-app hardware-keyboard shortcuts' : 'Set as inapp-wide hotkey. (default is system-wide)',
+                    ),
                   ),
                 ],
               ),

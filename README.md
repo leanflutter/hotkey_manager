@@ -12,7 +12,7 @@
 
 [visits-count-image]: https://img.shields.io/badge/dynamic/json?label=Visits%20Count&query=value&url=https://api.countapi.xyz/hit/leanflutter.hotkey_manager/visits
 
-This plugin allows Flutter desktop apps to defines system/inapp wide hotkey (i.e. shortcut).
+System-wide desktop shortcuts and in-app hardware-keyboard shortcuts for Flutter desktop and Android apps.
 
 ---
 
@@ -237,11 +237,36 @@ HotKeyRecorder(
 
 ### HotKeyManager
 
-| Method        | Description                               | Linux | macOS | Windows |
-| ------------- | ----------------------------------------- | ----- | ----- | ------- |
-| register      | register an system/inapp wide hotkey.     | ✔️     | ✔️     | ✔️       |
-| unregister    | unregister an system/inapp wide hotkey.   | ✔️     | ✔️     | ✔️       |
-| unregisterAll | unregister all system/inapp wide hotkeys. | ✔️     | ✔️     | ✔️       |
+| Method        | Description                               | Linux | macOS | Windows | Android |
+| ------------- | ----------------------------------------- | ----- | ----- | ------- | ------- |
+| register      | Register a system/in-app hotkey.           | ✔️    | ✔️    | ✔️      | In-app |
+| unregister    | Unregister a hotkey.                       | ✔️    | ✔️    | ✔️      | ✔️ |
+| unregisterAll | Unregister all owned hotkeys.              | ✔️    | ✔️    | ✔️      | ✔️ |
+
+### Android and Chromebooks
+
+Use `HotKeyScope.inapp` with a hardware keyboard. Callbacks run while your Flutter
+application receives keyboard input, including key-up after modifiers are released.
+The recorder and virtual-key widgets use the same API as desktop. The Android
+example selects in-app scope automatically.
+
+```dart
+final save = HotKey(
+  key: PhysicalKeyboardKey.keyS,
+  modifiers: [HotKeyModifier.control],
+  scope: HotKeyScope.inapp,
+);
+await hotKeyManager.register(save, keyDownHandler: (_) => saveDocument());
+```
+
+`HotKeyScope.system` reports `PlatformException(code: 'unsupported_hotkey')` on
+Android; nativeapi does not provide system-wide Android registration. Software IME
+text entry does not necessarily produce physical keyboard events. ChromeOS may
+reserve its own combinations before they reach an Android application; see
+[Android's ChromeOS input guidance](https://developer.android.com/develop/devices/chromeos/learn/input-compatibility).
+Automated Android coverage uses a real Android emulator and dispatches native
+`KeyEvent`s directly to the example Activity, through Flutter's Android embedding.
+Physical Chromebook hardware and ChromeOS-reserved shortcuts require device testing.
 
 ## Related Links
 

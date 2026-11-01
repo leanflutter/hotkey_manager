@@ -1,0 +1,137 @@
+{
+  "verifiedAt": "2026-11-01T13:14:17.519629+00:00",
+  "issue": 14,
+  "releaseReady": false,
+  "implementation": "Android Dart plugin registration; hardware-keyboard HotKeyScope.inapp with unchanged models, public API and JSON",
+  "dependency": {
+    "source": "local workspace overrides, not hosted 0.5.6",
+    "localManifestVersion": "0.5.5",
+    "targetVersion": "0.5.6",
+    "workspaceCommit": "6dc63d750a0d5f104f30b6ecf35bcde31e290822",
+    "coreCommit": "fdce2aad1b01dc244a834eecb51d89aa684156f4"
+  },
+  "runtimeRuns": [
+    {
+      "passed": true,
+      "platform": "android",
+      "releaseMode": true,
+      "delivery": "Activity.dispatchKeyEvent -> Android embedding -> Flutter",
+      "osKeyboardInputGenerated": false,
+      "checks": [
+        "running in Android",
+        "automatic Android Dart plugin registration",
+        "platform API without a missing method channel",
+        "startup native cleanup succeeds",
+        "native global shortcuts unavailable",
+        "system scope fails explicitly and recoverably",
+        "recorder retains Shift+A",
+        "recorder preserves requested in-app scope",
+        "physical/logical shared chord receives both callbacks",
+        "held-key repeat does not duplicate key-down callbacks",
+        "key-up survives releasing Ctrl before the primary key",
+        "unregister and cleanup suppress stale held-key callbacks",
+        "cleanup leaves no registrations",
+        "in-app shortcut preserves editable Android text input"
+      ],
+      "observedNativeKeys": [
+        "KeyDownEvent:physical=458977:logical=8589934850",
+        "KeyDownEvent:physical=458756:logical=97",
+        "KeyUpEvent:physical=458756:logical=97",
+        "KeyUpEvent:physical=458977:logical=8589934850",
+        "KeyDownEvent:physical=458976:logical=8589934848",
+        "KeyDownEvent:physical=458766:logical=107",
+        "KeyRepeatEvent:physical=458766:logical=107",
+        "KeyUpEvent:physical=458976:logical=8589934848",
+        "KeyUpEvent:physical=458766:logical=107",
+        "KeyDownEvent:physical=458976:logical=8589934848",
+        "KeyDownEvent:physical=458766:logical=107",
+        "KeyUpEvent:physical=458766:logical=107",
+        "KeyUpEvent:physical=458976:logical=8589934848",
+        "KeyDownEvent:physical=458756:logical=97",
+        "KeyUpEvent:physical=458756:logical=97"
+      ],
+      "verifiedAt": "2026-11-01T13:03:54.064706+00:00",
+      "serial": "emulator-5554",
+      "androidVersion": "16",
+      "abi": "arm64-v8a",
+      "physicalChromebookTested": false,
+      "localDependencyOverrides": true
+    },
+    {
+      "passed": true,
+      "platform": "android",
+      "releaseMode": true,
+      "delivery": "Activity.dispatchKeyEvent -> Android embedding -> Flutter",
+      "osKeyboardInputGenerated": false,
+      "checks": [
+        "running in Android",
+        "automatic Android Dart plugin registration",
+        "platform API without a missing method channel",
+        "startup native cleanup succeeds",
+        "native global shortcuts unavailable",
+        "system scope fails explicitly and recoverably",
+        "recorder retains Shift+A",
+        "recorder preserves requested in-app scope",
+        "physical/logical shared chord receives both callbacks",
+        "held-key repeat does not duplicate key-down callbacks",
+        "key-up survives releasing Ctrl before the primary key",
+        "unregister and cleanup suppress stale held-key callbacks",
+        "cleanup leaves no registrations",
+        "in-app shortcut preserves editable Android text input"
+      ],
+      "observedNativeKeys": [
+        "KeyDownEvent:physical=458977:logical=8589934850",
+        "KeyDownEvent:physical=458756:logical=97",
+        "KeyUpEvent:physical=458756:logical=97",
+        "KeyUpEvent:physical=458977:logical=8589934850",
+        "KeyDownEvent:physical=458976:logical=8589934848",
+        "KeyDownEvent:physical=458766:logical=107",
+        "KeyRepeatEvent:physical=458766:logical=107",
+        "KeyUpEvent:physical=458976:logical=8589934848",
+        "KeyUpEvent:physical=458766:logical=107",
+        "KeyDownEvent:physical=458976:logical=8589934848",
+        "KeyDownEvent:physical=458766:logical=107",
+        "KeyUpEvent:physical=458766:logical=107",
+        "KeyUpEvent:physical=458976:logical=8589934848",
+        "KeyDownEvent:physical=458756:logical=97",
+        "KeyUpEvent:physical=458756:logical=97"
+      ],
+      "verifiedAt": "2026-11-01T13:06:57.412132+00:00",
+      "serial": "emulator-5554",
+      "androidVersion": "16",
+      "abi": "arm64-v8a",
+      "physicalChromebookTested": false,
+      "localDependencyOverrides": true
+    }
+  ],
+  "hostTests": {
+    "platform": "macOS",
+    "passed": 61,
+    "skipped": 1
+  },
+  "analysis": "package and example: no issues",
+  "defaultExample": {
+    "releaseBuild": "passed",
+    "abi": "arm64-v8a",
+    "uiLabelsVerified": [
+      "REGISTERED HOTKEY LIST"
+    ],
+    "uiArtifactSha256": "f13bf8edd4363b40c34aab2fb2517de640b6fec00725c894e2aab1a16009f0fd"
+  },
+  "probeApkSha256": "2be031e628d2bd5770354a9d6578d87f7a48220c14dd340f381c9fd7c2fd27cc",
+  "ci": "Android x86_64 emulator AOT job added; final hosted-dependency CI pending",
+  "limitations": [
+    "Physical Chromebook hardware and ChromeOS-reserved keys are not certified.",
+    "Android nativeapi system-wide registration is unavailable; explicit unsupported_hotkey error is verified."
+  ],
+  "sourceFilesSha256": {
+    "packages/hotkey_manager/pubspec.yaml": "bdbee8e94b424b18541598e0b35517ad2d8a6a6cb77824a78299d36faf4debb5",
+    "packages/hotkey_manager/lib/src/hotkey_accelerator.dart": "02e902c9a3d09997bd5065120b351dd974eb1c53a629cfcaf00197f6a7c7f0fb",
+    "packages/hotkey_manager/example/lib/main.dart": "72fffeb1288ec16ad40cdd5e257d524c002545ead9817720ef4f609c27052b8a",
+    "packages/hotkey_manager/example/lib/widgets/record_hotkey_dialog.dart": "4c51e9c844f8f3ef1260ddb670c6993b574b42f63e87f1283d2f5949e45e718b",
+    "packages/hotkey_manager/example/test_support/android_keyboard_probe.dart": "7fc6995d63ad39cb4207e100bbb17541f3b14bc7abc0233839cfc17dfda9effe",
+    "packages/hotkey_manager/example/test_support/run_android_keyboard_probe.py": "7635110ca144b8734f3f8d08dc64d754614c37b3d5014f63b64e6f76e5ebe0b8",
+    "packages/hotkey_manager/example/android/app/src/androidTest/java/com/example/hotkey_manager_example/KeyboardProbeRunner.java": "a7f02897dd2ee65daf610f2c027cff3ace3b87514c4a672b2ab48b98a7052a8e",
+    "packages/hotkey_manager/example/android/app/build.gradle": "16c0bf3afa3b591894edb677bf7967d3d97ffcecd80e5fcc102ee0ed7d9ce516"
+  }
+}

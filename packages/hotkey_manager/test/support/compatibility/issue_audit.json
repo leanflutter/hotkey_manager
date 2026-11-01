@@ -116,8 +116,8 @@
     {
       "number": 14,
       "url": "https://github.com/leanflutter/hotkey_manager/issues/14",
-      "status": "pending_android",
-      "finding": "The package still declares only desktop Dart plugins; Android hardware-keyboard in-app support needs registration/build verification."
+      "status": "implemented_pending_dependency_release",
+      "finding": "Android Dart plugin registration and example implemented. Two Android 16 arm64 AOT runs pass 14 native Activity key-delivery checks each, including recorder, key-down/up, repeat handling, shared chords, cleanup and editable text. Ordinary Android release example builds and reaches its UI. Hardware Chromebook is untested; system-wide registration explicitly remains unavailable. Await final hosted nativeapi dependency and candidate CI before closure."
     },
     {
       "number": 12,
@@ -162,7 +162,7 @@
   "remainingReleaseWork": [
     "Release the nativeapi dependency containing Portal support and verify the final hosted-package hotkey candidate on Windows and both Linux hosts (#12, #21, PR #72).",
     "Implement and verify actual macOS system media Play/Pause registration (#62); safe failure alone is not media-key support.",
-    "Enable and verify Android/Chromebook in-app hardware-keyboard use (#14), documenting platform-wide key restrictions.",
+    "Ship the verified Android/Chromebook in-app implementation and pass its new Android AOT CI against the final hosted dependency (#14).",
     "Complete final candidate CI, package dry run and patch-version metadata."
   ]
 }

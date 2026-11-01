@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Add Android Dart plugin registration, an Android example and in-app hardware-keyboard support for Android/Chromebook apps (#14). Report unavailable system-wide scope explicitly; keep nativeapi startup cleanup usable.
+
 - Support asynchronous native Wayland GlobalShortcuts Portal registration with nativeapi 0.5.6, stable shared-action keys and human-readable desktop descriptions (#12, #21, PR #72).
 - Cancel pending approvals during unregister, widget disposal and hot restart cleanup without affecting other nativeapi callers. Retain ownership when native cleanup fails so it can be retried.
 - Keep X11/Windows/macOS immediate registration and serialized shared-key cleanup; test early replies, denied requests, cancellation races and queued registrations.

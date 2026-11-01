@@ -61,3 +61,40 @@ jobs:
       - working-directory: ./packages/hotkey_manager/example
         run: |
           flutter build windows --release
+
+  android-keyboard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.6"
+          channel: stable
+          cache: true
+      - name: Build Android example
+        working-directory: packages/hotkey_manager/example
+        run: flutter build apk --release --target-platform android-x64
+      - name: Enable emulator KVM access
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          enable-hw-keyboard: true
+          working-directory: packages/hotkey_manager/example
+          script: python3 test_support/run_android_keyboard_probe.py --serial emulator-5554
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-keyboard-probe
+          path: packages/hotkey_manager/example/build/compatibility_audit/android/

@@ -1,9 +1,10 @@
 name: hotkey_manager
-description: This plugin allows Flutter desktop apps to defines system/inapp wide hotkey (i.e. shortcut).
+description: System-wide desktop shortcuts and in-app hardware-keyboard shortcuts for Flutter desktop and Android apps.
 version: 0.2.3
 homepage: https://github.com/leanflutter/hotkey_manager
 
 platforms:
+  android:
   linux:
   macos:
   windows:
@@ -36,6 +37,9 @@ dev_dependencies:
 flutter:
   plugin:
     platforms:
+      android:
+        dartPluginClass: NativeHotKeyManagerPlatform
+        dartFileName: native.dart
       linux:
         dartPluginClass: NativeHotKeyManagerPlatform
         dartFileName: native.dart
