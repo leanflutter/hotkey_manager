@@ -156,7 +156,7 @@ Add the published package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  hotkey_manager: ^0.3.0
+  hotkey_manager: ^0.4.0
 ```
 
 #### Upgrading from 0.2.x

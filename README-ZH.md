@@ -86,7 +86,7 @@ Wayland 请使用 `await hotKeyManager.register(...)` 等待桌面结果，最�
 
 ```yaml
 dependencies:
-  hotkey_manager: ^0.3.0
+  hotkey_manager: ^0.4.0
 ```
 
 #### 从 0.2.x 升级
