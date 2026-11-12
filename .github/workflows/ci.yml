@@ -12,21 +12,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.50.0"
           channel: "stable"
           cache: true
 
-      - uses: bluefireteam/melos-action@v3
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Install example dependencies
+        run: flutter pub get
+        working-directory: example
 
       - name: Check code formatting
-        run: melos run format-check
+        run: dart format --set-exit-if-changed .
 
-      - name: Analyze
-        run: melos run analyze
+      - name: Analyze package
+        run: flutter analyze
+
+      - name: Analyze example
+        run: flutter analyze
+        working-directory: example
 
   test:
     name: Test (${{ matrix.os }})
@@ -37,9 +48,11 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.50.0"
           channel: "stable"
@@ -49,15 +62,16 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libx11-dev libxi-dev xvfb xauth
 
-      - uses: bluefireteam/melos-action@v3
+      - name: Install dependencies
+        run: flutter pub get
 
       - name: Test with native X11 registration
         if: runner.os == 'Linux'
-        run: xvfb-run -a melos run test --no-select
+        run: xvfb-run -a flutter test
 
       - name: Test
         if: runner.os != 'Linux'
-        run: melos run test --no-select
+        run: flutter test
 
   build-linux:
     name: Build Linux
@@ -65,20 +79,22 @@ jobs:
     needs: [lint]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.50.0"
           channel: "stable"
 
-      - run: |
+      - name: Install Linux native dependencies
+        run: |
           sudo apt-get update
           sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libx11-dev libxi-dev
 
-      - uses: bluefireteam/melos-action@v3
-
-      - working-directory: ./packages/hotkey_manager/example
+      - name: Build example
+        working-directory: example
         run: flutter build linux --release
 
   build-macos:
@@ -87,20 +103,21 @@ jobs:
     needs: [lint]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.50.0"
           channel: "stable"
 
-      - uses: bluefireteam/melos-action@v3
-
-      - working-directory: ./packages/hotkey_manager/example
+      - name: Build example
+        working-directory: example
         run: flutter build macos --release
 
       - name: macOS media AOT regression
-        working-directory: ./packages/hotkey_manager/example
+        working-directory: example
         run: python3 test_support/run_macos_media_probe.py --allow-unavailable-global
 
   build-web:
@@ -109,16 +126,17 @@ jobs:
     needs: [lint]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.50.0"
           channel: "stable"
 
-      - uses: bluefireteam/melos-action@v3
-
-      - working-directory: ./packages/hotkey_manager/example
+      - name: Build example
+        working-directory: example
         run: flutter build web --release
 
   build-windows:
@@ -127,16 +145,17 @@ jobs:
     needs: [lint]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.50.0"
           channel: "stable"
 
-      - uses: bluefireteam/melos-action@v3
-
-      - working-directory: ./packages/hotkey_manager/example
+      - name: Build example
+        working-directory: example
         run: flutter build windows --release
 
   android-keyboard:
@@ -146,21 +165,24 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.50.0"
           channel: stable
           cache: true
 
       - name: Build Android example
-        working-directory: packages/hotkey_manager/example
+        working-directory: example
         run: flutter build apk --release --target-platform android-x64
 
       - name: Enable emulator KVM access
@@ -176,11 +198,11 @@ jobs:
           target: google_apis
           disable-animations: true
           enable-hw-keyboard: true
-          working-directory: packages/hotkey_manager/example
+          working-directory: example
           script: python3 test_support/run_android_keyboard_probe.py --serial emulator-5554
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: android-keyboard-probe
-          path: packages/hotkey_manager/example/build/compatibility_audit/android/
+          path: example/build/compatibility_audit/android/
