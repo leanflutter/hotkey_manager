@@ -1,4 +1,4 @@
-name: build
+name: CI
 
 on:
   push:
@@ -7,86 +7,168 @@ on:
     branches: [main]
 
 jobs:
-  build-linux:
+  lint:
+    name: Lint & Analyze
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.50.0"
           channel: "stable"
+          cache: true
+
+      - uses: bluefireteam/melos-action@v3
+
+      - name: Check code formatting
+        run: melos run format-check
+
+      - name: Analyze
+        run: melos run analyze
+
+  test:
+    name: Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.50.0"
+          channel: "stable"
+          cache: true
+
+      - name: Install Linux native dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libx11-dev libxi-dev xvfb xauth
+
+      - uses: bluefireteam/melos-action@v3
+
+      - name: Test with native X11 registration
+        if: runner.os == 'Linux'
+        run: xvfb-run -a melos run test --no-select
+
+      - name: Test
+        if: runner.os != 'Linux'
+        run: melos run test --no-select
+
+  build-linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
+    needs: [lint]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.50.0"
+          channel: "stable"
+
       - run: |
           sudo apt-get update
           sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libx11-dev libxi-dev
+
       - uses: bluefireteam/melos-action@v3
+
       - working-directory: ./packages/hotkey_manager/example
-        run: |
-          flutter build linux --release
+        run: flutter build linux --release
 
   build-macos:
+    name: Build macOS
     runs-on: macos-latest
+    needs: [lint]
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.50.0"
           channel: "stable"
+
       - uses: bluefireteam/melos-action@v3
+
       - working-directory: ./packages/hotkey_manager/example
-        run: |
-          flutter build macos --release
+        run: flutter build macos --release
+
       - name: macOS media AOT regression
         working-directory: ./packages/hotkey_manager/example
         run: python3 test_support/run_macos_media_probe.py --allow-unavailable-global
 
   build-web:
+    name: Build Web
     runs-on: macos-latest
+    needs: [lint]
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.50.0"
           channel: "stable"
+
       - uses: bluefireteam/melos-action@v3
+
       - working-directory: ./packages/hotkey_manager/example
-        run: |
-          flutter build web --release
+        run: flutter build web --release
 
   build-windows:
+    name: Build Windows
     runs-on: windows-latest
+    needs: [lint]
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.50.0"
           channel: "stable"
+
       - uses: bluefireteam/melos-action@v3
+
       - working-directory: ./packages/hotkey_manager/example
-        run: |
-          flutter build windows --release
+        run: flutter build windows --release
 
   android-keyboard:
+    name: Android keyboard
     runs-on: ubuntu-latest
+    needs: [lint]
     timeout-minutes: 30
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.50.0"
           channel: stable
           cache: true
+
       - name: Build Android example
         working-directory: packages/hotkey_manager/example
         run: flutter build apk --release --target-platform android-x64
+
       - name: Enable emulator KVM access
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
+
       - uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 36
@@ -96,6 +178,7 @@ jobs:
           enable-hw-keyboard: true
           working-directory: packages/hotkey_manager/example
           script: python3 test_support/run_android_keyboard_probe.py --serial emulator-5554
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
