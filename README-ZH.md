@@ -44,7 +44,7 @@
 ## nativeapi 迁移
 
 系统快捷键通过 Dart FFI 使用 nativeapi C++ 核心，不再依赖各平台原生插件。
-需要 Dart 3.13+、Flutter 3.47+ 和 **nativeapi/cnativeapi 0.5.6+**。
+需要 Dart 3.14+、Flutter 3.50+ 和 **nativeapi/cnativeapi 0.6.0+**。
 两个依赖均已发布到 pub.dev，无需本地依赖覆盖。
 
 `package:hotkey_manager/native.dart` 单独导出 `ShortcutManager`、`ShortcutOptions`

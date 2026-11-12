@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hotkey_manager/native.dart' as hotkey;
 import 'package:hotkey_manager_example/pages/home.dart';
 

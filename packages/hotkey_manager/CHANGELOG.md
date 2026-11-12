@@ -1,3 +1,8 @@
+## Unreleased
+
+- **Breaking:** requires Flutter 3.50 / Dart 3.14 and nativeapi/cnativeapi 0.6.0.
+- **Breaking:** the widgets import `package:material_ui` instead of the deprecated `package:flutter/material.dart`. `HotKeyVirtualView` takes its canvas, divider and text colors from material_ui's `Theme`, so an app still built on the SDK's `MaterialApp` gets the default colors there.
+
 ## 0.3.0
 
 - Migrate desktop shortcuts to nativeapi 0.5.6 through Dart FFI and native assets; remove the platform native packages and Swift HotKey dependency.

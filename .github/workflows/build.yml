@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.47.6"
+          flutter-version: "3.50.0"
           channel: "stable"
       - run: |
           sudo apt-get update
@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.47.6"
+          flutter-version: "3.50.0"
           channel: "stable"
       - uses: bluefireteam/melos-action@v3
       - working-directory: ./packages/hotkey_manager/example
@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.47.6"
+          flutter-version: "3.50.0"
           channel: "stable"
       - uses: bluefireteam/melos-action@v3
       - working-directory: ./packages/hotkey_manager/example
@@ -58,7 +58,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.47.6"
+          flutter-version: "3.50.0"
           channel: "stable"
       - uses: bluefireteam/melos-action@v3
       - working-directory: ./packages/hotkey_manager/example
@@ -76,7 +76,7 @@ jobs:
           java-version: '17'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.47.6"
+          flutter-version: "3.50.0"
           channel: stable
           cache: true
       - name: Build Android example
