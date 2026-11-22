@@ -24,12 +24,12 @@ dependencies:
     sdk: flutter
   hotkey_manager_platform_interface: ^0.2.0
   material_ui: ^1.11.0
-  nativeapi: ^0.6.0
+  nativeapi: ^0.6.2
   uni_platform: ^0.1.3
   uuid: '>=3.0.7 <5.0.0'
 
 dev_dependencies:
-  cnativeapi: ^0.6.0
+  cnativeapi: ^0.6.2
   dependency_validator: ^3.0.0
   flutter_test:
     sdk: flutter

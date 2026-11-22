@@ -46,7 +46,7 @@ English | [简体中文](./README-ZH.md)
 System shortcuts use the C++ nativeapi core through Dart FFI. No per-platform
 native hotkey_manager plugin or method channel is needed.
 
-Requires Dart 3.14+, Flutter 3.50+ and **nativeapi/cnativeapi 0.6.0+** with asynchronous desktop shortcut registration.
+Requires Dart 3.14+, Flutter 3.50+ and **nativeapi/cnativeapi 0.6.2+** with asynchronous desktop shortcut registration.
 Both dependencies are published on pub.dev; no local dependency overrides are needed.
 
 ```dart

@@ -16,7 +16,7 @@ dependencies:
   material_ui: ^1.11.0
 
 dev_dependencies:
-  nativeapi: ^0.6.0
+  nativeapi: ^0.6.2
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
