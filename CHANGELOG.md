@@ -1,3 +1,8 @@
+## 0.4.1
+
+- Require nativeapi and cnativeapi 0.6.2 or later.
+- Move the package and its example to the repository root.
+
 ## 0.4.0
 
 - **Breaking:** requires Flutter 3.50 / Dart 3.14 and nativeapi/cnativeapi 0.6.0.
